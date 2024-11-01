@@ -7,7 +7,7 @@
 
 export default function Overlay() {
   return (
-    <>
+    <div>
       {/* <div
         className="text-[14vw] m-0 p-0 absolute"
         style={{ top: 40, left: 40 }}
@@ -59,9 +59,9 @@ export default function Overlay() {
           textAlign: "right",
         }}
       >
-        LJ
+        LJ WHITE
         <br />
-        WHITE
+        PORTFOLIO
       </div>
       <div
         style={{
@@ -126,6 +126,6 @@ export default function Overlay() {
         </div>
         <br />
       </div>
-    </>
+    </div>
   );
 }

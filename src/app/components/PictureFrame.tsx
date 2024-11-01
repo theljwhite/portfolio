@@ -11,9 +11,6 @@ interface PictureFrameProps {
 export default function PictureFrame(props: any) {
   const { nodes, materials } = useGLTF("./3D/picture_frame.glb");
 
-  console.log("nodes", nodes);
-  console.log("materials", materials);
-
   const group = useRef();
 
   return (

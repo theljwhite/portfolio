@@ -9,7 +9,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        main: ["Patua One"],
+        main: ["Geist Mono"],
         second: ["Comfortaa"],
         third: ["Merriweather"],
       },
