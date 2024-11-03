@@ -1,55 +1,8 @@
-// position: absolute;
-//   font-size: 14vw;
-//   font-weight: 800;
-//   padding: 0;
-//   margin: 0;
-//   line-height: 0.8em;
+import Link from "next/link";
 
 export default function Overlay() {
   return (
     <div>
-      {/* <div
-        className="text-[14vw] m-0 p-0 absolute"
-        style={{ top: 40, left: 40 }}
-      >
-        L
-      </div>
-      <div
-        className="text-[14vw] m-0 p-0 absolute"
-        style={{ top: 40, left: "20vw" }}
-      >
-        J
-      </div>
-      <div
-        className="text-[14vw] m-0 p-0 absolute"
-        style={{ top: 40, left: "40vw" }}
-      >
-        W
-      </div>
-      <div
-        className="text-[14vw] m-0 p-0 absolute"
-        style={{ top: "20vw", left: "20vw" }}
-      >
-        H
-      </div>
-      <div
-        className="text-[14vw] m-0 p-0 absolute"
-        style={{ bottom: 40, left: "40vw" }}
-      >
-        I
-      </div>
-      <div
-        className="text-[14vw] m-0 p-0 absolute"
-        style={{ bottom: 40, left: "60vw" }}
-      >
-        T
-      </div>
-      <div
-        className="text-[14vw] m-0 p-0 absolute"
-        style={{ bottom: 40, left: "80vw" }}
-      >
-        E
-      </div> */}
       <div
         style={{
           position: "absolute",
@@ -109,12 +62,12 @@ export default function Overlay() {
             display: "inline-block",
           }}
         >
-          <a
+          <Link
             style={{ fontSize: "15px", fontWeight: 600, letterSpacing: 2 }}
-            href="https://github.com/pmndrs/drei#caustics"
+            href="/projects"
           >
             PROJECTS
-          </a>
+          </Link>
           <div
             style={{
               marginTop: 6,

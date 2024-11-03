@@ -1,22 +1,32 @@
 "use client";
+import * as THREE from "three";
 import { Suspense, useState } from "react";
 import { SOCIALS } from "../constants/socials";
 import {
+  Backdrop,
   Center,
+  Cloud,
+  Clouds,
   Environment,
   MeshReflectorMaterial,
   OrbitControls,
   PerspectiveCamera,
+  Sky,
+  SpotLight,
+  Stars,
 } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
 import type { RapierRigidBody } from "@react-three/rapier";
 import { useGLTF } from "@react-three/drei";
 import { useRef } from "react";
+import SceneLoading from "./UI/SceneLoading";
 import Laptop from "./Laptop";
 import PictureFrame from "./PictureFrame";
+import EthStatue from "./EthStatue";
+import Krk from "./Krk";
 
-//TODO - fix 'any' type casts
+//TODO - fix 'any' type casts and any's in general
 
 interface SocialModelProps {
   url: string;
@@ -43,10 +53,10 @@ const SocialModel = ({ url, handleClick }: SocialModelProps) => {
   return (
     <primitive
       onClick={handleClick}
-      onPointerOver={(e: any) => {
+      onPointerOver={() => {
         gl.domElement.style.cursor = "pointer";
       }}
-      onPointerOut={(e: any) => {
+      onPointerOut={() => {
         gl.domElement.style.cursor = "default";
       }}
       castShadow
@@ -72,31 +82,12 @@ const BitcoinMachine = () => {
 
 const Redbulls = () => {
   const { scene } = useGLTF("./3D/redbulls.glb");
-  return (
-    <primitive
-      // position={[-1.5, -3.2, 3.2]}
-      position={[-3.4, -1.86, 2.0]}
-      scale={3.8}
-      object={scene}
-    />
-  );
+  return <primitive position={[-3.4, -1.86, 2.0]} scale={3.8} object={scene} />;
 };
 
 const RedbullSingle = () => {
   const { scene } = useGLTF("./3D/redbull_single.glb");
   return <primitive position={[1.0, 1.16, -1]} scale={0.1} object={scene} />;
-};
-
-const KrkStudioMonitorRipInPieceInPeace = () => {
-  const { scene } = useGLTF("./3D/krk_single.glb");
-  return (
-    <primitive
-      rotation={[0, 0.6, 0]}
-      position={[-3, 0, 0]}
-      scale={0.4}
-      object={scene}
-    />
-  );
 };
 
 export default function Scene() {
@@ -129,13 +120,7 @@ export default function Scene() {
   };
 
   return (
-    <div
-      // style={{
-      //   background: "url('./lol.jpg')",
-      //   backgroundPosition: "50%",
-      // }}
-      className="w-dvh h-dvh bg-primary-5"
-    >
+    <div className="w-dvh h-dvh bg-black">
       <div id="socials" className="hidden">
         {Object.keys(SOCIALS).map((social, index) => {
           return (
@@ -150,12 +135,43 @@ export default function Scene() {
           );
         })}
       </div>
-      <Suspense fallback="Loading...">
+      <Suspense fallback={<SceneLoading />}>
         <Canvas dpr={[1, 2]} shadows>
           <Physics paused={paused} key={0} timeStep={1 / 60}>
             <fog attach="fog" args={["rgb(16,16,16)", 0, 10]} />
 
             <Environment preset="city" />
+
+            <Stars
+              radius={100}
+              depth={50}
+              count={5000}
+              factor={4}
+              saturation={0}
+              fade
+              speed={1}
+            />
+
+            {/* <Clouds limit={40} material={THREE.MeshBasicMaterial}>
+              <Cloud
+                segments={40}
+                bounds={[10, 30, 10]}
+                volume={0.1}
+                color={0xd580ff}
+                concentrate="outside"
+                fade={0}
+              />
+              <Cloud
+                seed={1}
+                scale={1}
+                // bounds={[2, 30, 10]}
+                volume={2}
+                color={0xd580ff}
+                fade={0}
+                position={[2, 10, 0]}
+                concentrate="random"
+              />
+            </Clouds> */}
 
             <group position={[0, -0.5, 0]}>
               <Desk />
@@ -163,7 +179,18 @@ export default function Scene() {
               <BitcoinMachine />
               <Redbulls />
               <RedbullSingle />
-              <KrkStudioMonitorRipInPieceInPeace />
+              <EthStatue />
+              <Krk />
+
+              {/* <SpotLight
+                // position={[0, 0.3, 0]}
+                position={[-0.1, 0.1, 0.9]}
+                penumbra={1}
+                angle={0.1}
+                intensity={100}
+                castShadow
+              /> */}
+
               {/* <PictureFrame
                 // rotation={[-0, -1.1, 7.8]}
                 // position={[-1.46, 2.1, -3.6]}
@@ -250,7 +277,7 @@ export default function Scene() {
                     maxDepthThreshold={1.25}
                     roughness={1}
                     mirror={1}
-                    //color
+                    // color={0xd580ff}
                   />
                 </mesh>
               </RigidBody>
@@ -274,15 +301,16 @@ export default function Scene() {
               enableZoom={false}
               enablePan={true}
             />
+
             <PerspectiveCamera makeDefault fov={65} position={[0, 0, 4]}>
-              <spotLight
+              {/* <spotLight
                 position={[10, 10, 5]}
                 angle={0.1}
                 penumbra={1}
                 intensity={10}
                 castShadow
                 shadow-mapSize={[2048, 2048]}
-              />
+              /> */}
             </PerspectiveCamera>
           </Physics>
         </Canvas>
