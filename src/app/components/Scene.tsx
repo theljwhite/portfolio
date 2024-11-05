@@ -279,6 +279,7 @@ export default function Scene() {
                     mirror={1}
                     // color={0xd580ff}
                   />
+                  {/* <meshPhysicalMaterial color={0x301934} /> */}
                 </mesh>
               </RigidBody>
 
