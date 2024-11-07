@@ -76,6 +76,7 @@ export default function KrkDynamic() {
     if (
       rightSpotlightRef.current &&
       leftSpotlightRef.current &&
+      visualiserRef.current &&
       isAudioPlaying
     ) {
       const elapsedTime = state.clock.getElapsedTime();
@@ -88,9 +89,7 @@ export default function KrkDynamic() {
 
       leftSpotlightRef.current.target.position.x = xPos;
       leftSpotlightRef.current.target.position.y = yPos;
-    }
 
-    if (isAudioPlaying && visualiserRef.current) {
       const { avg } = updateAudio();
 
       for (let i = 0; i < data.length; i++) {
@@ -118,13 +117,8 @@ export default function KrkDynamic() {
 
   const onSpeakerClick = (): void => {
     setIsAudioPlaying(!isAudioPlaying);
-    if (isAudioPlaying) {
-      gain.disconnect();
-      console.log("disconnected on click");
-    } else {
-      gain.connect(ctx.destination);
-      console.log("connected on click");
-    }
+    if (isAudioPlaying) gain.disconnect();
+    else gain.connect(ctx.destination);
   };
 
   return (

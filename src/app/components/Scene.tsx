@@ -1,18 +1,12 @@
 "use client";
-import * as THREE from "three";
 import { Suspense, useState } from "react";
 import { SOCIALS } from "../constants/socials";
 import {
-  Backdrop,
   Center,
-  Cloud,
-  Clouds,
   Environment,
   MeshReflectorMaterial,
   OrbitControls,
   PerspectiveCamera,
-  Sky,
-  SpotLight,
   Stars,
 } from "@react-three/drei";
 import { Canvas, useThree } from "@react-three/fiber";
@@ -22,9 +16,7 @@ import { useGLTF } from "@react-three/drei";
 import { useRef } from "react";
 import SceneLoading from "./UI/SceneLoading";
 import Laptop from "./Laptop";
-import PictureFrame from "./PictureFrame";
 import EthStatue from "./EthStatue";
-import Krk from "./Krk";
 import KrkDynamic from "./KrkDynamic";
 
 //TODO - fix 'any' type casts and any's in general
@@ -67,10 +59,18 @@ const SocialModel = ({ url, handleClick }: SocialModelProps) => {
   );
 };
 
-const BitcoinMachine = () => {
+const BitcoinMachine = ({ handleClick }: { handleClick: () => void }) => {
   const { scene } = useGLTF("./3D/bitcoin_atm.glb");
+  const { gl } = useThree();
   return (
     <primitive
+      onClick={handleClick}
+      onPointerOver={() => {
+        gl.domElement.style.cursor = "pointer";
+      }}
+      onPointerOut={() => {
+        gl.domElement.style.cursor = "default";
+      }}
       castShadow
       receiveShadow
       position={[1.5, 0, 1.1]}
@@ -92,6 +92,8 @@ const RedbullSingle = () => {
 };
 
 export default function Scene() {
+  const [paused, setPaused] = useState<boolean>(true);
+
   const socialRefs = useRef<Record<string, HTMLAnchorElement>>({});
   const rigidBodyRefs = useRef<Record<string, RapierRigidBody | null>>({
     github: null,
@@ -99,7 +101,7 @@ export default function Scene() {
     soundcloud: null,
     linkedin: null,
   });
-  const [paused, setPaused] = useState<boolean>(true);
+  const bitcoinAnchorRef = useRef<any>();
 
   const handleSocialClick = (social: string): void => {
     setPaused(false);
@@ -136,6 +138,15 @@ export default function Scene() {
           );
         })}
       </div>
+      <div className="hidden">
+        <a
+          className="hidden"
+          target="_blank"
+          href="https://coinmarketcap.com/currencies/bitcoin/"
+          rel="noreferrer"
+          ref={bitcoinAnchorRef}
+        />
+      </div>
       <Suspense fallback={<SceneLoading />}>
         <Canvas dpr={[1, 2]} shadows>
           <Physics paused={paused} key={0} timeStep={1 / 60}>
@@ -153,44 +164,16 @@ export default function Scene() {
               speed={1}
             />
 
-            {/* <Clouds limit={40} material={THREE.MeshBasicMaterial}>
-              <Cloud
-                segments={40}
-                bounds={[10, 30, 10]}
-                volume={0.1}
-                color={0xd580ff}
-                concentrate="outside"
-                fade={0}
-              />
-              <Cloud
-                seed={1}
-                scale={1}
-                // bounds={[2, 30, 10]}
-                volume={2}
-                color={0xd580ff}
-                fade={0}
-                position={[2, 10, 0]}
-                concentrate="random"
-              />
-            </Clouds> */}
-
             <group position={[0, -0.5, 0]}>
               <Desk />
               <Laptop />
-              <BitcoinMachine />
+              <BitcoinMachine
+                handleClick={() => bitcoinAnchorRef.current.click()}
+              />
               <Redbulls />
               <RedbullSingle />
               <EthStatue />
               <KrkDynamic />
-
-              {/* <SpotLight
-                // position={[0, 0.3, 0]}
-                position={[-0.1, 0.1, 0.9]}
-                penumbra={1}
-                angle={0.1}
-                intensity={100}
-                castShadow
-              /> */}
 
               {/* <PictureFrame
                 // rotation={[-0, -1.1, 7.8]}
@@ -278,9 +261,7 @@ export default function Scene() {
                     maxDepthThreshold={1.25}
                     roughness={1}
                     mirror={1}
-                    // color={0xd580ff}
                   />
-                  {/* <meshPhysicalMaterial color={0x301934} /> */}
                 </mesh>
               </RigidBody>
 
@@ -304,16 +285,11 @@ export default function Scene() {
               enablePan={true}
             />
 
-            <PerspectiveCamera makeDefault fov={65} position={[0, 0, 4]}>
-              {/* <spotLight
-                position={[10, 10, 5]}
-                angle={0.1}
-                penumbra={1}
-                intensity={10}
-                castShadow
-                shadow-mapSize={[2048, 2048]}
-              /> */}
-            </PerspectiveCamera>
+            <PerspectiveCamera
+              makeDefault
+              fov={65}
+              position={[0, 0, 4]}
+            ></PerspectiveCamera>
           </Physics>
         </Canvas>
       </Suspense>

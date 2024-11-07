@@ -39,21 +39,23 @@ export default function AudioPlayer() {
                       backgroundImage:
                         "linear-gradient(135deg, #70929c, #e6846e)",
                     }}
-                    className="w-8 h-8 block"
+                    className="w-7 h-7 block"
                   >
                     <span
                       style={{
                         backgroundImage:
                           "https://img.freepik.com/free-psd/square-flyer-template-maximalist-business_23-2148524497.jpg?w=1800&t=st=1699458420~exp=1699459020~hmac=5b00d72d6983d04966cc08ccd0fc1f80ad0d7ba75ec20316660e11efd18133cd",
                       }}
-                      className="w-8 h-8"
+                      className="w-7 h-7"
                     />
                   </div>
                 </div>
                 <div className="grow w-0">
-                  <span className="text-xs text-gray-400 h-4">G JONES</span>
+                  <span className="text-xs text-gray-400 leading-4 h-4">
+                    G JONES
+                  </span>
                   <div className="flex w-full items-center h-4">
-                    <span className="truncate text-neutral-22 text-xs">
+                    <span className="truncate text-neutral-22 leading-4 text-xs">
                       CHEE - Get Hot (G JONES Remix)
                     </span>
                   </div>
