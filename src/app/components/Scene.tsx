@@ -25,6 +25,7 @@ import Laptop from "./Laptop";
 import PictureFrame from "./PictureFrame";
 import EthStatue from "./EthStatue";
 import Krk from "./Krk";
+import KrkDynamic from "./KrkDynamic";
 
 //TODO - fix 'any' type casts and any's in general
 
@@ -180,7 +181,7 @@ export default function Scene() {
               <Redbulls />
               <RedbullSingle />
               <EthStatue />
-              <Krk />
+              <KrkDynamic />
 
               {/* <SpotLight
                 // position={[0, 0.3, 0]}

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import AudioPlayer from "./AudioPlayer";
+import { NavHamburgerIcon } from "./UI/Icons";
 
 export default function Overlay() {
   return (
@@ -30,18 +32,10 @@ export default function Overlay() {
         <br />
         10/30/2024
       </div>
-      <svg
-        style={{ position: "absolute", right: 40, top: "50%" }}
-        width="54"
-        height="23"
-        viewBox="0 0 54 23"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <line y1="1.5" x2="54" y2="1.5" stroke="black" strokeWidth="3" />
-        <line y1="11.5" x2="54" y2="11.5" stroke="black" strokeWidth="3" />
-        <line y1="21.5" x2="54" y2="21.5" stroke="black" strokeWidth="3" />
-      </svg>
+      <div style={{ position: "absolute", right: 40, top: "50%" }}>
+        <NavHamburgerIcon width={54} height={23} />
+        {/* TODO a navbar */}
+      </div>
       <div
         style={{
           position: "absolute",
@@ -79,6 +73,7 @@ export default function Overlay() {
         </div>
         <br />
       </div>
+      <AudioPlayer />
     </div>
   );
 }
