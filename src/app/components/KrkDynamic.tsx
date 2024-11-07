@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, Suspense } from "react";
 import * as THREE from "three";
-import { Sparkles, SpotLight, useGLTF } from "@react-three/drei";
+import { SpotLight, useGLTF } from "@react-three/drei";
 import { useThree, useFrame } from "@react-three/fiber";
 import {
   SpotLight as TSpotLight,
