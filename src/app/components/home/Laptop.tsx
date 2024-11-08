@@ -1,5 +1,8 @@
 import React, { useRef } from "react";
 import { Html, useGLTF } from "@react-three/drei";
+
+//TODO - fix any types
+
 export default function Laptop(props: any) {
   const { nodes, materials } = useGLTF("./3D/mac-draco.glb");
 
@@ -30,7 +33,9 @@ export default function Laptop(props: any) {
               rotation-x={-Math.PI / 2}
               position={[0, 0.05, -0.09]}
               transform
-              occlude
+              occlude="blending"
+              // occlude
+              // zIndexRange={[8388637, 0]}
             >
               <div onPointerDown={(e) => e.stopPropagation()}>
                 <img

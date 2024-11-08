@@ -1,6 +1,7 @@
 import Link from "next/link";
-import AudioPlayer from "./AudioPlayer";
-import { NavHamburgerIcon } from "./UI/Icons";
+
+//TODO - temp fix for three JS canvas getting high zIndex of 8388636 when occlude = "blending" is set,
+//that's why the z indexes here are so high for now.
 
 export default function Overlay() {
   return (
@@ -12,6 +13,7 @@ export default function Overlay() {
           right: 160,
           fontSize: "15px",
           textAlign: "right",
+          zIndex: 8388637,
         }}
       >
         LJ WHITE
@@ -33,7 +35,7 @@ export default function Overlay() {
         10/30/2024
       </div>
       <div style={{ position: "absolute", right: 40, top: "50%" }}>
-        <NavHamburgerIcon width={54} height={23} />
+        {/* <NavHamburgerIcon width={54} height={23} /> */}
         {/* TODO a navbar */}
       </div>
       <div
@@ -42,6 +44,7 @@ export default function Overlay() {
           bottom: 120,
           left: 120,
           fontSize: "18px",
+          zIndex: 8388637,
         }}
       >
         Full stack developer
@@ -73,7 +76,7 @@ export default function Overlay() {
         </div>
         <br />
       </div>
-      <AudioPlayer />
+      {/* TODO AudioPlayer will go here */}
     </div>
   );
 }

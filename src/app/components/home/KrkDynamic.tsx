@@ -1,13 +1,14 @@
 import { useState, useRef, useEffect, Suspense } from "react";
 import * as THREE from "three";
 import { SpotLight, useGLTF } from "@react-three/drei";
-import { useThree, useFrame } from "@react-three/fiber";
-import {
+import { useFrame } from "@react-three/fiber";
+import type { ThreeEvent } from "@react-three/fiber";
+import type {
   SpotLight as TSpotLight,
   InstancedMesh as TInstancedMesh,
 } from "three";
 import { suspend } from "suspend-react";
-import { createAudio } from "../utils/audio";
+import { createAudio } from "../../utils/audio";
 
 //TODO fix any type's.
 
@@ -15,12 +16,16 @@ import { createAudio } from "../utils/audio";
 //according to this r3f docs: https://r3f.docs.pmnd.rs/advanced/pitfalls,
 //it's better to do all in useFrame but I think for now the intervals are neccessary to achieve what I need it to do
 
+//TODO - because of HTML occlude="blending" bug, the onPointerOver's here,
+//for now have to use the document.body to set cursor pointer.
+//when fixed, they can use gl.domElement.style.cursor = "pointer" from useThree's gl
+
 const SPOT_COLOR_CHANGE_MS = 12_000;
 const SPOT_SPEED_CHANGE_MS = 24_000;
-const ANALYSER_OBJ_WIDTH = 0.03; //0.01
-const ANALYSER_OBJ_HEIGHT = 0.08; //0.05
-const ANALYSER_OBJ_SPACE = 1.5; //1.8
-const ANALYSER_Y_POS = 1500; //2500
+const ANALYSER_OBJ_WIDTH = 0.03;
+const ANALYSER_OBJ_HEIGHT = 0.08;
+const ANALYSER_OBJ_SPACE = 1.5;
+const ANALYSER_Y_POS = 1500;
 
 export default function KrkDynamic() {
   const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
@@ -34,7 +39,6 @@ export default function KrkDynamic() {
   const timeRef = useRef<number | undefined>(0);
 
   const { scene } = useGLTF("./3D/krk_single.glb");
-  const { gl } = useThree();
   const obj = new THREE.Object3D();
 
   const leftSpotlightColors: number[] = [
@@ -125,11 +129,12 @@ export default function KrkDynamic() {
     <>
       <primitive
         onClick={onSpeakerClick}
-        onPointerOver={() => {
-          gl.domElement.style.cursor = "pointer";
+        onPointerOver={(e: ThreeEvent<any>) => {
+          e.stopPropagation();
+          document.body.style.cursor = "pointer";
         }}
         onPointerOut={() => {
-          gl.domElement.style.cursor = "default";
+          document.body.style.cursor = "auto";
         }}
         rotation={[0, 0.6, 0]}
         position={[-3, 0, 0]}
@@ -165,7 +170,7 @@ export default function KrkDynamic() {
           <instancedMesh
             castShadow
             ref={visualiserRef as any}
-            position={[-3.3, 1.2, 0]} //0, 1,0
+            position={[-3.3, 1.2, 0]}
             args={[null, null, data.length] as any}
           >
             <planeGeometry args={[ANALYSER_OBJ_WIDTH, ANALYSER_OBJ_HEIGHT]} />

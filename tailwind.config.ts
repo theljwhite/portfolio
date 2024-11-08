@@ -9,9 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        main: ["Geist Mono"],
-        second: ["Comfortaa"],
-        third: ["Merriweather"],
+        main: ["Inter"],
+        second: ["--font-share_tech_mono"],
+        third: ["Geist Mono"],
       },
       colors: {
         transparent: "transparent",

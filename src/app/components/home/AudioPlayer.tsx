@@ -1,4 +1,6 @@
-import { AudioBackIcon, AudioPauseIcon, AudioForwardIcon } from "./UI/Icons";
+import { AudioBackIcon, AudioPauseIcon, AudioForwardIcon } from "../UI/Icons";
+
+//TODO - this is fully unfinished and will be implemented in the future
 
 export default function AudioPlayer() {
   return (
@@ -25,7 +27,7 @@ export default function AudioPlayer() {
                   <div />
                 </div>
                 <div className="w-13 h-13">
-                  <span className="text-primary-2 text-xs">0:16</span>
+                  <span className="text-primary-2 text-xs">2:23</span>
                 </div>
                 <div></div>
                 <div></div>

@@ -1,6 +1,6 @@
 "use client";
 import { Suspense, useState } from "react";
-import { SOCIALS } from "../constants/socials";
+import { SOCIALS } from "../../constants/socials";
 import {
   Center,
   Environment,
@@ -9,17 +9,22 @@ import {
   PerspectiveCamera,
   Stars,
 } from "@react-three/drei";
-import { Canvas, useThree } from "@react-three/fiber";
+import { Canvas } from "@react-three/fiber";
+import type { ThreeEvent } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
 import type { RapierRigidBody } from "@react-three/rapier";
 import { useGLTF } from "@react-three/drei";
 import { useRef } from "react";
-import SceneLoading from "./UI/SceneLoading";
+import SceneLoading from "../UI/SceneLoading";
 import Laptop from "./Laptop";
 import EthStatue from "./EthStatue";
 import KrkDynamic from "./KrkDynamic";
 
 //TODO - fix 'any' type casts and any's in general
+
+//TODO - because of HTML occlude="blending" bug, the onPointerOver's here,
+//for now have to use the document.body to set cursor pointer.
+//when fixed, they can use gl.domElement.style.cursor = "pointer" from useThree's gl
 
 interface SocialModelProps {
   url: string;
@@ -41,16 +46,16 @@ const Desk = () => {
 
 const SocialModel = ({ url, handleClick }: SocialModelProps) => {
   const { scene } = useGLTF(url);
-  const { gl } = useThree();
 
   return (
     <primitive
       onClick={handleClick}
-      onPointerOver={() => {
-        gl.domElement.style.cursor = "pointer";
+      onPointerOver={(e: ThreeEvent<any>) => {
+        e.stopPropagation();
+        document.body.style.cursor = "pointer";
       }}
       onPointerOut={() => {
-        gl.domElement.style.cursor = "default";
+        document.body.style.cursor = "auto";
       }}
       castShadow
       receiveShadow
@@ -61,15 +66,16 @@ const SocialModel = ({ url, handleClick }: SocialModelProps) => {
 
 const BitcoinMachine = ({ handleClick }: { handleClick: () => void }) => {
   const { scene } = useGLTF("./3D/bitcoin_atm.glb");
-  const { gl } = useThree();
   return (
     <primitive
+      className="cursor-pointer"
       onClick={handleClick}
-      onPointerOver={() => {
-        gl.domElement.style.cursor = "pointer";
+      onPointerOver={(e: ThreeEvent<any>) => {
+        e.stopPropagation();
+        document.body.style.cursor = "pointer";
       }}
       onPointerOut={() => {
-        gl.domElement.style.cursor = "default";
+        document.body.style.cursor = "auto";
       }}
       castShadow
       receiveShadow
