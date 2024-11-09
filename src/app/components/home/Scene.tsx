@@ -46,7 +46,6 @@ const Desk = () => {
 
 const SocialModel = ({ url, handleClick }: SocialModelProps) => {
   const { scene } = useGLTF(url);
-
   return (
     <primitive
       onClick={handleClick}
@@ -98,7 +97,7 @@ const RedbullSingle = () => {
 };
 
 export default function Scene() {
-  const [paused, setPaused] = useState<boolean>(true);
+  const [physicsPaused, setPhysicsPaused] = useState<boolean>(true);
 
   const socialRefs = useRef<Record<string, HTMLAnchorElement>>({});
   const rigidBodyRefs = useRef<Record<string, RapierRigidBody | null>>({
@@ -107,10 +106,10 @@ export default function Scene() {
     soundcloud: null,
     linkedin: null,
   });
-  const bitcoinAnchorRef = useRef<any>();
+  const bitcoinAnchorRef = useRef<HTMLAnchorElement | null>(null);
 
   const handleSocialClick = (social: string): void => {
-    setPaused(false);
+    setPhysicsPaused(false);
 
     Object.keys(rigidBodyRefs.current).forEach((key) => {
       const rigidBody = rigidBodyRefs.current[key];
@@ -155,11 +154,9 @@ export default function Scene() {
       </div>
       <Suspense fallback={<SceneLoading />}>
         <Canvas dpr={[1, 2]} shadows>
-          <Physics paused={paused} key={0} timeStep={1 / 60}>
+          <Physics paused={physicsPaused} key={0} timeStep={1 / 60}>
             <fog attach="fog" args={["rgb(16,16,16)", 0, 10]} />
-
             <Environment preset="city" />
-
             <Stars
               radius={100}
               depth={50}
@@ -169,24 +166,16 @@ export default function Scene() {
               fade
               speed={1}
             />
-
             <group position={[0, -0.5, 0]}>
               <Desk />
               <Laptop />
               <BitcoinMachine
-                handleClick={() => bitcoinAnchorRef.current.click()}
+                handleClick={() => bitcoinAnchorRef?.current?.click()}
               />
               <Redbulls />
               <RedbullSingle />
               <EthStatue />
               <KrkDynamic />
-
-              {/* <PictureFrame
-                // rotation={[-0, -1.1, 7.8]}
-                // position={[-1.46, 2.1, -3.6]}
-                frameImgPath="./TS_logo.png"
-              /> */}
-
               <group scale={0.3} position={[0, 0, -1.2]}>
                 <Center rotation={[0, -0.4, 0]} position={[-2, 1, -2]}>
                   <RigidBody
@@ -290,7 +279,6 @@ export default function Scene() {
               enableZoom={false}
               enablePan={true}
             />
-
             <PerspectiveCamera
               makeDefault
               fov={65}

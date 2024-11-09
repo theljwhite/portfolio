@@ -36,8 +36,6 @@ export default function KrkDynamic() {
   const leftSpotlightRef = useRef<TSpotLight>();
   const visualiserRef = useRef<TInstancedMesh>();
 
-  const timeRef = useRef<number | undefined>(0);
-
   const { scene } = useGLTF("./3D/krk_single.glb");
   const obj = new THREE.Object3D();
 
@@ -57,8 +55,6 @@ export default function KrkDynamic() {
 
   useEffect(() => {
     if (isAudioPlaying) {
-      timeRef.current = performance.now() / 1000;
-
       const indexIntervalId = setInterval(() => {
         setColorIndex(
           (prevIndex) => (prevIndex + 1) % leftSpotlightColors.length
@@ -143,30 +139,30 @@ export default function KrkDynamic() {
       />
 
       <group visible={isAudioPlaying}>
-        <SpotLight
-          ref={leftSpotlightRef as any}
-          penumbra={1}
-          distance={10}
-          angle={0.35}
-          attenuation={10}
-          anglePower={4}
-          intensity={2}
-          color={leftSpotlightColors[colorIndex]}
-          position={[-3, 3, 2]}
-        />
-        <SpotLight
-          ref={rightSpotlightRef as any}
-          penumbra={1}
-          distance={10}
-          angle={0.35}
-          attenuation={10}
-          anglePower={4}
-          intensity={2}
-          color={rightSpotlightColors[colorIndex]}
-          position={[3, 3, 2]}
-        />
-
         <Suspense fallback={<span>AUDIO LOADING</span>}>
+          <SpotLight
+            ref={leftSpotlightRef as any}
+            penumbra={1}
+            distance={10}
+            angle={0.35}
+            attenuation={10}
+            anglePower={4}
+            intensity={2}
+            color={leftSpotlightColors[colorIndex]}
+            position={[-3, 3, 2]}
+          />
+          <SpotLight
+            ref={rightSpotlightRef as any}
+            penumbra={1}
+            distance={10}
+            angle={0.35}
+            attenuation={10}
+            anglePower={4}
+            intensity={2}
+            color={rightSpotlightColors[colorIndex]}
+            position={[3, 3, 2]}
+          />
+
           <instancedMesh
             castShadow
             ref={visualiserRef as any}

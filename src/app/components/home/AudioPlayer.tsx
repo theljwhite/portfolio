@@ -4,7 +4,7 @@ import { AudioBackIcon, AudioPauseIcon, AudioForwardIcon } from "../UI/Icons";
 
 export default function AudioPlayer() {
   return (
-    <div className="fixed bottom-0 w-full ">
+    <div style={{ zIndex: 8388637 }} className="fixed bottom-0 w-full ">
       <section className="h-12 bg-almostblack">
         <div className="w-screen relative h-full mx-12">
           <div className="flex relative h-full items-center">

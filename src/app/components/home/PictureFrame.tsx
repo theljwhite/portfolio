@@ -2,6 +2,9 @@ import React, { useRef } from "react";
 import { Html, useGLTF } from "@react-three/drei";
 import type { Euler, Vector3 } from "@react-three/fiber";
 
+// rotation={[-0, -1.1, 7.8]}
+// position={[-1.46, 2.1, -3.6]}
+
 interface PictureFrameProps {
   rotation: Euler;
   position: Vector3;

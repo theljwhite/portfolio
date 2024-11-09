@@ -1,9 +1,14 @@
+"use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import AudioPlayer from "./AudioPlayer";
 
 //TODO - temp fix for three JS canvas getting high zIndex of 8388636 when occlude = "blending" is set,
 //that's why the z indexes here are so high for now.
 
 export default function Overlay() {
+  const router = useRouter();
+
   return (
     <div>
       <div
@@ -28,11 +33,12 @@ export default function Overlay() {
           fontSize: "15px",
           textAlign: "right",
           fontVariantNumeric: "tabular-nums",
+          zIndex: 8388637,
         }}
       >
         —
         <br />
-        10/30/2024
+        {new Date().toLocaleDateString()}
       </div>
       <div style={{ position: "absolute", right: 40, top: "50%" }}>
         {/* <NavHamburgerIcon width={54} height={23} /> */}
@@ -59,12 +65,13 @@ export default function Overlay() {
             display: "inline-block",
           }}
         >
-          <Link
+          <button
             style={{ fontSize: "15px", fontWeight: 600, letterSpacing: 2 }}
-            href="/projects"
+            // href="/projects"
+            onClick={() => router.push("/projects")}
           >
             PROJECTS
-          </Link>
+          </button>
           <div
             style={{
               marginTop: 6,
@@ -77,6 +84,7 @@ export default function Overlay() {
         <br />
       </div>
       {/* TODO AudioPlayer will go here */}
+      {/* <AudioPlayer /> */}
     </div>
   );
 }
