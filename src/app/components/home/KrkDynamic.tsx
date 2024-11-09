@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, Suspense } from "react";
+import { useSceneStore } from "@/app/store/scene";
 import * as THREE from "three";
 import { SpotLight, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
@@ -28,7 +29,8 @@ const ANALYSER_OBJ_SPACE = 1.5;
 const ANALYSER_Y_POS = 1500;
 
 export default function KrkDynamic() {
-  const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
+  const { isAudioPlaying, setIsAudioPlaying } = useSceneStore((state) => state);
+
   const [colorIndex, setColorIndex] = useState<number>(0);
   const [speedMultiplier, setSpeedMultiplier] = useState<number>(1);
 
@@ -69,6 +71,8 @@ export default function KrkDynamic() {
         clearInterval(indexIntervalId);
         clearInterval(speedIndexId);
       };
+    } else {
+      gain.disconnect();
     }
   }, [isAudioPlaying]);
 

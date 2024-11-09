@@ -1,8 +1,11 @@
+import { useSceneStore } from "@/app/store/scene";
 import { AudioBackIcon, AudioPauseIcon, AudioForwardIcon } from "../UI/Icons";
 
 //TODO - this is fully unfinished and will be implemented in the future
 
 export default function AudioPlayer() {
+  const { audioDetails } = useSceneStore((state) => state);
+
   return (
     <div style={{ zIndex: 8388637 }} className="fixed bottom-0 w-full ">
       <section className="h-12 bg-almostblack">
@@ -20,7 +23,7 @@ export default function AudioPlayer() {
             <div className="mx-10 block grow items-center justify-center">
               <div className="flex">
                 <div className="w-13 h-13">
-                  <span className="text-primary-2 text-xs">0:16</span>
+                  <span className="text-primary-2 text-xs">0:00</span>
                 </div>
                 <div className="mx-2.5 py-2.5 block relative grow">
                   <div className="bg-white h-px absolute w-full" />
@@ -45,8 +48,7 @@ export default function AudioPlayer() {
                   >
                     <span
                       style={{
-                        backgroundImage:
-                          "https://img.freepik.com/free-psd/square-flyer-template-maximalist-business_23-2148524497.jpg?w=1800&t=st=1699458420~exp=1699459020~hmac=5b00d72d6983d04966cc08ccd0fc1f80ad0d7ba75ec20316660e11efd18133cd",
+                        backgroundImage: audioDetails.artwork,
                       }}
                       className="w-7 h-7"
                     />
@@ -54,11 +56,11 @@ export default function AudioPlayer() {
                 </div>
                 <div className="grow w-0">
                   <span className="text-xs text-gray-400 leading-4 h-4">
-                    G JONES
+                    {audioDetails.artist}
                   </span>
                   <div className="flex w-full items-center h-4">
                     <span className="truncate text-neutral-22 leading-4 text-xs">
-                      CHEE - Get Hot (G JONES Remix)
+                      {audioDetails.title}
                     </span>
                   </div>
                 </div>

@@ -1,13 +1,20 @@
 "use client";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useSceneStore } from "@/app/store/scene";
 import AudioPlayer from "./AudioPlayer";
 
 //TODO - temp fix for three JS canvas getting high zIndex of 8388636 when occlude = "blending" is set,
 //that's why the z indexes here are so high for now.
 
 export default function Overlay() {
+  const { isAudioPlaying, setIsAudioPlaying } = useSceneStore((state) => state);
+
   const router = useRouter();
+
+  const onProjectsClick = (): void => {
+    setIsAudioPlaying(false);
+    router.push("/projects");
+  };
 
   return (
     <div>
@@ -67,8 +74,7 @@ export default function Overlay() {
         >
           <button
             style={{ fontSize: "15px", fontWeight: 600, letterSpacing: 2 }}
-            // href="/projects"
-            onClick={() => router.push("/projects")}
+            onClick={onProjectsClick}
           >
             PROJECTS
           </button>
@@ -83,8 +89,7 @@ export default function Overlay() {
         </div>
         <br />
       </div>
-      {/* TODO AudioPlayer will go here */}
-      {/* <AudioPlayer /> */}
+      {isAudioPlaying && <AudioPlayer />}
     </div>
   );
 }
