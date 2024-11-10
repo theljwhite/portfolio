@@ -29,7 +29,14 @@ const ANALYSER_OBJ_SPACE = 1.5;
 const ANALYSER_Y_POS = 1500;
 
 export default function KrkDynamic() {
-  const { isAudioPlaying, setIsAudioPlaying } = useSceneStore((state) => state);
+  const {
+    isAudioPlaying,
+    setIsAudioPlaying,
+    audioDuration,
+    audioCurrTime,
+    setAudioDuration,
+    setAudioCurrTime,
+  } = useSceneStore((state) => state);
 
   const [colorIndex, setColorIndex] = useState<number>(0);
   const [speedMultiplier, setSpeedMultiplier] = useState<number>(1);
@@ -53,6 +60,7 @@ export default function KrkDynamic() {
     ctx,
     update: updateAudio,
     data,
+    source,
   } = suspend(() => createAudio("./Chee.mp3"), ["./Chee.mp3"]);
 
   useEffect(() => {
@@ -75,6 +83,24 @@ export default function KrkDynamic() {
       gain.disconnect();
     }
   }, [isAudioPlaying]);
+
+  useEffect(() => {
+    let intervalId: NodeJS.Timeout | null = null;
+
+    if (isAudioPlaying) {
+      intervalId = setInterval(() => {
+        if (audioCurrTime < audioDuration) {
+          setAudioCurrTime(audioCurrTime + 1);
+        } else {
+          setAudioCurrTime(0);
+        }
+      }, 1000);
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isAudioPlaying, audioCurrTime, audioDuration]);
 
   useFrame((state) => {
     if (

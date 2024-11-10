@@ -62,7 +62,7 @@ export default function Overlay() {
       >
         Full stack developer
         <br />
-        based in Fayetteville, WV
+        from Fayetteville, WV
         <br />
         <br />
         <div

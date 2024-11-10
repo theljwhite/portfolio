@@ -1,10 +1,13 @@
 import { useSceneStore } from "@/app/store/scene";
+import { getMinAndSecFromSec } from "@/app/utils/time";
 import { AudioBackIcon, AudioPauseIcon, AudioForwardIcon } from "../UI/Icons";
 
 //TODO - this is fully unfinished and will be implemented in the future
 
 export default function AudioPlayer() {
-  const { audioDetails } = useSceneStore((state) => state);
+  const { audioDuration, audioCurrTime, audioDetails } = useSceneStore(
+    (state) => state
+  );
 
   return (
     <div style={{ zIndex: 8388637 }} className="fixed bottom-0 w-full ">
@@ -23,14 +26,18 @@ export default function AudioPlayer() {
             <div className="mx-10 block grow items-center justify-center">
               <div className="flex">
                 <div className="w-13 h-13">
-                  <span className="text-primary-2 text-xs">0:00</span>
+                  <span className="text-primary-2 text-xs">
+                    {getMinAndSecFromSec(audioCurrTime)}
+                  </span>
                 </div>
                 <div className="mx-2.5 py-2.5 block relative grow">
                   <div className="bg-white h-px absolute w-full" />
                   <div />
                 </div>
                 <div className="w-13 h-13">
-                  <span className="text-primary-2 text-xs">2:23</span>
+                  <span className="text-primary-2 text-xs">
+                    {getMinAndSecFromSec(audioDuration)}
+                  </span>
                 </div>
                 <div></div>
                 <div></div>
