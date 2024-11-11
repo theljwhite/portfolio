@@ -89,7 +89,7 @@ export default function Overlay() {
         </div>
         <br />
       </div>
-      {isAudioPlaying && <AudioPlayer />}
+      {/* {isAudioPlaying && <AudioPlayer />} */}
     </div>
   );
 }

@@ -13,8 +13,12 @@ type AudioDetails = {
 export interface HomeSceneState {
   isAudioPlaying: boolean;
   audioDetails: AudioDetails;
+  isDonateOpen: boolean;
+  donateAmount: string;
   setIsAudioPlaying: (isAudioPlaying: boolean) => void;
   setAudioDetails: (audioDetails: AudioDetails) => void;
+  setIsDonateOpen: (isDonateOpen: boolean) => void;
+  setDonateAmount: (donateAmount: string) => void;
   reset: () => void;
 }
 
@@ -29,12 +33,16 @@ export const useSceneStore = create<HomeSceneState>((set) => {
       duration: 0,
       outlink: "",
     },
+    isDonateOpen: false,
+    donateAmount: "",
   };
 
   return {
     ...initialState,
     setIsAudioPlaying: (isAudioPlaying: boolean) => set({ isAudioPlaying }),
     setAudioDetails: (audioDetails: AudioDetails) => set({ audioDetails }),
+    setIsDonateOpen: (isDonateOpen: boolean) => set({ isDonateOpen }),
+    setDonateAmount: (donateAmount: string) => set({ donateAmount }),
     reset: () => set({ ...initialState }),
   };
 });
