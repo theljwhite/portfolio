@@ -85,9 +85,13 @@ export default function KrkDynamic() {
   }, [isAudioPlaying]);
 
   useEffect(() => {
+    //TODO - this effect wont be needed prob when refactored
     let intervalId: NodeJS.Timeout | null = null;
 
     if (isAudioPlaying) {
+      const duration = Math.round(source?.buffer?.duration ?? 0);
+      setAudioDuration(duration);
+
       intervalId = setInterval(() => {
         if (audioCurrTime < audioDuration) {
           setAudioCurrTime(audioCurrTime + 1);

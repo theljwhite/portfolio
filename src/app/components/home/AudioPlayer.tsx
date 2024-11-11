@@ -5,9 +5,8 @@ import { AudioBackIcon, AudioPauseIcon, AudioForwardIcon } from "../UI/Icons";
 //TODO - this is fully unfinished and will be implemented in the future
 
 export default function AudioPlayer() {
-  const { audioDuration, audioCurrTime, audioDetails } = useSceneStore(
-    (state) => state
-  );
+  const { audioDuration, audioCurrTime, audioDetails, setIsAudioPlaying } =
+    useSceneStore((state) => state);
 
   return (
     <div style={{ zIndex: 8388637 }} className="fixed bottom-0 w-full ">
@@ -17,7 +16,10 @@ export default function AudioPlayer() {
             <button className="h-full w-6 ml-4">
               <AudioBackIcon size={24} />
             </button>
-            <button className="h-full w-6 ml-4">
+            <button
+              onClick={() => setIsAudioPlaying(false)}
+              className="h-full w-6 ml-4"
+            >
               <AudioPauseIcon size={24} />
             </button>
             <button className="h-full w-6 ml-4">
@@ -32,7 +34,12 @@ export default function AudioPlayer() {
                 </div>
                 <div className="mx-2.5 py-2.5 block relative grow">
                   <div className="bg-white h-px absolute w-full" />
-                  <div />
+                  <div
+                    style={{
+                      width: `${(audioCurrTime / audioDuration) * 100}%`,
+                    }}
+                    className="h-px absolute bg-primary-3 min-w-[1px]"
+                  />
                 </div>
                 <div className="w-13 h-13">
                   <span className="text-primary-2 text-xs">
