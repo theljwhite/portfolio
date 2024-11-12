@@ -1,11 +1,12 @@
 "use client";
+
 import { useState, useEffect } from "react";
 import { useSceneStore } from "@/app/store/scene";
 import { EthIcon } from "../UI/Icons";
 import StyledInput from "../UI/StyledInput";
 
 //TODO this isnt implemented yet
-//TODO get rid of the useEffect here tbh for the transitions
+//TODO get rid of the useEffect here tbh for the transitions prob a better way
 
 export default function DonateEthModal() {
   const [show, setShow] = useState<boolean>(false);
@@ -43,14 +44,14 @@ export default function DonateEthModal() {
               <h1 className="text-white font-semibold text-lg">
                 Donate me Ethereum
               </h1>
-              <p className="mt-4 text-white text-md opacity-70">
+              <p className="mt-4 text-white text-sm opacity-70">
                 I figured I would leave this here, because why not. Would my
                 portfolio page be complete without some crypto stuff? I
                 haven&apos;t got around to this yet though, so it wont work yet.
               </p>
               <div className="my-4">
                 <div>
-                  <div className="text-neutral-22">
+                  <div className="text-neutral-22 text-sm">
                     For now, send direct to:{" "}
                     <span className="text-teal-500 font-semibold">
                       {process.env.NEXT_PUBLIC_MY_WALLET_ADDRESS}

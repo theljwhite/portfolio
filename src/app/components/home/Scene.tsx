@@ -1,5 +1,6 @@
 "use client";
-import { Suspense, useState } from "react";
+
+import { Suspense, useState, useRef } from "react";
 import { SOCIALS } from "../../constants/socials";
 import {
   Center,
@@ -9,13 +10,11 @@ import {
   PerspectiveCamera,
   Stars,
 } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import type { ThreeEvent } from "@react-three/fiber";
-import { Physics, RigidBody } from "@react-three/rapier";
-import type { RapierRigidBody } from "@react-three/rapier";
+import { Canvas, type ThreeEvent } from "@react-three/fiber";
+import { Physics, RigidBody, type RapierRigidBody } from "@react-three/rapier";
 import { useGLTF } from "@react-three/drei";
-import { useRef } from "react";
-import SceneLoading from "../UI/SceneLoading";
+import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
+import SceneLoading from "./SceneLoading";
 import Laptop from "./Laptop";
 import EthStatue from "./EthStatue";
 import KrkDynamic from "./KrkDynamic";
@@ -31,17 +30,25 @@ interface SocialModelProps {
   handleClick?: () => void;
 }
 
+const ALL_MODELS = [
+  "./3D/desk1.glb",
+  "./3D/bitcoin_atm.glb",
+  "./3D/redbulls.glb",
+  "./3D/redbull_single.glb",
+  "./3d/soundcloud.glb",
+  "./3d/linkedin.glb",
+  "./3d/github.glb",
+  "./3d/x.glb",
+  "./3D/krk_single.glb",
+  "./3D/eth_donate.glb",
+  "./3D/mac-draco.glb",
+];
+
+ALL_MODELS.forEach((model) => useGLTF.preload(model));
+
 const Desk = () => {
   const { scene } = useGLTF("./3D/desk1.glb");
-  return (
-    <primitive
-      castShadow
-      receiveShadow
-      rotation={[0, 10, 0]}
-      scale={1}
-      object={scene}
-    />
-  );
+  return <primitive rotation={[0, 10, 0]} scale={1} object={scene} />;
 };
 
 const SocialModel = ({ url, handleClick }: SocialModelProps) => {
@@ -56,8 +63,6 @@ const SocialModel = ({ url, handleClick }: SocialModelProps) => {
       onPointerOut={() => {
         document.body.style.cursor = "auto";
       }}
-      castShadow
-      receiveShadow
       object={scene}
     />
   );
@@ -76,8 +81,6 @@ const BitcoinMachine = ({ handleClick }: { handleClick: () => void }) => {
       onPointerOut={() => {
         document.body.style.cursor = "auto";
       }}
-      castShadow
-      receiveShadow
       position={[1.5, 0, 1.1]}
       rotation={[0, -1, 0]}
       scale={1}
@@ -107,6 +110,8 @@ export default function Scene() {
     linkedin: null,
   });
   const bitcoinAnchorRef = useRef<HTMLAnchorElement | null>(null);
+
+  const isMobile = useClientMediaQuery("(max-width: 600px)");
 
   const handleSocialClick = (social: string): void => {
     setPhysicsPaused(false);
@@ -272,18 +277,19 @@ export default function Scene() {
 
             <OrbitControls
               makeDefault
-              // autoRotate
               autoRotateSpeed={0.02}
               maxPolarAngle={Math.PI / 2.3}
               minPolarAngle={Math.PI / 2.8}
               enableZoom={false}
               enablePan={true}
+              target={isMobile ? [-1, 0, -2] : undefined}
             />
             <PerspectiveCamera
               makeDefault
-              fov={65}
-              position={[0, 0, 4]}
-            ></PerspectiveCamera>
+              // fov={isMobile ? 94 : 65}
+              fov={isMobile ? 100 : 65}
+              position={isMobile ? [0, 0, 4] : [0, 0, 4]}
+            />
           </Physics>
         </Canvas>
       </Suspense>

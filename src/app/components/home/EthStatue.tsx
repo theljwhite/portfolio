@@ -4,10 +4,18 @@ import type { ThreeEvent } from "@react-three/fiber";
 
 export default function EthStatue() {
   const { scene } = useGLTF("./3D/eth_donate.glb");
-  const { isDonateOpen, setIsDonateOpen } = useSceneStore((state) => state);
+  const { isDonateOpen, setIsDonateOpen, setIsAudioPlaying } = useSceneStore(
+    (state) => state
+  );
+
+  const onEthStatueClick = (): void => {
+    setIsDonateOpen(!isDonateOpen);
+    setIsAudioPlaying(false);
+  };
+
   return (
     <primitive
-      onClick={() => setIsDonateOpen(!isDonateOpen)}
+      onClick={onEthStatueClick}
       onPointerOver={(e: ThreeEvent<any>) => {
         e.stopPropagation();
         document.body.style.cursor = "pointer";
