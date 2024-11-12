@@ -12,7 +12,7 @@ export default function SceneLoading() {
           <div
             style={{ width: `${progress}%` }}
             className="h-6 bg-primary-3 rounded-full"
-          ></div>
+          />
         </div>
       </div>
     </div>
