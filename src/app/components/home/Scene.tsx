@@ -20,6 +20,7 @@ import EthStatue from "./EthStatue";
 import KrkDynamic from "./KrkDynamic";
 
 //TODO - fix 'any' type casts and any's in general
+//TODO - some of this can be consolidated
 
 //TODO - because of HTML occlude="blending" bug, the onPointerOver's here,
 //for now have to use the document.body to set cursor pointer.
@@ -72,7 +73,6 @@ const BitcoinMachine = ({ handleClick }: { handleClick: () => void }) => {
   const { scene } = useGLTF("./3D/bitcoin_atm.glb");
   return (
     <primitive
-      className="cursor-pointer"
       onClick={handleClick}
       onPointerOver={(e: ThreeEvent<any>) => {
         e.stopPropagation();
@@ -94,9 +94,23 @@ const Redbulls = () => {
   return <primitive position={[-3.4, -1.86, 2.0]} scale={3.8} object={scene} />;
 };
 
-const RedbullSingle = () => {
+const RedbullSingle = ({ handleClick }: { handleClick: () => void }) => {
   const { scene } = useGLTF("./3D/redbull_single.glb");
-  return <primitive position={[1.0, 1.16, -1]} scale={0.1} object={scene} />;
+  return (
+    <primitive
+      onClick={handleClick}
+      onPointerOver={(e: ThreeEvent<any>) => {
+        e.stopPropagation();
+        document.body.style.cursor = "pointer";
+      }}
+      onPointerOut={() => {
+        document.body.style.cursor = "auto";
+      }}
+      position={[1.0, 1.16, -1]}
+      scale={0.1}
+      object={scene}
+    />
+  );
 };
 
 export default function Scene() {
@@ -110,6 +124,7 @@ export default function Scene() {
     linkedin: null,
   });
   const bitcoinAnchorRef = useRef<HTMLAnchorElement | null>(null);
+  const redbullAnchorRef = useRef<HTMLAnchorElement | null>(null);
 
   const isMobile = useClientMediaQuery("(max-width: 600px)");
 
@@ -156,6 +171,13 @@ export default function Scene() {
           rel="noreferrer"
           ref={bitcoinAnchorRef}
         />
+        <a
+          className="hidden"
+          target="_blank"
+          href="https://www.walmart.com/ip/Red-Bull-Winter-Edition-Iced-Vanilla-Berry-Energy-Drink-12-fl-oz-4-pack-cans/5340366890"
+          rel="noreferrer"
+          ref={redbullAnchorRef}
+        />
       </div>
       <Suspense fallback={<SceneLoading />}>
         <Canvas dpr={[1, 2]} shadows>
@@ -178,7 +200,9 @@ export default function Scene() {
                 handleClick={() => bitcoinAnchorRef?.current?.click()}
               />
               <Redbulls />
-              <RedbullSingle />
+              <RedbullSingle
+                handleClick={() => redbullAnchorRef?.current?.click()}
+              />
               <EthStatue />
               <KrkDynamic />
               <group scale={0.3} position={[0, 0, -1.2]}>
@@ -286,9 +310,8 @@ export default function Scene() {
             />
             <PerspectiveCamera
               makeDefault
-              // fov={isMobile ? 94 : 65}
               fov={isMobile ? 100 : 65}
-              position={isMobile ? [0, 0, 4] : [0, 0, 4]}
+              position={[0, 0, 4]}
             />
           </Physics>
         </Canvas>
