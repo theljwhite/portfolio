@@ -27,7 +27,7 @@ export default function SceneLoadingCircle() {
               className="stroke-current text-primary-4"
               strokeWidth="3"
               strokeDasharray="100"
-              strokeDashoffset={progress - 100}
+              strokeDashoffset={100 - progress}
               strokeLinecap="round"
             />
           </svg>
