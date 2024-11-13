@@ -15,7 +15,7 @@ import { CanvasWrapper } from "@isaac_ua/drei-html-fix";
 import { Physics, RigidBody, type RapierRigidBody } from "@react-three/rapier";
 import { useGLTF } from "@react-three/drei";
 import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
-import SceneLoading from "./SceneLoading";
+import SceneLoadingCircle from "./SceneLoadingCircle";
 import Laptop from "./Laptop";
 import EthStatue from "./EthStatue";
 import KrkDynamic from "./KrkDynamic";
@@ -180,7 +180,7 @@ export default function Scene() {
           ref={redbullAnchorRef}
         />
       </div>
-      <Suspense fallback={<SceneLoading />}>
+      <Suspense fallback={<SceneLoadingCircle />}>
         <CanvasWrapper>
           <Canvas dpr={[1, 2]} shadows>
             <Physics paused={physicsPaused} key={0} timeStep={1 / 60}>
