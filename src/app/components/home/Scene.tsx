@@ -150,7 +150,7 @@ export default function Scene() {
 
   return (
     <div className="w-dvh h-dvh bg-black">
-      <div id="socials" className="hidden">
+      <div className="hidden">
         {Object.keys(SOCIALS).map((social, index) => {
           return (
             <a
@@ -163,8 +163,6 @@ export default function Scene() {
             />
           );
         })}
-      </div>
-      <div className="hidden">
         <a
           className="hidden"
           target="_blank"
