@@ -36,9 +36,9 @@ export default function KrkDynamic() {
 
   const { isAudioPlaying, setIsAudioPlaying } = useSceneStore((state) => state);
 
-  const rightSpotlightRef = useRef<TSpotLight>();
-  const leftSpotlightRef = useRef<TSpotLight>();
-  const visualiserRef = useRef<TInstancedMesh>();
+  const rightSpotlightRef = useRef<TSpotLight>(null);
+  const leftSpotlightRef = useRef<TSpotLight>(null);
+  const visualiserRef = useRef<TInstancedMesh>(null);
 
   const { scene } = useGLTF("./3D/krk_single.glb");
   const obj = new THREE.Object3D();
@@ -137,7 +137,7 @@ export default function KrkDynamic() {
 
       <group visible={isAudioPlaying}>
         <SpotLight
-          ref={leftSpotlightRef as any}
+          ref={leftSpotlightRef}
           penumbra={1}
           distance={10}
           angle={0.35}
@@ -148,7 +148,7 @@ export default function KrkDynamic() {
           position={[-3, 3, 2]}
         />
         <SpotLight
-          ref={rightSpotlightRef as any}
+          ref={rightSpotlightRef}
           penumbra={1}
           distance={10}
           angle={0.35}
