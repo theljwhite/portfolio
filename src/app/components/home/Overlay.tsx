@@ -37,7 +37,7 @@ export default function Overlay() {
         {/* <NavHamburgerIcon width={54} height={23} /> */}
         {/* TODO a navbar */}
       </div>
-      <div className="absolute z-[8388637] bottom-[120px] md:left-[120px] left-[50px] text-[18px]">
+      <div className="absolute z-[8388637] bottom-[20px] md:bottom-[120px] md:left-[120px] left-[50px] md:text-[18px]">
         Full stack developer
         <br />
         based in Fayetteville, WV
