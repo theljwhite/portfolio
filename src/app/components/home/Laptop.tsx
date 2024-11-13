@@ -1,4 +1,5 @@
 import React, { useRef } from "react";
+import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
 import { Html, useGLTF } from "@react-three/drei";
 
 //TODO - fix any types
@@ -7,6 +8,7 @@ export default function Laptop(props: any) {
   const { nodes, materials } = useGLTF("./3D/mac-draco.glb");
 
   const group = useRef();
+  const isMobile = useClientMediaQuery("(max-width: 600px)");
 
   return (
     <group
@@ -34,13 +36,11 @@ export default function Laptop(props: any) {
               position={[0, 0.05, -0.09]}
               transform
               occlude="blending"
-              // occlude
-              // zIndexRange={[8388637, 0]}
             >
               <div onPointerDown={(e) => e.stopPropagation()}>
                 <img
                   className="w-[334px] h-[216px] object-cover"
-                  src="https://avatars.githubusercontent.com/u/105994500?v=4"
+                  src="./meFromGH.jpg"
                 />
               </div>
             </Html>
