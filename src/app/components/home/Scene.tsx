@@ -310,13 +310,15 @@ export default function Scene() {
                 autoRotateSpeed={0.02}
                 maxPolarAngle={Math.PI / 2.3}
                 minPolarAngle={Math.PI / 2.8}
-                enableZoom={false}
+                enableZoom={!!isMobile}
+                minDistance={2}
+                maxDistance={7}
                 enablePan={true}
                 target={isMobile ? [-1, 0, -2] : undefined}
               />
               <PerspectiveCamera
                 makeDefault
-                fov={isMobile ? 100 : 65}
+                fov={isMobile ? 94 : 65}
                 position={[0, 0, 4]}
               />
             </Physics>
