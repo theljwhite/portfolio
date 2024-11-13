@@ -161,7 +161,7 @@ export default function KrkDynamic() {
 
         <instancedMesh
           castShadow
-          ref={visualiserRef as any}
+          ref={visualiserRef}
           position={[-3.3, 1.2, 0]}
           args={[null, null, data.length] as any}
         >
