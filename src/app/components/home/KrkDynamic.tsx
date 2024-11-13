@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect, Suspense } from "react";
 import { useSceneStore } from "@/app/store/scene";
-import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
 import * as THREE from "three";
 import { SpotLight, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
@@ -50,8 +49,6 @@ export default function KrkDynamic() {
     update: updateAudio,
     data,
   } = suspend(() => createAudio("./Chee.mp3"), ["./Chee.mp3"]);
-
-  const isMobile = useClientMediaQuery("(max-width: 600px)");
 
   useEffect(() => {
     if (isAudioPlaying) {
