@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect, Suspense } from "react";
 import { useSceneStore } from "@/app/store/scene";
+import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
 import * as THREE from "three";
 import { SpotLight, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
@@ -27,12 +28,14 @@ const ANALYSER_OBJ_WIDTH = 0.03;
 const ANALYSER_OBJ_HEIGHT = 0.08;
 const ANALYSER_OBJ_SPACE = 1.5;
 const ANALYSER_Y_POS = 1500;
+const LEFT_SPOT_COLORS = [0xb00c3f, 0xa855f7, 0x006cff, 0xff00b9];
+const RIGHT_SPOT_COLORS = [0x1d4ed8, 0x22c55e, 0xff9300, 0x00ff46];
 
 export default function KrkDynamic() {
-  const { isAudioPlaying, setIsAudioPlaying } = useSceneStore((state) => state);
-
   const [colorIndex, setColorIndex] = useState<number>(0);
   const [speedMultiplier, setSpeedMultiplier] = useState<number>(1);
+
+  const { isAudioPlaying, setIsAudioPlaying } = useSceneStore((state) => state);
 
   const rightSpotlightRef = useRef<TSpotLight>();
   const leftSpotlightRef = useRef<TSpotLight>();
@@ -41,13 +44,6 @@ export default function KrkDynamic() {
   const { scene } = useGLTF("./3D/krk_single.glb");
   const obj = new THREE.Object3D();
 
-  const leftSpotlightColors: number[] = [
-    0xb00c3f, 0xa855f7, 0x006cff, 0xff00b9,
-  ];
-  const rightSpotlightColors: number[] = [
-    0x1d4ed8, 0x22c55e, 0xff9300, 0x00ff46,
-  ];
-
   const {
     gain,
     ctx,
@@ -55,12 +51,12 @@ export default function KrkDynamic() {
     data,
   } = suspend(() => createAudio("./Chee.mp3"), ["./Chee.mp3"]);
 
+  const isMobile = useClientMediaQuery("(max-width: 600px)");
+
   useEffect(() => {
     if (isAudioPlaying) {
       const indexIntervalId = setInterval(() => {
-        setColorIndex(
-          (prevIndex) => (prevIndex + 1) % leftSpotlightColors.length
-        );
+        setColorIndex((prevIndex) => (prevIndex + 1) % LEFT_SPOT_COLORS.length);
       }, SPOT_COLOR_CHANGE_MS);
 
       const speedIndexId = setInterval(() => {
@@ -152,7 +148,7 @@ export default function KrkDynamic() {
             attenuation={10}
             anglePower={4}
             intensity={2}
-            color={leftSpotlightColors[colorIndex]}
+            color={LEFT_SPOT_COLORS[colorIndex]}
             position={[-3, 3, 2]}
           />
           <SpotLight
@@ -163,7 +159,7 @@ export default function KrkDynamic() {
             attenuation={10}
             anglePower={4}
             intensity={2}
-            color={rightSpotlightColors[colorIndex]}
+            color={RIGHT_SPOT_COLORS[colorIndex]}
             position={[3, 3, 2]}
           />
 
