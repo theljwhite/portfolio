@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, Suspense } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useSceneStore } from "@/app/store/scene";
 import * as THREE from "three";
 import { SpotLight, useGLTF } from "@react-three/drei";
@@ -136,40 +136,38 @@ export default function KrkDynamic() {
       />
 
       <group visible={isAudioPlaying}>
-        <Suspense fallback={<span>AUDIO LOADING</span>}>
-          <SpotLight
-            ref={leftSpotlightRef as any}
-            penumbra={1}
-            distance={10}
-            angle={0.35}
-            attenuation={10}
-            anglePower={4}
-            intensity={2}
-            color={LEFT_SPOT_COLORS[colorIndex]}
-            position={[-3, 3, 2]}
-          />
-          <SpotLight
-            ref={rightSpotlightRef as any}
-            penumbra={1}
-            distance={10}
-            angle={0.35}
-            attenuation={10}
-            anglePower={4}
-            intensity={2}
-            color={RIGHT_SPOT_COLORS[colorIndex]}
-            position={[3, 3, 2]}
-          />
+        <SpotLight
+          ref={leftSpotlightRef as any}
+          penumbra={1}
+          distance={10}
+          angle={0.35}
+          attenuation={10}
+          anglePower={4}
+          intensity={2}
+          color={LEFT_SPOT_COLORS[colorIndex]}
+          position={[-3, 3, 2]}
+        />
+        <SpotLight
+          ref={rightSpotlightRef as any}
+          penumbra={1}
+          distance={10}
+          angle={0.35}
+          attenuation={10}
+          anglePower={4}
+          intensity={2}
+          color={RIGHT_SPOT_COLORS[colorIndex]}
+          position={[3, 3, 2]}
+        />
 
-          <instancedMesh
-            castShadow
-            ref={visualiserRef as any}
-            position={[-3.3, 1.2, 0]}
-            args={[null, null, data.length] as any}
-          >
-            <planeGeometry args={[ANALYSER_OBJ_WIDTH, ANALYSER_OBJ_HEIGHT]} />
-            <meshBasicMaterial toneMapped={false} />
-          </instancedMesh>
-        </Suspense>
+        <instancedMesh
+          castShadow
+          ref={visualiserRef as any}
+          position={[-3.3, 1.2, 0]}
+          args={[null, null, data.length] as any}
+        >
+          <planeGeometry args={[ANALYSER_OBJ_WIDTH, ANALYSER_OBJ_HEIGHT]} />
+          <meshBasicMaterial toneMapped={false} />
+        </instancedMesh>
       </group>
     </>
   );
