@@ -5,7 +5,7 @@ import ProjectsNav from "../components/projects/ProjectsNav";
 const shareTech = Share_Tech_Mono({
   weight: "400",
   subsets: ["latin"],
-  variable: "--font-share_tech_mono",
+  variable: "--sharetech",
   display: "swap",
 });
 

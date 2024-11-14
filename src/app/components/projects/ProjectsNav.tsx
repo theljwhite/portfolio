@@ -15,8 +15,8 @@ export default function ProjectsNav() {
       />
       <nav className="px-6 mx-auto h-16 flex max-w-7xl items-center justify-end gap-2">
         <a className="flex items-center mr-auto ring-2 ring-transparent rounded">
-          <h1 className="uppercase font-bold text-2xl flex flex-row tracking-tighter items-baseline leading-8">
-            <span className="text-primary-1">ljwhite</span>
+          <h1 className="uppercase font-bold text-2xl flex flex-row tracking-[-0.14em] items-baseline leading-8">
+            <span className="text-primary-1">ljw</span>
             <span className="ml-1 text-primary-4">projects</span>
           </h1>
         </a>
@@ -25,10 +25,10 @@ export default function ProjectsNav() {
           style={{ color: "rgba(75, 85, 99, 1)" }}
           className="text-sm p-2 whitespace-nowrap -ml-2 mr-4 relative ring-2 ring-transparent cursor-pointer"
         >
-          <span className="text-center">Go to Home ↗</span>
+          <span className="text-center hidden md:block">Go to Home ↗</span>
         </Link>
         <div className="flex flex-row gap-4 text-primary-1">
-          <XIcon size={24} />
+          <XIcon size={21} />
           <DiscordIcon size={24} />
           <GithubIcon size={24} />
           <SoundcloudIcon size={24} />

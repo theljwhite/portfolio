@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
 import { useSceneStore } from "@/app/store/scene";
+import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
 import * as THREE from "three";
-import { SpotLight, useGLTF } from "@react-three/drei";
+import { SpotLight, useBounds, useGLTF } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
 import type {
@@ -42,6 +43,8 @@ export default function KrkDynamic() {
 
   const { scene } = useGLTF("./3D/krk_single.glb");
   const obj = new THREE.Object3D();
+  const bounds = useBounds();
+  const isMobile = useClientMediaQuery("(max-width: 600px)");
 
   const {
     gain,
@@ -112,16 +115,29 @@ export default function KrkDynamic() {
     }
   });
 
-  const onSpeakerClick = (): void => {
+  const onSpeakerClick = (e: ThreeEvent<any>): void => {
     setIsAudioPlaying(!isAudioPlaying);
-    if (isAudioPlaying) gain.disconnect();
-    else gain.connect(ctx.destination);
+    e.stopPropagation();
+
+    if (isAudioPlaying) {
+      gain.disconnect();
+
+      if (isMobile) {
+        bounds.moveTo([0, 0, 4]).lookAt({ target: [-1, 0, -2] });
+      }
+    } else {
+      gain.connect(ctx.destination);
+
+      if (isMobile) {
+        bounds.moveTo([-3, 0, 1]).lookAt({ target: [-3, 0, 0] });
+      }
+    }
   };
 
   return (
     <>
       <primitive
-        onClick={onSpeakerClick}
+        onClick={(e: ThreeEvent<any>) => onSpeakerClick(e)}
         onPointerOver={(e: ThreeEvent<any>) => {
           e.stopPropagation();
           document.body.style.cursor = "pointer";
@@ -135,40 +151,41 @@ export default function KrkDynamic() {
         object={scene}
       />
 
-      <group visible={isAudioPlaying}>
-        <SpotLight
-          ref={leftSpotlightRef}
-          penumbra={1}
-          distance={10}
-          angle={0.35}
-          attenuation={10}
-          anglePower={4}
-          intensity={2}
-          color={LEFT_SPOT_COLORS[colorIndex]}
-          position={[-3, 3, 2]}
-        />
-        <SpotLight
-          ref={rightSpotlightRef}
-          penumbra={1}
-          distance={10}
-          angle={0.35}
-          attenuation={10}
-          anglePower={4}
-          intensity={2}
-          color={RIGHT_SPOT_COLORS[colorIndex]}
-          position={[3, 3, 2]}
-        />
+      <SpotLight
+        ref={leftSpotlightRef}
+        penumbra={1}
+        distance={10}
+        angle={0.35}
+        attenuation={10}
+        anglePower={4}
+        intensity={2}
+        color={LEFT_SPOT_COLORS[colorIndex]}
+        position={[-3, 3, 2]}
+        visible={isAudioPlaying}
+      />
+      <SpotLight
+        ref={rightSpotlightRef}
+        penumbra={1}
+        distance={10}
+        angle={0.35}
+        attenuation={10}
+        anglePower={4}
+        intensity={2}
+        color={RIGHT_SPOT_COLORS[colorIndex]}
+        position={[3, 3, 2]}
+        visible={isAudioPlaying}
+      />
 
-        <instancedMesh
-          castShadow
-          ref={visualiserRef}
-          position={[-3.3, 1.2, 0]}
-          args={[null, null, data.length] as any}
-        >
-          <planeGeometry args={[ANALYSER_OBJ_WIDTH, ANALYSER_OBJ_HEIGHT]} />
-          <meshBasicMaterial toneMapped={false} />
-        </instancedMesh>
-      </group>
+      <instancedMesh
+        castShadow
+        ref={visualiserRef}
+        position={[-3.3, 1.2, 0]}
+        args={[null, null, data.length] as any}
+        visible={isAudioPlaying}
+      >
+        <planeGeometry args={[ANALYSER_OBJ_WIDTH, ANALYSER_OBJ_HEIGHT]} />
+        <meshBasicMaterial toneMapped={false} />
+      </instancedMesh>
     </>
   );
 }

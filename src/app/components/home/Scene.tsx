@@ -9,11 +9,12 @@ import {
   OrbitControls,
   PerspectiveCamera,
   Stars,
+  Bounds,
 } from "@react-three/drei";
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { CanvasWrapper } from "@isaac_ua/drei-html-fix";
 import { Physics, RigidBody, type RapierRigidBody } from "@react-three/rapier";
-import { useGLTF } from "@react-three/drei";
+import { useGLTF, useBounds } from "@react-three/drei";
 import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
 import SceneLoadingCircle from "./SceneLoadingCircle";
 import Laptop from "./Laptop";
@@ -21,15 +22,19 @@ import EthStatue from "./EthStatue";
 import KrkDynamic from "./KrkDynamic";
 
 //TODO - fix 'any' type casts and any's in general
-//TODO - some of this can be consolidated
+//TODO - some of this code can be consolidated and modularized
 
 //TODO - because of HTML occlude="blending" bug, the onPointerOver's here,
 //for now have to use the document.body to set cursor pointer.
 //when fixed, they can use gl.domElement.style.cursor = "pointer" from useThree's gl
 
+//TODO - bounds animation duration can be turned up when this is fixed: https://github.com/pmndrs/drei/issues/1801
+//so that the camera zooms in slowly over time.
+
 interface SocialModelProps {
   url: string;
-  handleClick?: () => void;
+  handleClick: () => void;
+  isMobile: boolean;
 }
 
 const ALL_MODELS = [
@@ -53,11 +58,15 @@ const Desk = () => {
   return <primitive rotation={[0, 10, 0]} scale={1} object={scene} />;
 };
 
-const SocialModel = ({ url, handleClick }: SocialModelProps) => {
+const SocialModel = ({ url, handleClick, isMobile }: SocialModelProps) => {
   const { scene } = useGLTF(url);
+  const bounds = useBounds();
   return (
     <primitive
-      onClick={handleClick}
+      onClick={() => {
+        if (isMobile) bounds.moveTo([0.4, 0, 2]);
+        handleClick();
+      }}
       onPointerOver={(e: ThreeEvent<any>) => {
         e.stopPropagation();
         document.body.style.cursor = "pointer";
@@ -193,123 +202,141 @@ export default function Scene() {
                 fade
                 speed={1}
               />
-              <group position={[0, -0.5, 0]}>
-                <Desk />
-                <Laptop />
-                <BitcoinMachine
-                  handleClick={() => bitcoinAnchorRef?.current?.click()}
-                />
-                <Redbulls />
-                <RedbullSingle
-                  handleClick={() => redbullAnchorRef?.current?.click()}
-                />
-                <EthStatue />
-                <KrkDynamic />
-                <group scale={0.3} position={[0, 0, -1.2]}>
-                  <Center rotation={[0, -0.4, 0]} position={[-2, 1, -2]}>
-                    <RigidBody
-                      colliders="hull"
-                      position={[0, 0, 0]}
-                      enabledRotations={[true, false, false]}
-                      restitution={1}
-                      ref={(ref) =>
-                        (rigidBodyRefs.current.soundcloud = ref) as any
-                      }
-                      canSleep
+              <Bounds clip={false} observe maxDuration={0}>
+                <group position={[0, -0.5, 0]}>
+                  <Desk />
+                  <Laptop />
+                  <BitcoinMachine
+                    handleClick={() => bitcoinAnchorRef?.current?.click()}
+                  />
+                  <Redbulls />
+                  <RedbullSingle
+                    handleClick={() => redbullAnchorRef?.current?.click()}
+                  />
+                  <EthStatue />
+                  <KrkDynamic />
+                  <group scale={0.3} position={[0, 0, -1.2]}>
+                    <Center rotation={[0, -0.4, 0]} position={[-2, 1, -2]}>
+                      <RigidBody
+                        colliders="hull"
+                        position={[0, 0, 0]}
+                        enabledRotations={[true, false, false]}
+                        restitution={1}
+                        ref={(ref) =>
+                          (rigidBodyRefs.current.soundcloud = ref) as any
+                        }
+                        canSleep
+                      >
+                        <SocialModel
+                          url="./3d/soundcloud.glb"
+                          handleClick={() => handleSocialClick("soundcloud")}
+                          isMobile={!!isMobile}
+                        />
+                      </RigidBody>
+                    </Center>
+                    <Center
+                      rotation={[0, 0, 0]}
+                      position={[0.1, -0.01, -2]}
+                      top
                     >
-                      <SocialModel
-                        url="./3d/soundcloud.glb"
-                        handleClick={() => handleSocialClick("soundcloud")}
-                      />
-                    </RigidBody>
-                  </Center>
-                  <Center rotation={[0, 0, 0]} position={[0.1, -0.01, -2]} top>
-                    <RigidBody
-                      colliders="hull"
-                      position={[0, 0, 0]}
-                      enabledRotations={[true, false, true]}
-                      restitution={1}
-                      ref={(ref) =>
-                        (rigidBodyRefs.current.linkedin = ref) as any
-                      }
-                      canSleep
-                    >
-                      <SocialModel
-                        url="./3d/linkedin.glb"
-                        handleClick={() => handleSocialClick("linkedin")}
-                      />
-                    </RigidBody>
-                  </Center>
+                      <RigidBody
+                        colliders="hull"
+                        position={[0, 0, 0]}
+                        enabledRotations={[true, false, true]}
+                        restitution={1}
+                        ref={(ref) =>
+                          (rigidBodyRefs.current.linkedin = ref) as any
+                        }
+                        canSleep
+                      >
+                        <SocialModel
+                          url="./3d/linkedin.glb"
+                          handleClick={() => handleSocialClick("linkedin")}
+                          isMobile={!!isMobile}
+                        />
+                      </RigidBody>
+                    </Center>
 
-                  <Center
-                    rotation={[0, -100, 0]}
-                    position={[-4, -0.01, -2]}
-                    top
+                    <Center
+                      rotation={[0, -100, 0]}
+                      position={[-4, -0.01, -2]}
+                      top
+                    >
+                      <RigidBody
+                        colliders="hull"
+                        position={[0, 0, 0]}
+                        enabledRotations={[true, false, false]}
+                        restitution={1}
+                        ref={(ref) =>
+                          (rigidBodyRefs.current.github = ref) as any
+                        }
+                        canSleep
+                      >
+                        <SocialModel
+                          url="./3d/github.glb"
+                          handleClick={() => handleSocialClick("github")}
+                          isMobile={!!isMobile}
+                        />
+                      </RigidBody>
+                    </Center>
+
+                    <Center
+                      rotation={[0, -100, 0]}
+                      position={[2, -0.01, -2]}
+                      top
+                    >
+                      <RigidBody
+                        colliders="hull"
+                        position={[0, 0, 0]}
+                        enabledRotations={[true, false, true]}
+                        restitution={1}
+                        ref={(ref) => (rigidBodyRefs.current.x = ref) as any}
+                        canSleep
+                      >
+                        <SocialModel
+                          url="./3d/x.glb"
+                          handleClick={() => handleSocialClick("x")}
+                          isMobile={!!isMobile}
+                        />
+                      </RigidBody>
+                    </Center>
+                  </group>
+
+                  <RigidBody type="fixed" colliders="cuboid" name="floor">
+                    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
+                      <planeGeometry args={[10, 10]} />
+                      <MeshReflectorMaterial
+                        blur={[400, 100]}
+                        resolution={1024}
+                        mixBlur={1}
+                        opacity={2}
+                        depthScale={1.1}
+                        minDepthThreshold={0.4}
+                        maxDepthThreshold={1.25}
+                        roughness={1}
+                        mirror={1}
+                      />
+                    </mesh>
+                  </RigidBody>
+
+                  <mesh
+                    receiveShadow
+                    rotation-x={-Math.PI / 2}
+                    position={[0, 0.001, 0]}
                   >
-                    <RigidBody
-                      colliders="hull"
-                      position={[0, 0, 0]}
-                      enabledRotations={[true, false, false]}
-                      restitution={1}
-                      ref={(ref) => (rigidBodyRefs.current.github = ref) as any}
-                      canSleep
-                    >
-                      <SocialModel
-                        url="./3d/github.glb"
-                        handleClick={() => handleSocialClick("github")}
-                      />
-                    </RigidBody>
-                  </Center>
-
-                  <Center rotation={[0, -100, 0]} position={[2, -0.01, -2]} top>
-                    <RigidBody
-                      colliders="hull"
-                      position={[0, 0, 0]}
-                      enabledRotations={[true, false, true]}
-                      restitution={1}
-                      ref={(ref) => (rigidBodyRefs.current.x = ref) as any}
-                      canSleep
-                    >
-                      <SocialModel
-                        url="./3d/x.glb"
-                        handleClick={() => handleSocialClick("x")}
-                      />
-                    </RigidBody>
-                  </Center>
-                </group>
-
-                <RigidBody type="fixed" colliders="cuboid" name="floor">
-                  <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
                     <planeGeometry args={[10, 10]} />
-                    <MeshReflectorMaterial
-                      blur={[400, 100]}
-                      resolution={1024}
-                      mixBlur={1}
-                      opacity={2}
-                      depthScale={1.1}
-                      minDepthThreshold={0.4}
-                      maxDepthThreshold={1.25}
-                      roughness={1}
-                      mirror={1}
-                    />
+                    <shadowMaterial transparent color="#000000" opacity={0.4} />
                   </mesh>
-                </RigidBody>
-
-                <mesh
-                  receiveShadow
-                  rotation-x={-Math.PI / 2}
-                  position={[0, 0.001, 0]}
-                >
-                  <planeGeometry args={[10, 10]} />
-                  <shadowMaterial transparent color="#000000" opacity={0.4} />
-                </mesh>
-              </group>
+                </group>
+              </Bounds>
 
               <OrbitControls
                 makeDefault
                 autoRotateSpeed={0.02}
                 maxPolarAngle={Math.PI / 2.3}
                 minPolarAngle={Math.PI / 2.8}
+                maxAzimuthAngle={isMobile ? 1 : Infinity}
+                minAzimuthAngle={isMobile ? 5.6 : Infinity}
                 enableZoom={!!isMobile}
                 minDistance={2}
                 maxDistance={7}

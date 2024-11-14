@@ -10,7 +10,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         main: ["Inter"],
-        second: ["--font-share_tech_mono"],
+        second: ["--sharetech"],
         third: ["Geist Mono"],
       },
       colors: {
