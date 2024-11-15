@@ -22,6 +22,11 @@ import { createAudio } from "../../utils/audio";
 //for now have to use the document.body to set cursor pointer.
 //when fixed, they can use gl.domElement.style.cursor = "pointer" from useThree's gl
 
+//TODO - the way in which the audio is created and works is going to be refactored here,
+//because it seems a little hacky but also, it'll need to be because I plan on
+//making it an audio player in which different songs can be played, not just 1 from a file.
+//so this works for now but will be changed.
+
 const SPOT_COLOR_CHANGE_MS = 12_000;
 const SPOT_SPEED_CHANGE_MS = 24_000;
 const ANALYSER_OBJ_WIDTH = 0.03;
@@ -127,6 +132,7 @@ export default function KrkDynamic() {
       }
     } else {
       gain.connect(ctx.destination);
+      ctx.resume();
 
       if (isMobile) {
         bounds.moveTo([-3, 0, 1]).lookAt({ target: [-3, 0, 0] });

@@ -13,24 +13,6 @@ export type UpdateAudioReturn = {
   highs: number;
 };
 
-const unlockMobileAudio = (ctx: AudioContext): void => {
-  if (ctx.state === "suspended") {
-    const resumeCtx = (): void => {
-      ctx.resume();
-
-      console.log("RESUME RAN, state is -->", ctx.state);
-
-      setTimeout(() => {
-        if (ctx.state === "running") {
-          document.body.removeEventListener("touchend", resumeCtx, false);
-        }
-      }, 0);
-    };
-
-    document.body.addEventListener("touchend", resumeCtx, false);
-  }
-};
-
 export const createAudio = async (url: string): Promise<CreateAudioReturn> => {
   const res = await fetch(url);
   const buffer = await res.arrayBuffer();
@@ -44,7 +26,6 @@ export const createAudio = async (url: string): Promise<CreateAudioReturn> => {
   source.loop = true;
 
   source.start(0);
-  unlockMobileAudio(ctx);
 
   const gain = ctx.createGain();
   const analyser = ctx.createAnalyser();
