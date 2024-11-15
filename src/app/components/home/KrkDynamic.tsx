@@ -12,7 +12,7 @@ import type {
 import { suspend } from "suspend-react";
 import { createAudio } from "../../utils/audio";
 
-//TODO fix any type's.
+//TODO fix any type's, optimizations
 
 //TODO figure a way to eliminate useEffects and setting state in intervals.
 //according to this r3f docs: https://r3f.docs.pmnd.rs/advanced/pitfalls,
@@ -26,6 +26,11 @@ import { createAudio } from "../../utils/audio";
 //because it seems a little hacky but also, it'll need to be because I plan on
 //making it an audio player in which different songs can be played, not just 1 from a file.
 //so this works for now but will be changed.
+
+//spotlights originally used visible={isAudioPlaying} to hide the lights until speaker click,
+//but with this, there was a slight "lag" when clicking
+//the speaker to start the audio, so instead for now it is using position to "hide" them,
+//and it gets rid of the lag when speaker is clicked but more processing on initial render. for now I will leave it this way.
 
 const SPOT_COLOR_CHANGE_MS = 12_000;
 const SPOT_SPEED_CHANGE_MS = 24_000;
@@ -164,10 +169,9 @@ export default function KrkDynamic() {
         angle={0.35}
         attenuation={10}
         anglePower={4}
-        intensity={2}
+        intensity={isAudioPlaying ? 2 : 0}
         color={LEFT_SPOT_COLORS[colorIndex]}
-        position={[-3, 3, 2]}
-        visible={isAudioPlaying}
+        position={isAudioPlaying ? [-3, 3, 2] : [10_000, 10_000, 10_000]}
       />
       <SpotLight
         ref={rightSpotlightRef}
@@ -176,10 +180,9 @@ export default function KrkDynamic() {
         angle={0.35}
         attenuation={10}
         anglePower={4}
-        intensity={2}
+        intensity={isAudioPlaying ? 2 : 0}
         color={RIGHT_SPOT_COLORS[colorIndex]}
-        position={[3, 3, 2]}
-        visible={isAudioPlaying}
+        position={isAudioPlaying ? [3, 3, 2] : [10_000, 10_000, 10_000]}
       />
 
       <instancedMesh
