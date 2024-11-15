@@ -3,11 +3,10 @@ import { useSceneStore } from "@/app/store/scene";
 import type { ThreeEvent } from "@react-three/fiber";
 
 export default function EthStatue() {
-  const { scene } = useGLTF("./3D/eth_donate.glb");
   const { isDonateOpen, setIsDonateOpen, setIsAudioPlaying } = useSceneStore(
     (state) => state
   );
-
+  const { scene } = useGLTF("./3D/eth_donate.glb");
   const onEthStatueClick = (): void => {
     setIsDonateOpen(!isDonateOpen);
     setIsAudioPlaying(false);
