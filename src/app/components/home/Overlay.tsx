@@ -18,7 +18,7 @@ export default function Overlay() {
 
   return (
     <div>
-      <div className="absolute top-[40px] right-[160px] text-[15px] text-right z-[8388637]">
+      <div className="absolute text-white top-[40px] right-[160px] text-[15px] text-right z-[8388637]">
         LJ WHITE
         <br />
         PORTFOLIO
@@ -27,7 +27,7 @@ export default function Overlay() {
         style={{
           fontVariantNumeric: "tabular-nums",
         }}
-        className="absolute top-[40px] right-[40px] text-[15px] text-right z-[8388637]"
+        className="absolute text-white top-[40px] right-[40px] text-[15px] text-right z-[8388637]"
       >
         —
         <br />
@@ -37,7 +37,7 @@ export default function Overlay() {
         {/* <NavHamburgerIcon width={54} height={23} /> */}
         {/* TODO a navbar */}
       </div>
-      <div className="absolute z-[8388637] bottom-[20px] md:bottom-[120px] md:left-[120px] left-[20px] md:text-[18px]">
+      <div className="text-white absolute z-[8388637] bottom-[20px] md:bottom-[120px] md:left-[120px] left-[20px] md:text-[18px]">
         Full stack developer
         <br />
         from Fayetteville, WV

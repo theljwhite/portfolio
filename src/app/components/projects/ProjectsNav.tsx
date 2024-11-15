@@ -15,8 +15,8 @@ export default function ProjectsNav() {
       />
       <nav className="px-6 mx-auto h-16 flex max-w-7xl items-center justify-end gap-2">
         <a className="flex items-center mr-auto ring-2 ring-transparent rounded">
-          <h1 className="uppercase font-bold text-2xl flex flex-row tracking-[-0.14em] items-baseline leading-8">
-            <span className="text-primary-1">ljw</span>
+          <h1 className="font-bold text-xl md:text-2xl flex flex-row tracking-tighter items-baseline leading-8">
+            <span className="text-primary-1">ljwhite</span>
             <span className="ml-1 text-primary-4">projects</span>
           </h1>
         </a>
