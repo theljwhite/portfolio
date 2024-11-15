@@ -228,7 +228,7 @@ export default function Scene() {
                         canSleep
                       >
                         <SocialModel
-                          url="./3d/soundcloud.glb"
+                          url="./3D/soundcloud.glb"
                           handleClick={() => handleSocialClick("soundcloud")}
                           isMobile={!!isMobile}
                         />
@@ -250,7 +250,7 @@ export default function Scene() {
                         canSleep
                       >
                         <SocialModel
-                          url="./3d/linkedin.glb"
+                          url="./3D/linkedin.glb"
                           handleClick={() => handleSocialClick("linkedin")}
                           isMobile={!!isMobile}
                         />
@@ -273,7 +273,7 @@ export default function Scene() {
                         canSleep
                       >
                         <SocialModel
-                          url="./3d/github.glb"
+                          url="./3D/github.glb"
                           handleClick={() => handleSocialClick("github")}
                           isMobile={!!isMobile}
                         />
@@ -294,7 +294,7 @@ export default function Scene() {
                         canSleep
                       >
                         <SocialModel
-                          url="./3d/x.glb"
+                          url="./3D/x.glb"
                           handleClick={() => handleSocialClick("x")}
                           isMobile={!!isMobile}
                         />
