@@ -1,15 +1,18 @@
-import React, { useRef } from "react";
+import { useRef } from "react";
 import { Html, useGLTF } from "@react-three/drei";
+import { useSceneStore } from "@/app/store/scene";
 
 //TODO - fix any types
 
 export default function Laptop(props: any) {
+  const { isProjectsOpen, setIsProjectsOpen } = useSceneStore((state) => state);
   const { nodes, materials } = useGLTF("./3D/mac-draco.glb");
 
   const group = useRef();
 
   return (
     <group
+      onClick={() => setIsProjectsOpen(!isProjectsOpen)}
       ref={group}
       rotation={[0, -0.2, 0]}
       position={[0.1, 1.2, -1.7]}

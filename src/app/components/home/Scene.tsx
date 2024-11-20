@@ -15,11 +15,14 @@ import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { CanvasWrapper } from "@isaac_ua/drei-html-fix";
 import { Physics, RigidBody, type RapierRigidBody } from "@react-three/rapier";
 import { useGLTF, useBounds } from "@react-three/drei";
+import { useSceneStore } from "@/app/store/scene";
 import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
 import SceneLoadingCircle from "./SceneLoadingCircle";
 import Laptop from "./Laptop";
 import EthStatue from "./EthStatue";
 import KrkDynamic from "./KrkDynamic";
+import ProjectsStage from "./ProjectsStage";
+import PictureFrame from "./PictureFrame";
 
 //TODO - fix 'any' type casts and any's in general
 //TODO - some of this code can be consolidated and modularized
@@ -126,6 +129,8 @@ const RedbullSingle = ({ handleClick }: { handleClick: () => void }) => {
 export default function Scene() {
   const [physicsPaused, setPhysicsPaused] = useState<boolean>(true);
 
+  const { isProjectsOpen } = useSceneStore((state) => state);
+
   const socialRefs = useRef<Record<string, HTMLAnchorElement>>({});
   const rigidBodyRefs = useRef<Record<string, RapierRigidBody | null>>({
     github: null,
@@ -205,6 +210,13 @@ export default function Scene() {
               <Bounds clip={false} observe maxDuration={0}>
                 <group position={[0, -0.5, 0]}>
                   <Desk />
+                  <PictureFrame
+                    imageUrl="./projectspic1.png"
+                    color={0x00000}
+                    scale={[0.6, 0.6, 0.05]}
+                    position={[-1.4, 1.2, -1.95]}
+                    rotation={[0, 0.6, 0]}
+                  />
                   <Laptop />
                   <BitcoinMachine
                     handleClick={() => bitcoinAnchorRef?.current?.click()}
@@ -215,6 +227,7 @@ export default function Scene() {
                   />
                   <EthStatue />
                   <KrkDynamic />
+
                   <group scale={0.3} position={[0, 0, -1.2]}>
                     <Center rotation={[0, -0.4, 0]} position={[-2, 1, -2]}>
                       <RigidBody
@@ -318,7 +331,6 @@ export default function Scene() {
                       />
                     </mesh>
                   </RigidBody>
-
                   <mesh
                     receiveShadow
                     rotation-x={-Math.PI / 2}

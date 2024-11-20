@@ -11,10 +11,14 @@ type AudioDetails = {
 };
 
 export interface HomeSceneState {
+  isOverlayHidden: boolean;
+  isProjectsOpen: boolean;
   isAudioPlaying: boolean;
   audioDetails: AudioDetails;
   isDonateOpen: boolean;
   donateAmount: string;
+  setIsOverlayHidden: (isOverlayHidden: boolean) => void;
+  setIsProjectsOpen: (isProjectsOpen: boolean) => void;
   setIsAudioPlaying: (isAudioPlaying: boolean) => void;
   setAudioDetails: (audioDetails: AudioDetails) => void;
   setIsDonateOpen: (isDonateOpen: boolean) => void;
@@ -24,6 +28,9 @@ export interface HomeSceneState {
 
 export const useSceneStore = create<HomeSceneState>((set) => {
   const initialState = {
+    stage: 0,
+    isOverlayHidden: false,
+    isProjectsOpen: false,
     isAudioPlaying: false,
     audioDetails: {
       artist: "G JONES (Short clip)",
@@ -39,6 +46,8 @@ export const useSceneStore = create<HomeSceneState>((set) => {
 
   return {
     ...initialState,
+    setIsOverlayHidden: (isOverlayHidden: boolean) => set({ isOverlayHidden }),
+    setIsProjectsOpen: (isProjectsOpen: boolean) => set({ isProjectsOpen }),
     setIsAudioPlaying: (isAudioPlaying: boolean) => set({ isAudioPlaying }),
     setAudioDetails: (audioDetails: AudioDetails) => set({ audioDetails }),
     setIsDonateOpen: (isDonateOpen: boolean) => set({ isDonateOpen }),
