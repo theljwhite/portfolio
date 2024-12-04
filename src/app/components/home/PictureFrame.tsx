@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import * as THREE from "three";
-import { Image, useCursor } from "@react-three/drei";
+import type { ThreeEvent } from "@react-three/fiber";
+import { Image, Text, useCursor } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 
@@ -8,8 +9,10 @@ interface PictureFrameProps {
   imageUrl: string;
   color: number;
   scale: THREE.Vector3;
+  name: string;
   position: THREE.Vector3;
-  rotation: THREE.Euler;
+  rotation?: THREE.Euler;
+  onClick?: (e: ThreeEvent<MouseEvent>) => void;
 }
 
 const GOLDEN_RATIO = 1.61803398875;
@@ -18,31 +21,40 @@ export default function PictureFrame({
   imageUrl,
   color,
   scale,
+  name,
   position,
   rotation,
+  onClick,
 }: PictureFrameProps) {
   const [isHover, setIsHover] = useState<boolean>(false);
 
   const imageRef = useRef<any>(null);
   const pictureFrameRef = useRef<any>(null);
 
-  useFrame((state, dt) => {
+  useCursor(isHover);
+
+  useFrame((_, dt) => {
     easing.dampC(
       pictureFrameRef.current.material.color,
-      isHover ? "orange" : "white",
+      isHover ? "orange" : "black",
+      0.1,
+      dt
+    );
+    easing.damp3(
+      imageRef.current.scale,
+      [0.85 * (isHover ? 0.99 : 1), 0.9 * (isHover ? 0.905 : 1), 1],
       0.1,
       dt
     );
   });
 
   return (
-    <group position={position} rotation={rotation}>
+    <group onClick={onClick} position={position} rotation={rotation}>
       <mesh
-        // name={name}
-        // onPointerOver={(e) => (e.stopPropagation(), hover(true))}
-        // onPointerOut={() => hover(false)}
+        name={name}
+        onPointerOver={(e) => (e.stopPropagation(), setIsHover(true))}
+        onPointerOut={() => setIsHover(false)}
         scale={scale}
-        // scale={2}
         position={[0, GOLDEN_RATIO / 2, 0]}
       >
         <boxGeometry />
@@ -55,7 +67,7 @@ export default function PictureFrame({
         <mesh
           ref={pictureFrameRef}
           raycast={() => null}
-          scale={[0.9, 0.93, 0.9]}
+          scale={[1.1, 1.1, 0.9]}
           position={[0, 0, 0.2]}
         >
           <boxGeometry />
@@ -66,6 +78,7 @@ export default function PictureFrame({
           ref={imageRef}
           url={imageUrl}
           position={[0, 0, 0.7]}
+          zoom={1}
         />
       </mesh>
     </group>

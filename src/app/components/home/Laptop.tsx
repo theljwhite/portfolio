@@ -1,22 +1,36 @@
-import { useRef } from "react";
-import { Html, useGLTF } from "@react-three/drei";
-import { useSceneStore } from "@/app/store/scene";
+import { useState, useRef } from "react";
+import * as THREE from "three";
+import { Html, useGLTF, useBounds } from "@react-three/drei";
+import LaptopContent from "./LaptopContent";
+import type { ThreeEvent } from "@react-three/fiber";
 
 //TODO - fix any types
 
-export default function Laptop(props: any) {
-  const { isProjectsOpen, setIsProjectsOpen } = useSceneStore((state) => state);
-  const { nodes, materials } = useGLTF("./3D/mac-draco.glb");
+export default function Laptop() {
+  const [isLaptopContentChange, setIsLaptopContentChange] =
+    useState<boolean>(false);
 
-  const group = useRef();
+  const group = useRef<THREE.Group>(null);
+
+  const { nodes, materials } = useGLTF("./3D/mac-draco.glb");
+  const bounds = useBounds();
+
+  const onLaptopClick = (e: ThreeEvent<MouseEvent>): void => {
+    setIsLaptopContentChange(!isLaptopContentChange);
+
+    if (isLaptopContentChange) {
+      bounds.moveTo([0, 0, 4]).lookAt({ target: [-1, 0, -2] });
+    } else {
+      bounds.moveTo([0.1, 2, 1.7]).lookAt({ target: [0.1, -1, -6] });
+    }
+  };
 
   return (
     <group
-      onClick={() => setIsProjectsOpen(!isProjectsOpen)}
+      onClick={onLaptopClick}
       ref={group}
       rotation={[0, -0.2, 0]}
       position={[0.1, 1.2, -1.7]}
-      {...props}
       scale={0.125}
       dispose={null}
     >
@@ -32,17 +46,24 @@ export default function Laptop(props: any) {
           />
           <mesh geometry={(nodes["Cube008_2"] as any).geometry}>
             <Html
-              className="w-[334px] h-[216px]"
+              className={
+                isLaptopContentChange ? "cursor-default" : "cursor-pointer"
+              }
               rotation-x={-Math.PI / 2}
               position={[0, 0.05, -0.09]}
               transform
               occlude="blending"
             >
               <div onPointerDown={(e) => e.stopPropagation()}>
-                <img
-                  className="w-[334px] h-[216px] object-cover"
-                  src="./meFromGH.jpg"
-                />
+                {isLaptopContentChange ? (
+                  <LaptopContent />
+                ) : (
+                  <img
+                    onClick={onLaptopClick}
+                    className="w-[334px] h-[216px] object-cover"
+                    src="./meFromGH.jpg"
+                  />
+                )}
               </div>
             </Html>
           </mesh>

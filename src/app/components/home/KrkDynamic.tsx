@@ -148,8 +148,8 @@ export default function KrkDynamic() {
   return (
     <>
       <primitive
-        onClick={(e: ThreeEvent<any>) => onSpeakerClick(e)}
-        onPointerOver={(e: ThreeEvent<any>) => {
+        onClick={(e: ThreeEvent<MouseEvent>) => onSpeakerClick(e)}
+        onPointerOver={(e: ThreeEvent<MouseEvent>) => {
           e.stopPropagation();
           document.body.style.cursor = "pointer";
         }}

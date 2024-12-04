@@ -54,7 +54,7 @@ export default function DonateEthModal() {
                   <div className="text-neutral-22 text-sm">
                     For now, send direct to:{" "}
                     <span className="text-teal-500 font-semibold">
-                      {process.env.NEXT_PUBLIC_MY_WALLET_ADDRESS}
+                      ljwhite.eth
                     </span>
                   </div>
                   <div className="my-8">

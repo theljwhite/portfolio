@@ -14,22 +14,18 @@ import {
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { CanvasWrapper } from "@isaac_ua/drei-html-fix";
 import { Physics, RigidBody, type RapierRigidBody } from "@react-three/rapier";
-import { useGLTF, useBounds } from "@react-three/drei";
-import { useSceneStore } from "@/app/store/scene";
+import { useGLTF, useBounds, useCursor } from "@react-three/drei";
 import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
 import SceneLoadingCircle from "./SceneLoadingCircle";
 import Laptop from "./Laptop";
 import EthStatue from "./EthStatue";
 import KrkDynamic from "./KrkDynamic";
-import ProjectsStage from "./ProjectsStage";
 import PictureFrame from "./PictureFrame";
+import BitcoinDisplay from "./BitcoinDisplay";
+import ProjectsStage from "./ProjectsStage";
 
 //TODO - fix 'any' type casts and any's in general
 //TODO - some of this code can be consolidated and modularized
-
-//TODO - because of HTML occlude="blending" bug, the onPointerOver's here,
-//for now have to use the document.body to set cursor pointer.
-//when fixed, they can use gl.domElement.style.cursor = "pointer" from useThree's gl
 
 //TODO - bounds animation duration can be turned up when this is fixed: https://github.com/pmndrs/drei/issues/1801
 //so that the camera zooms in slowly over time.
@@ -58,45 +54,30 @@ ALL_MODELS.forEach((model) => useGLTF.preload(model));
 
 const Desk = () => {
   const { scene } = useGLTF("./3D/desk1.glb");
-  return <primitive rotation={[0, 10, 0]} scale={1} object={scene} />;
+  return (
+    <primitive
+      onClick={(e: ThreeEvent<MouseEvent>) => e.stopPropagation()}
+      rotation={[0, 10, 0]}
+      scale={1}
+      object={scene}
+    />
+  );
 };
 
 const SocialModel = ({ url, handleClick, isMobile }: SocialModelProps) => {
+  const [isHover, setIsHover] = useState<boolean>(false);
   const { scene } = useGLTF(url);
   const bounds = useBounds();
+
+  useCursor(isHover);
   return (
     <primitive
       onClick={() => {
         if (isMobile) bounds.moveTo([0.4, 0, 2]);
         handleClick();
       }}
-      onPointerOver={(e: ThreeEvent<any>) => {
-        e.stopPropagation();
-        document.body.style.cursor = "pointer";
-      }}
-      onPointerOut={() => {
-        document.body.style.cursor = "auto";
-      }}
-      object={scene}
-    />
-  );
-};
-
-const BitcoinMachine = ({ handleClick }: { handleClick: () => void }) => {
-  const { scene } = useGLTF("./3D/bitcoin_atm.glb");
-  return (
-    <primitive
-      onClick={handleClick}
-      onPointerOver={(e: ThreeEvent<any>) => {
-        e.stopPropagation();
-        document.body.style.cursor = "pointer";
-      }}
-      onPointerOut={() => {
-        document.body.style.cursor = "auto";
-      }}
-      position={[1.5, 0, 1.1]}
-      rotation={[0, -1, 0]}
-      scale={1}
+      onPointerOver={() => setIsHover(true)}
+      onPointerOut={() => setIsHover(false)}
       object={scene}
     />
   );
@@ -108,17 +89,15 @@ const Redbulls = () => {
 };
 
 const RedbullSingle = ({ handleClick }: { handleClick: () => void }) => {
+  const [isHover, setIsHover] = useState<boolean>(false);
   const { scene } = useGLTF("./3D/redbull_single.glb");
+
+  useCursor(isHover);
   return (
     <primitive
       onClick={handleClick}
-      onPointerOver={(e: ThreeEvent<any>) => {
-        e.stopPropagation();
-        document.body.style.cursor = "pointer";
-      }}
-      onPointerOut={() => {
-        document.body.style.cursor = "auto";
-      }}
+      onPointerOver={() => setIsHover(true)}
+      onPointerOut={() => setIsHover(false)}
       position={[1.0, 1.16, -1]}
       scale={0.1}
       object={scene}
@@ -126,10 +105,28 @@ const RedbullSingle = ({ handleClick }: { handleClick: () => void }) => {
   );
 };
 
+const ProjectsFrame = () => {
+  const bounds = useBounds();
+
+  const moveToProjectFrames = (): void => {
+    bounds.moveTo([-4.4, 1.2, -3.6]);
+  };
+
+  return (
+    <PictureFrame
+      imageUrl="./myProjects1.png"
+      color={0x00000}
+      name="projects-frame"
+      scale={[0.6, 0.6, 0.05] as any} //TODO
+      position={[-1.4, 1.2, -1.95] as any} //TODO
+      rotation={[0, 0.58, 0] as any} //TODO
+      onClick={moveToProjectFrames}
+    />
+  );
+};
+
 export default function Scene() {
   const [physicsPaused, setPhysicsPaused] = useState<boolean>(true);
-
-  const { isProjectsOpen } = useSceneStore((state) => state);
 
   const socialRefs = useRef<Record<string, HTMLAnchorElement>>({});
   const rigidBodyRefs = useRef<Record<string, RapierRigidBody | null>>({
@@ -138,7 +135,6 @@ export default function Scene() {
     soundcloud: null,
     linkedin: null,
   });
-  const bitcoinAnchorRef = useRef<HTMLAnchorElement | null>(null);
   const redbullAnchorRef = useRef<HTMLAnchorElement | null>(null);
 
   const isMobile = useClientMediaQuery("(max-width: 600px)");
@@ -180,13 +176,6 @@ export default function Scene() {
         <a
           className="hidden"
           target="_blank"
-          href="https://coinmarketcap.com/currencies/bitcoin/"
-          rel="noreferrer"
-          ref={bitcoinAnchorRef}
-        />
-        <a
-          className="hidden"
-          target="_blank"
           href="https://www.walmart.com/ip/Red-Bull-Winter-Edition-Iced-Vanilla-Berry-Energy-Drink-12-fl-oz-4-pack-cans/5340366890"
           rel="noreferrer"
           ref={redbullAnchorRef}
@@ -210,23 +199,16 @@ export default function Scene() {
               <Bounds clip={false} observe maxDuration={0}>
                 <group position={[0, -0.5, 0]}>
                   <Desk />
-                  <PictureFrame
-                    imageUrl="./projectspic1.png"
-                    color={0x00000}
-                    scale={[0.6, 0.6, 0.05]}
-                    position={[-1.4, 1.2, -1.95]}
-                    rotation={[0, 0.6, 0]}
-                  />
+                  <ProjectsFrame />
                   <Laptop />
-                  <BitcoinMachine
-                    handleClick={() => bitcoinAnchorRef?.current?.click()}
-                  />
+                  <BitcoinDisplay />
                   <Redbulls />
                   <RedbullSingle
                     handleClick={() => redbullAnchorRef?.current?.click()}
                   />
                   <EthStatue />
                   <KrkDynamic />
+                  <ProjectsStage />
 
                   <group scale={0.3} position={[0, 0, -1.2]}>
                     <Center rotation={[0, -0.4, 0]} position={[-2, 1, -2]}>

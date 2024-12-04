@@ -1,12 +1,16 @@
-import { useGLTF } from "@react-three/drei";
+import { useState } from "react";
+import { useGLTF, useCursor } from "@react-three/drei";
 import { useSceneStore } from "@/app/store/scene";
-import type { ThreeEvent } from "@react-three/fiber";
 
 export default function EthStatue() {
+  const [isHover, setIsHover] = useState<boolean>(false);
   const { isDonateOpen, setIsDonateOpen, setIsAudioPlaying } = useSceneStore(
     (state) => state
   );
   const { scene } = useGLTF("./3D/eth_donate.glb");
+
+  useCursor(isHover);
+
   const onEthStatueClick = (): void => {
     setIsDonateOpen(!isDonateOpen);
     setIsAudioPlaying(false);
@@ -15,13 +19,8 @@ export default function EthStatue() {
   return (
     <primitive
       onClick={onEthStatueClick}
-      onPointerOver={(e: ThreeEvent<any>) => {
-        e.stopPropagation();
-        document.body.style.cursor = "pointer";
-      }}
-      onPointerOut={() => {
-        document.body.style.cursor = "auto";
-      }}
+      onPointerOver={() => setIsHover(true)}
+      onPointerOut={() => setIsHover(false)}
       rotation={[0, 0, 0]}
       position={[1.7, 1.19, -0.4]}
       scale={0.4}

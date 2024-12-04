@@ -16,13 +16,18 @@ export interface HomeSceneState {
   isAudioPlaying: boolean;
   audioDetails: AudioDetails;
   isDonateOpen: boolean;
+  isBitcoinDisplayOpen: boolean;
   donateAmount: string;
+  activeLaptopContent: number | null;
   setIsOverlayHidden: (isOverlayHidden: boolean) => void;
   setIsProjectsOpen: (isProjectsOpen: boolean) => void;
   setIsAudioPlaying: (isAudioPlaying: boolean) => void;
   setAudioDetails: (audioDetails: AudioDetails) => void;
   setIsDonateOpen: (isDonateOpen: boolean) => void;
+  setIsBitcoinDisplayOpen: (isBitcoinDisplayOpen: boolean) => void;
   setDonateAmount: (donateAmount: string) => void;
+  setActiveLaptopContent: (activeLaptopContent: number | null) => void;
+  resetLaptopContent: () => void;
   reset: () => void;
 }
 
@@ -40,8 +45,10 @@ export const useSceneStore = create<HomeSceneState>((set) => {
       duration: 0,
       outlink: "",
     },
+    isBitcoinDisplayOpen: false,
     isDonateOpen: false,
     donateAmount: "",
+    activeLaptopContent: 0,
   };
 
   return {
@@ -51,7 +58,12 @@ export const useSceneStore = create<HomeSceneState>((set) => {
     setIsAudioPlaying: (isAudioPlaying: boolean) => set({ isAudioPlaying }),
     setAudioDetails: (audioDetails: AudioDetails) => set({ audioDetails }),
     setIsDonateOpen: (isDonateOpen: boolean) => set({ isDonateOpen }),
+    setIsBitcoinDisplayOpen: (isBitcoinDisplayOpen: boolean) =>
+      set({ isBitcoinDisplayOpen }),
     setDonateAmount: (donateAmount: string) => set({ donateAmount }),
+    setActiveLaptopContent: (activeLaptopContent: number | null) =>
+      set({ activeLaptopContent }),
+    resetLaptopContent: () => set({ activeLaptopContent: 0 }),
     reset: () => set({ ...initialState }),
   };
 });
