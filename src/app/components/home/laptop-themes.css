@@ -3,267 +3,352 @@ to give a preview of the VSCode themes I made
 See: /components/LaptopContent.tsx
 */
 
-[data-theme="ilyat-mariana"] {
-  code[class*="language-"],
-  pre[class*="language-"] {
-    color: #ccc;
-    background: none;
-    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
-    font-size: 1em;
-    text-align: left;
-    white-space: pre;
-    word-spacing: normal;
-    word-break: normal;
-    word-wrap: normal;
-    line-height: 1.5;
-
-    -moz-tab-size: 4;
-    -o-tab-size: 4;
-    tab-size: 4;
-
-    -webkit-hyphens: none;
-    -moz-hyphens: none;
-    -ms-hyphens: none;
-    hyphens: none;
-  }
-
-  /* Code blocks */
-  pre[class*="language-"] {
-    padding: 1em;
-    margin: 0.5em 0;
-    overflow: auto;
-  }
-
-  :not(pre) > code[class*="language-"],
-  pre[class*="language-"] {
-    background: #2d2d2d;
-  }
-
-  /* Inline code */
-  :not(pre) > code[class*="language-"] {
-    padding: 0.1em;
-    border-radius: 0.3em;
-    white-space: normal;
-  }
-
-  .token.comment,
-  .token.block-comment,
-  .token.prolog,
-  .token.doctype,
-  .token.cdata {
-    color: #ffffff70;
-  }
-
-  .token.punctuation {
-    color: #ffffffdd;
-  }
-
-  .token.tag,
-  .token.attr-name,
-  .token.namespace,
-  .token.deleted {
-    color: #e2777a;
-  }
-
-  .token.function-name {
-    color: #6196cc;
-  }
-
-  .token.function {
-    color: #5fb3b3;
-  }
-
-  .token.boolean {
-    font-style: italic;
-    color: #ee6a6f;
-  }
-
-  .token.number {
-    color: #fab763;
-  }
-
-  .token.property,
-  .token.class-name,
-  .token.symbol {
-    color: #fab763;
-  }
-
-  .token.constant {
-    color: #d5ced9;
-  }
-
-  .token.builtin {
-    color: #6699cc;
-  }
-
-  .token.selector,
-  .token.important,
-  .token.atrule,
-  .token.keyword {
-    color: #c594c5;
-  }
-
-  .token.string,
-  .token.char,
-  .token.attr-value,
-  .token.regex,
-  .token.variable {
-    color: #a3ce9e;
-  }
-
-  .token.operator,
-  .token.entity,
-  .token.url {
-    color: #fa8763;
-  }
-
-  .token.important,
-  .token.bold {
-    font-weight: bold;
-  }
-  .token.italic {
-    font-style: italic;
-  }
-
-  .token.entity {
-    cursor: help;
-  }
-
-  .token.inserted {
-    color: green;
-  }
-}
-
 [data-theme="ilyat"] {
-  code[class*="language-"],
-  pre[class*="language-"] {
-    color: #282c34;
-    background: none;
-    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
-    font-size: 1em;
-    text-align: left;
-    white-space: pre;
-    word-spacing: normal;
-    word-break: normal;
-    word-wrap: normal;
-    line-height: 1.5;
-
-    -moz-tab-size: 4;
-    -o-tab-size: 4;
-    tab-size: 4;
-
-    -webkit-hyphens: none;
-    -moz-hyphens: none;
-    -ms-hyphens: none;
-    hyphens: none;
-  }
-
-  /* Code blocks */
-  pre[class*="language-"] {
+  pre code.hljs {
+    display: block;
+    overflow-x: auto;
     padding: 1em;
-    margin: 0.5em 0;
-    overflow: auto;
+  }
+  code.hljs {
+    padding: 3px 5px;
   }
 
-  :not(pre) > code[class*="language-"],
-  pre[class*="language-"] {
-    background: #2d2d2d;
-  }
-
-  /* Inline code */
-  :not(pre) > code[class*="language-"] {
-    padding: 0.1em;
-    border-radius: 0.3em;
-    white-space: normal;
-  }
-
-  .token.comment,
-  .token.block-comment,
-  .token.prolog,
-  .token.doctype,
-  .token.cdata {
-    color: #ffffff70;
-  }
-
-  .token.punctuation {
-    color: #5fb3b3;
-  }
-
-  .token.tag,
-  .token.attr-name,
-  .token.namespace,
-  .token.deleted {
-    color: #e2777a;
-  }
-
-  .token.function-name {
-    color: #6196cc;
-  }
-
-  .token.function {
-    color: #5fb3b3;
-  }
-
-  .token.boolean {
-    font-style: italic;
-    color: #ee6a6f;
-  }
-
-  .token.number {
-    color: #fab763;
-  }
-
-  .token.property,
-  .token.class-name,
-  .token.symbol {
-    color: #fab763;
-  }
-
-  .token.constant {
-    color: #d5ced9;
-  }
-
-  .token.builtin {
-    color: #6495ee;
-  }
-
-  .token.selector,
-  .token.important,
-  .token.atrule,
-  .token.keyword {
-    color: #a78cfa;
-  }
-
-  .token.string,
-  .token.char,
-  .token.attr-value,
-  .token.regex {
-    color: #a3ce9e;
-  }
-
-  .token.operator,
-  .token.entity,
-  .token.url {
-    color: #ff9070;
-  }
-
-  .token.variable {
+  div {
+    background-color: #282c34;
     color: #b0b7c3;
   }
 
-  .token.important,
-  .token.bold {
-    font-weight: bold;
+  .hljs-comment,
+  .hljs-quote {
+    color: #ffffff70;
   }
-  .token.italic {
+
+  .hljs-operator {
+    color: #ff9070;
+  }
+  .hljs-literal {
+    color: #e06c75;
     font-style: italic;
   }
 
-  .token.entity {
-    cursor: help;
+  .hljs-number {
+    color: #fab763;
   }
 
-  .token.inserted {
-    color: green;
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-tag,
+  .hljs-name,
+  .hljs-selector-id,
+  .hljs-selector-class,
+  .hljs-regexp,
+  .hljs-deletion {
+    color: #ff9da4;
+  }
+  .hljs-built_in,
+  .hljs-type,
+  .hljs-meta,
+  .hljs-link {
+    color: #6495ee;
+  }
+  .hljs-attribute {
+    color: #ffeead;
+  }
+  .hljs-string,
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-addition {
+    color: #a3ce9e;
+  }
+
+  .hljs-params {
+    color: #fab763;
+  }
+
+  .hljs-title,
+  .hljs-section {
+    color: #5fb3b3;
+  }
+
+  .hljs-title.class_ {
+    color: #fab763;
+  }
+
+  .hljs-keyword,
+  .hljs-selector-tag {
+    color: #a78cfa;
+  }
+  .hljs {
+    background: #002451;
+    color: white;
+  }
+  .hljs-emphasis {
+    font-style: italic;
+  }
+  .hljs-strong {
+    font-weight: bold;
+  }
+}
+
+[data-theme="ilyat-mariana"] {
+  pre code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+  }
+  code.hljs {
+    padding: 3px 5px;
+  }
+
+  div {
+    background-color: #262a33;
+    color: #d5ced9;
+  }
+
+  .hljs-comment,
+  .hljs-quote {
+    color: #ffffff70;
+  }
+
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-tag,
+  .hljs-name,
+  .hljs-selector-id,
+  .hljs-selector-class,
+  .hljs-regexp,
+  .hljs-deletion {
+    color: #ff9da4;
+  }
+
+  .hljs-number {
+    color: #fab763;
+  }
+
+  .hljs-literal {
+    color: #ff9070;
+    font-style: italic;
+  }
+
+  .hljs-operator {
+    color: #fa8763;
+  }
+
+  .hljs-meta,
+  .hljs-link {
+    color: #db7b22;
+  }
+
+  .hljs-params {
+    color: #fab763;
+  }
+
+  .hljs-built_in {
+    color: #6699cc;
+  }
+
+  .hljs-title.class_ {
+    color: #fab763;
+  }
+
+  .hljs-attribute {
+    color: #ffeead;
+  }
+  .hljs-string,
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-addition {
+    color: #a3ce9e;
+  }
+
+  .hljs-title,
+  .hljs-section {
+    color: #5fb3b3;
+  }
+
+  .hljs-keyword,
+  .hljs-selector-tag {
+    color: #c594c5;
+  }
+
+  .hljs-emphasis {
+    font-style: italic;
+  }
+  .hljs-strong {
+    font-weight: bold;
+  }
+}
+
+[data-theme="ilyat-poimandres"] {
+  pre code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+  }
+  code.hljs {
+    padding: 3px 5px;
+  }
+
+  div {
+    background-color: #252b37;
+    color: #fff;
+  }
+
+  .hljs-comment,
+  .hljs-quote {
+    color: #868cadb0;
+  }
+
+  .hljs-operator {
+    color: #ff9070;
+  }
+  .hljs-literal {
+    color: #d0679d;
+    font-style: italic;
+  }
+
+  .hljs-number {
+    color: #fab763;
+  }
+
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-tag,
+  .hljs-name,
+  .hljs-selector-id,
+  .hljs-selector-class,
+  .hljs-regexp,
+  .hljs-deletion {
+    color: #ff9da4;
+  }
+  .hljs-built_in,
+  .hljs-type,
+  .hljs-meta,
+  .hljs-link {
+    color: #add7ff;
+  }
+  .hljs-attribute {
+    color: #ffeead;
+  }
+  .hljs-string,
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-addition {
+    color: #a3ce9e;
+  }
+
+  .hljs-params {
+    color: #fab763;
+  }
+
+  .hljs-title,
+  .hljs-section {
+    color: #73d6d6;
+  }
+
+  .hljs-title.class_ {
+    color: #fab763;
+  }
+
+  .hljs-keyword,
+  .hljs-selector-tag {
+    color: #91b4d5;
+  }
+  .hljs {
+    background: #002451;
+    color: white;
+  }
+  .hljs-emphasis {
+    font-style: italic;
+  }
+  .hljs-strong {
+    font-weight: bold;
+  }
+}
+
+[data-theme="ilyat-poimandres-darker"] {
+  pre code.hljs {
+    display: block;
+    overflow-x: auto;
+    padding: 1em;
+  }
+  code.hljs {
+    padding: 3px 5px;
+  }
+
+  div {
+    background-color: #1b1e28;
+    color: #fff;
+  }
+
+  .hljs-comment,
+  .hljs-quote {
+    color: #868cadb0;
+  }
+
+  .hljs-operator {
+    color: #ff9070;
+  }
+  .hljs-literal {
+    color: #d0679d;
+    font-style: italic;
+  }
+
+  .hljs-number {
+    color: #fab763;
+  }
+
+  .hljs-variable,
+  .hljs-template-variable,
+  .hljs-tag,
+  .hljs-name,
+  .hljs-selector-id,
+  .hljs-selector-class,
+  .hljs-regexp,
+  .hljs-deletion {
+    color: #ff9da4;
+  }
+  .hljs-built_in,
+  .hljs-type,
+  .hljs-meta,
+  .hljs-link {
+    color: #add7ff;
+  }
+  .hljs-attribute {
+    color: #ffeead;
+  }
+  .hljs-string,
+  .hljs-symbol,
+  .hljs-bullet,
+  .hljs-addition {
+    color: #a3ce9e;
+  }
+
+  .hljs-params {
+    color: #fab763;
+  }
+
+  .hljs-title,
+  .hljs-section {
+    color: #73d6d6;
+  }
+
+  .hljs-title.class_ {
+    color: #fab763;
+  }
+
+  .hljs-keyword,
+  .hljs-selector-tag {
+    color: #91b4d5;
+  }
+  .hljs {
+    background: #002451;
+    color: white;
+  }
+  .hljs-emphasis {
+    font-style: italic;
+  }
+  .hljs-strong {
+    font-weight: bold;
   }
 }

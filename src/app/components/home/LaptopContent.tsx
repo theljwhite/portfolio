@@ -3,10 +3,7 @@ import { useSceneStore } from "@/app/store/scene";
 import { copyTextToClipboard } from "@/app/utils/text";
 import { CopyIcon } from "../UI/Icons";
 import Editor from "react-simple-code-editor";
-import { Prism, highlight, languages } from "prismjs/components/prism-core.js";
-import "prismjs/components/prism-typescript";
-import "prismjs/components/prism-clike";
-import "prismjs/components/prism-javascript";
+import hljs from "highlight.js";
 import "./laptop-themes.css";
 
 type LaptopContent = {
@@ -31,27 +28,42 @@ const VideoDisplay = ({ url }: { url: string }) => {
 };
 
 const VSCodeTheme = () => {
-  const defaultCode = `//Write some code to preview theme
-type DoGreeting = (msg: string) => void;
+  const defaultCode = `//Write some TS/JS to preview theme
+type DoGreeting = (msg: string) => void; 
+const isFunny = true; 
 
-async function getGreeting(id: number): Promise<Greeting> {
+async function get(id: number): Promise<string> {
 const res = await fetch("/greet/" + id);
 const data = await res.json();
 return data;
-};
-doAncientProverb("That and 50 cents would get you a cup of coffee");
+}
 `;
 
   const themeOptions = [
-    "ilyat",
-    "ilyat-mariana",
-    "ilyat-poimandres",
-    "ilyat-poimandres-darker",
+    {
+      name: "ilyat",
+      sidebarBg: "#23262E",
+      sidebarFg: "#00e8c6",
+    },
+    {
+      name: "ilyat-mariana",
+      sidebarBg: "#23262E",
+      sidebarFg: "#00e8c6",
+    },
+    { name: "ilyat-poimandres", sidebarBg: "#252b37", sidebarFg: "#868cad" },
+    {
+      name: "ilyat-poimandres-darker",
+      sidebarBg: "#1b1e28",
+      sidebarFg: "#767c9d",
+    },
   ];
 
   const [activeTheme, setActiveTheme] = useState<number>(0);
   const [code, setCode] = useState<string>(defaultCode);
   const { resetLaptopContent } = useSceneStore((state) => state);
+
+  const sidebarBg = themeOptions[activeTheme].sidebarBg;
+  const sidebarFg = themeOptions[activeTheme].sidebarFg;
 
   const handleThemeChange = (): void => {
     setActiveTheme(
@@ -60,8 +72,11 @@ doAncientProverb("That and 50 cents would get you a cup of coffee");
   };
 
   return (
-    <div className="w-[334px] h-[216px] flex bg-[#262A33] flex-col relative">
-      <header className="flex bg-[#23262E] border-b border-[#1B1D23] py-1 px-3 w-full justify-between">
+    <div className="w-[334px] h-[216px] flex flex-col relative">
+      <header
+        style={{ backgroundColor: sidebarBg }}
+        className="flex border-b border-[#1B1D23] py-1 px-3 w-full justify-between"
+      >
         <a
           href="https://github.com/theljwhite/ilyat"
           rel="noreferrer"
@@ -84,16 +99,25 @@ doAncientProverb("That and 50 cents would get you a cup of coffee");
         </button>
       </header>
       <div className="flex flex-row h-full w-full">
-        <div className="bg-[#23262E] flex justify-center pt-2 border-r border-[#1B1D23] h-full w-1/4">
-          <span className="text-[#00e8c6] uppercase text-[8px] text-center">
+        <div
+          style={{ backgroundColor: sidebarBg }}
+          className="flex justify-center pt-2 border-r border-[#1B1D23] h-full w-1/4"
+        >
+          <span
+            style={{ color: sidebarFg }}
+            className="uppercase text-[8px] text-center"
+          >
             Explorer
           </span>
         </div>
-        <div data-theme={themeOptions[activeTheme]}>
+        <div data-theme={themeOptions[activeTheme].name}>
           <Editor
             value={code}
             onValueChange={(code) => setCode(code)}
-            highlight={(code) => highlight(code, languages.ts)}
+            // highlight={(code) => highlight(code, languages.ts)}
+            highlight={(code) =>
+              hljs.highlight(code, { language: "typescript" }).value
+            }
             padding={10}
             style={{
               fontSize: 12,
