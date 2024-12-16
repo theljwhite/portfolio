@@ -39,7 +39,7 @@ const BitcoinPrice = ({ isMobile }: { isMobile: boolean | null }) => {
           letterSpacing={-0.02}
           color={bitcoinIsUp ? 0x00cc00 : 0xff0000}
         >
-          {data ? "$" + formattedPrice : "99,999"} {bitcoinIsUp ? "▲" : "▼"}
+          {"$" + formattedPrice} {bitcoinIsUp ? "▲" : "▼"}
         </Text>
       )}
     </>

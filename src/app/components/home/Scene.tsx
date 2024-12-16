@@ -15,6 +15,7 @@ import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { CanvasWrapper } from "@isaac_ua/drei-html-fix";
 import { Physics, RigidBody, type RapierRigidBody } from "@react-three/rapier";
 import { useGLTF, useBounds, useCursor } from "@react-three/drei";
+import { useSceneStore } from "@/app/store/scene";
 import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
 import SceneLoadingCircle from "./SceneLoadingCircle";
 import Laptop from "./Laptop";
@@ -114,8 +115,8 @@ const ProjectsFrame = () => {
 
   return (
     <PictureFrame
-      imageUrl="./myProjects1.png"
-      color={0x00000}
+      imageUrl="./projects.png"
+      color={0x000000}
       name="projects-frame"
       scale={[0.6, 0.6, 0.05] as any} //TODO
       position={[-1.4, 1.2, -1.95] as any} //TODO
@@ -127,6 +128,8 @@ const ProjectsFrame = () => {
 
 export default function Scene() {
   const [physicsPaused, setPhysicsPaused] = useState<boolean>(true);
+
+  const { isOrbitEnabled } = useSceneStore((state) => state);
 
   const socialRefs = useRef<Record<string, HTMLAnchorElement>>({});
   const rigidBodyRefs = useRef<Record<string, RapierRigidBody | null>>({
@@ -325,6 +328,7 @@ export default function Scene() {
               </Bounds>
 
               <OrbitControls
+                enabled={isOrbitEnabled}
                 makeDefault
                 autoRotateSpeed={0.02}
                 maxPolarAngle={Math.PI / 2.3}

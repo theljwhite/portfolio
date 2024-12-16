@@ -19,6 +19,7 @@ export interface HomeSceneState {
   isBitcoinDisplayOpen: boolean;
   donateAmount: string;
   activeLaptopContent: number | null;
+  isOrbitEnabled: boolean;
   setIsOverlayHidden: (isOverlayHidden: boolean) => void;
   setIsProjectsOpen: (isProjectsOpen: boolean) => void;
   setIsAudioPlaying: (isAudioPlaying: boolean) => void;
@@ -27,6 +28,7 @@ export interface HomeSceneState {
   setIsBitcoinDisplayOpen: (isBitcoinDisplayOpen: boolean) => void;
   setDonateAmount: (donateAmount: string) => void;
   setActiveLaptopContent: (activeLaptopContent: number | null) => void;
+  setIsOrbitEnabled: (isOrbitEnabled: boolean) => void;
   resetLaptopContent: () => void;
   reset: () => void;
 }
@@ -49,6 +51,7 @@ export const useSceneStore = create<HomeSceneState>((set) => {
     isDonateOpen: false,
     donateAmount: "",
     activeLaptopContent: 0,
+    isOrbitEnabled: true,
   };
 
   return {
@@ -63,6 +66,7 @@ export const useSceneStore = create<HomeSceneState>((set) => {
     setDonateAmount: (donateAmount: string) => set({ donateAmount }),
     setActiveLaptopContent: (activeLaptopContent: number | null) =>
       set({ activeLaptopContent }),
+    setIsOrbitEnabled: (isOrbitEnabled: boolean) => set({ isOrbitEnabled }),
     resetLaptopContent: () => set({ activeLaptopContent: 0 }),
     reset: () => set({ ...initialState }),
   };

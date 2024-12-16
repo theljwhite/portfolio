@@ -36,7 +36,7 @@ export default function PictureFrame({
   useFrame((_, dt) => {
     easing.dampC(
       pictureFrameRef.current.material.color,
-      isHover ? "orange" : "black",
+      isHover ? "orange" : color ?? "black",
       0.1,
       dt
     );

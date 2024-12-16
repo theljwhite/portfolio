@@ -1,14 +1,17 @@
 import { useState, useRef } from "react";
 import * as THREE from "three";
 import { Html, useGLTF, useBounds } from "@react-three/drei";
-import LaptopContent from "./LaptopContent";
 import type { ThreeEvent } from "@react-three/fiber";
+import { useSceneStore } from "@/app/store/scene";
+import LaptopContent from "./LaptopContent";
 
 //TODO - fix any types
 
 export default function Laptop() {
   const [isLaptopContentChange, setIsLaptopContentChange] =
     useState<boolean>(false);
+
+  const { setIsOrbitEnabled } = useSceneStore((state) => state);
 
   const group = useRef<THREE.Group>(null);
 
@@ -20,8 +23,10 @@ export default function Laptop() {
 
     if (isLaptopContentChange) {
       bounds.moveTo([0, 0, 4]).lookAt({ target: [-1, 0, -2] });
+      setIsOrbitEnabled(true);
     } else {
-      bounds.moveTo([0.1, 2, 1.7]).lookAt({ target: [0.1, -1, -6] });
+      bounds.moveTo([0.1, 2, 1.7]).lookAt({ target: [0.15, -1, -6.5] }); //was 0.1, -1, -6
+      setIsOrbitEnabled(false);
     }
   };
 

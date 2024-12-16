@@ -1,0 +1,269 @@
+/* this CSS file is needed to quickly and easily customize prismjs code editor 
+to give a preview of the VSCode themes I made
+See: /components/LaptopContent.tsx
+*/
+
+[data-theme="ilyat-mariana"] {
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: #ccc;
+    background: none;
+    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    font-size: 1em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+  }
+
+  /* Code blocks */
+  pre[class*="language-"] {
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+  }
+
+  :not(pre) > code[class*="language-"],
+  pre[class*="language-"] {
+    background: #2d2d2d;
+  }
+
+  /* Inline code */
+  :not(pre) > code[class*="language-"] {
+    padding: 0.1em;
+    border-radius: 0.3em;
+    white-space: normal;
+  }
+
+  .token.comment,
+  .token.block-comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: #ffffff70;
+  }
+
+  .token.punctuation {
+    color: #ffffffdd;
+  }
+
+  .token.tag,
+  .token.attr-name,
+  .token.namespace,
+  .token.deleted {
+    color: #e2777a;
+  }
+
+  .token.function-name {
+    color: #6196cc;
+  }
+
+  .token.function {
+    color: #5fb3b3;
+  }
+
+  .token.boolean {
+    font-style: italic;
+    color: #ee6a6f;
+  }
+
+  .token.number {
+    color: #fab763;
+  }
+
+  .token.property,
+  .token.class-name,
+  .token.symbol {
+    color: #fab763;
+  }
+
+  .token.constant {
+    color: #d5ced9;
+  }
+
+  .token.builtin {
+    color: #6699cc;
+  }
+
+  .token.selector,
+  .token.important,
+  .token.atrule,
+  .token.keyword {
+    color: #c594c5;
+  }
+
+  .token.string,
+  .token.char,
+  .token.attr-value,
+  .token.regex,
+  .token.variable {
+    color: #a3ce9e;
+  }
+
+  .token.operator,
+  .token.entity,
+  .token.url {
+    color: #fa8763;
+  }
+
+  .token.important,
+  .token.bold {
+    font-weight: bold;
+  }
+  .token.italic {
+    font-style: italic;
+  }
+
+  .token.entity {
+    cursor: help;
+  }
+
+  .token.inserted {
+    color: green;
+  }
+}
+
+[data-theme="ilyat"] {
+  code[class*="language-"],
+  pre[class*="language-"] {
+    color: #282c34;
+    background: none;
+    font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+    font-size: 1em;
+    text-align: left;
+    white-space: pre;
+    word-spacing: normal;
+    word-break: normal;
+    word-wrap: normal;
+    line-height: 1.5;
+
+    -moz-tab-size: 4;
+    -o-tab-size: 4;
+    tab-size: 4;
+
+    -webkit-hyphens: none;
+    -moz-hyphens: none;
+    -ms-hyphens: none;
+    hyphens: none;
+  }
+
+  /* Code blocks */
+  pre[class*="language-"] {
+    padding: 1em;
+    margin: 0.5em 0;
+    overflow: auto;
+  }
+
+  :not(pre) > code[class*="language-"],
+  pre[class*="language-"] {
+    background: #2d2d2d;
+  }
+
+  /* Inline code */
+  :not(pre) > code[class*="language-"] {
+    padding: 0.1em;
+    border-radius: 0.3em;
+    white-space: normal;
+  }
+
+  .token.comment,
+  .token.block-comment,
+  .token.prolog,
+  .token.doctype,
+  .token.cdata {
+    color: #ffffff70;
+  }
+
+  .token.punctuation {
+    color: #5fb3b3;
+  }
+
+  .token.tag,
+  .token.attr-name,
+  .token.namespace,
+  .token.deleted {
+    color: #e2777a;
+  }
+
+  .token.function-name {
+    color: #6196cc;
+  }
+
+  .token.function {
+    color: #5fb3b3;
+  }
+
+  .token.boolean {
+    font-style: italic;
+    color: #ee6a6f;
+  }
+
+  .token.number {
+    color: #fab763;
+  }
+
+  .token.property,
+  .token.class-name,
+  .token.symbol {
+    color: #fab763;
+  }
+
+  .token.constant {
+    color: #d5ced9;
+  }
+
+  .token.builtin {
+    color: #6495ee;
+  }
+
+  .token.selector,
+  .token.important,
+  .token.atrule,
+  .token.keyword {
+    color: #a78cfa;
+  }
+
+  .token.string,
+  .token.char,
+  .token.attr-value,
+  .token.regex {
+    color: #a3ce9e;
+  }
+
+  .token.operator,
+  .token.entity,
+  .token.url {
+    color: #ff9070;
+  }
+
+  .token.variable {
+    color: #b0b7c3;
+  }
+
+  .token.important,
+  .token.bold {
+    font-weight: bold;
+  }
+  .token.italic {
+    font-style: italic;
+  }
+
+  .token.entity {
+    cursor: help;
+  }
+
+  .token.inserted {
+    color: green;
+  }
+}
