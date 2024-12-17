@@ -18,7 +18,7 @@ export default function Laptop() {
   const { nodes, materials } = useGLTF("./3D/mac-draco.glb");
   const bounds = useBounds();
 
-  const onLaptopClick = (e: ThreeEvent<MouseEvent>): void => {
+  const onLaptopClick = (): void => {
     setIsLaptopContentChange(!isLaptopContentChange);
 
     if (isLaptopContentChange) {

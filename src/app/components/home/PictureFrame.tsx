@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import * as THREE from "three";
 import type { ThreeEvent } from "@react-three/fiber";
-import { Image, Text, useCursor } from "@react-three/drei";
+import { Image, useCursor } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import { easing } from "maath";
 

@@ -1,10 +1,14 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useSceneStore } from "@/app/store/scene";
 import { copyTextToClipboard } from "@/app/utils/text";
 import { CopyIcon } from "../UI/Icons";
 import Editor from "react-simple-code-editor";
 import hljs from "highlight.js";
 import "./laptop-themes.css";
+
+//TODO check if statement, etc css styling for themes
+//TODO mobile
+//TODO in future, add more to faux editor sidebar
 
 type LaptopContent = {
   id: number;
@@ -30,12 +34,12 @@ const VideoDisplay = ({ url }: { url: string }) => {
 const VSCodeTheme = () => {
   const defaultCode = `//Write some TS/JS to preview theme
 type DoGreeting = (msg: string) => void; 
-const isFunny = true; 
+let isFunny = true; 
 
-async function get(id: number): Promise<string> {
+async function get (id: number): Promise<string> {
 const res = await fetch("/greet/" + id);
 const data = await res.json();
-return data;
+return data.greeting;
 }
 `;
 
@@ -65,12 +69,6 @@ return data;
   const sidebarBg = themeOptions[activeTheme].sidebarBg;
   const sidebarFg = themeOptions[activeTheme].sidebarFg;
 
-  const handleThemeChange = (): void => {
-    setActiveTheme(
-      activeTheme === themeOptions.length - 1 ? 0 : activeTheme + 1
-    );
-  };
-
   return (
     <div className="w-[334px] h-[216px] flex flex-col relative">
       <header
@@ -86,7 +84,11 @@ return data;
           Get the themes
         </a>
         <button
-          onClick={handleThemeChange}
+          onClick={() =>
+            setActiveTheme(
+              activeTheme === themeOptions.length - 1 ? 0 : activeTheme + 1
+            )
+          }
           className="underline text-xs text-white cursor-pointer hover:text-primary-2"
         >
           Toggle theme
@@ -114,7 +116,6 @@ return data;
           <Editor
             value={code}
             onValueChange={(code) => setCode(code)}
-            // highlight={(code) => highlight(code, languages.ts)}
             highlight={(code) =>
               hljs.highlight(code, { language: "typescript" }).value
             }
