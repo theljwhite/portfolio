@@ -1,13 +1,11 @@
 "use client";
 
-import { Suspense, useState, useRef } from "react";
+import { Suspense, useState, useRef, useEffect } from "react";
 import { SOCIALS } from "../../constants/socials";
 import {
   Center,
   Environment,
   MeshReflectorMaterial,
-  OrbitControls,
-  PerspectiveCamera,
   Stars,
   Bounds,
 } from "@react-three/drei";
@@ -15,9 +13,9 @@ import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { CanvasWrapper } from "@isaac_ua/drei-html-fix";
 import { Physics, RigidBody, type RapierRigidBody } from "@react-three/rapier";
 import { useGLTF, useBounds, useCursor } from "@react-three/drei";
-import { useSceneStore } from "@/app/store/scene";
 import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
 import SceneLoadingCircle from "./SceneLoadingCircle";
+import CameraControls from "./CameraControls";
 import Laptop from "./Laptop";
 import EthStatue from "./EthStatue";
 import KrkDynamic from "./KrkDynamic";
@@ -128,8 +126,6 @@ const ProjectsFrame = () => {
 
 export default function Scene() {
   const [physicsPaused, setPhysicsPaused] = useState<boolean>(true);
-
-  const { isOrbitEnabled } = useSceneStore((state) => state);
 
   const socialRefs = useRef<Record<string, HTMLAnchorElement>>({});
   const rigidBodyRefs = useRef<Record<string, RapierRigidBody | null>>({
@@ -326,26 +322,7 @@ export default function Scene() {
                   </mesh>
                 </group>
               </Bounds>
-
-              <OrbitControls
-                enabled={isOrbitEnabled}
-                makeDefault
-                autoRotateSpeed={0.02}
-                maxPolarAngle={Math.PI / 2.3}
-                minPolarAngle={Math.PI / 2.8}
-                maxAzimuthAngle={isMobile ? 1 : Infinity}
-                minAzimuthAngle={isMobile ? 5.6 : Infinity}
-                enableZoom={!!isMobile}
-                minDistance={2}
-                maxDistance={7}
-                enablePan={true}
-                target={isMobile ? [-1, 0, -2] : undefined}
-              />
-              <PerspectiveCamera
-                makeDefault
-                fov={isMobile ? 94 : 65}
-                position={[0, 0, 4]}
-              />
+              <CameraControls />
             </Physics>
           </Canvas>
         </CanvasWrapper>

@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@isaac_ua/drei-html-fix": "^0.2.1",
+    "@react-spring/three": "^9.7.5",
     "@react-three/drei": "^9.115.0",
     "@react-three/fiber": "^8.17.10",
     "@react-three/postprocessing": "^2.16.3",

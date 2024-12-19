@@ -33,7 +33,7 @@ const BitcoinPrice = ({ isMobile }: { isMobile: boolean | null }) => {
         </Text>
       ) : (
         <Text
-          position={isMobile ? [1.7, 1.6, 1.2] : [1.8, 1.5, 1.3]}
+          position={isMobile ? [1.7, 1.6, 1.2] : [1.8, 1.5, 1.4]}
           rotation={[0, -1, 0]}
           fontSize={isMobile ? 0.15 : 0.2}
           letterSpacing={-0.02}

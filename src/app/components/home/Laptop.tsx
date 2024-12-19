@@ -11,22 +11,30 @@ export default function Laptop() {
   const [isLaptopContentChange, setIsLaptopContentChange] =
     useState<boolean>(false);
 
-  const { setIsOrbitEnabled } = useSceneStore((state) => state);
+  const { setCameraValues, cameraValues, resetCameraValues } = useSceneStore(
+    (state) => state
+  );
 
   const group = useRef<THREE.Group>(null);
 
   const { nodes, materials } = useGLTF("./3D/mac-draco.glb");
-  const bounds = useBounds();
 
   const onLaptopClick = (): void => {
     setIsLaptopContentChange(!isLaptopContentChange);
 
+    const laptopView = [0.15, 0, -6.8];
+
     if (isLaptopContentChange) {
-      bounds.moveTo([0, 0, 4]).lookAt({ target: [-1, 0, -2] });
-      setIsOrbitEnabled(true);
+      resetCameraValues();
     } else {
-      bounds.moveTo([0.1, 2, 1.7]).lookAt({ target: [0.15, -1, -6.5] }); //was 0.1, -1, -6
-      setIsOrbitEnabled(false);
+      setCameraValues({
+        cachedPos: cameraValues.pos,
+        cachedTarget: cameraValues.target,
+        pos: [0, 0, 4],
+        target: laptopView,
+        autoRotate: false,
+        orbitEnabled: false,
+      });
     }
   };
 

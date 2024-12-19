@@ -10,6 +10,15 @@ type AudioDetails = {
   outlink?: string;
 };
 
+type CameraValues = {
+  cachedPos: number[];
+  cachedTarget: number[];
+  pos: number[];
+  target: number[];
+  autoRotate: boolean;
+  orbitEnabled: boolean;
+};
+
 export interface HomeSceneState {
   isOverlayHidden: boolean;
   isProjectsOpen: boolean;
@@ -19,7 +28,10 @@ export interface HomeSceneState {
   isBitcoinDisplayOpen: boolean;
   donateAmount: string;
   activeLaptopContent: number | null;
+  cameraValues: CameraValues;
   isOrbitEnabled: boolean;
+  isAnimating: boolean;
+  isImmediate: boolean;
   setIsOverlayHidden: (isOverlayHidden: boolean) => void;
   setIsProjectsOpen: (isProjectsOpen: boolean) => void;
   setIsAudioPlaying: (isAudioPlaying: boolean) => void;
@@ -28,12 +40,17 @@ export interface HomeSceneState {
   setIsBitcoinDisplayOpen: (isBitcoinDisplayOpen: boolean) => void;
   setDonateAmount: (donateAmount: string) => void;
   setActiveLaptopContent: (activeLaptopContent: number | null) => void;
+  setCameraValues: (cameraValues: CameraValues) => void;
   setIsOrbitEnabled: (isOrbitEnabled: boolean) => void;
+  setIsAnimating: (isAnimating: boolean) => void;
+  setIsImmediate: (isImmediate: boolean) => void;
+  zoomOutCameraFromPos: () => void;
+  resetCameraValues: () => void;
   resetLaptopContent: () => void;
   reset: () => void;
 }
 
-export const useSceneStore = create<HomeSceneState>((set) => {
+export const useSceneStore = create<HomeSceneState>((set, get) => {
   const initialState = {
     stage: 0,
     isOverlayHidden: false,
@@ -51,7 +68,17 @@ export const useSceneStore = create<HomeSceneState>((set) => {
     isDonateOpen: false,
     donateAmount: "",
     activeLaptopContent: 0,
+    cameraValues: {
+      cachedPos: [0, 0, 0],
+      cachedTarget: [0, 0, 0],
+      pos: [0, 0, 4],
+      target: [0, 0, 0],
+      autoRotate: true,
+      orbitEnabled: false,
+    },
     isOrbitEnabled: true,
+    isAnimating: false,
+    isImmediate: true,
   };
 
   return {
@@ -66,7 +93,24 @@ export const useSceneStore = create<HomeSceneState>((set) => {
     setDonateAmount: (donateAmount: string) => set({ donateAmount }),
     setActiveLaptopContent: (activeLaptopContent: number | null) =>
       set({ activeLaptopContent }),
+    setCameraValues: (cameraValues: CameraValues) =>
+      set({ cameraValues, isImmediate: false }),
     setIsOrbitEnabled: (isOrbitEnabled: boolean) => set({ isOrbitEnabled }),
+    setIsAnimating: (isAnimating: boolean) => set({ isAnimating }),
+    setIsImmediate: (isImmediate: boolean) => set({ isImmediate }),
+    zoomOutCameraFromPos: () =>
+      set({
+        cameraValues: {
+          cachedPos: [0, 0, 0],
+          cachedTarget: get().cameraValues.target,
+          pos: [0, 0, 4],
+          target: [0, 0, 0],
+          autoRotate: true,
+          orbitEnabled: true,
+        },
+      }),
+
+    resetCameraValues: () => set({ cameraValues: initialState.cameraValues }),
     resetLaptopContent: () => set({ activeLaptopContent: 0 }),
     reset: () => set({ ...initialState }),
   };
