@@ -239,3 +239,58 @@ export const CopyIcon = ({ size, color }: IconProps): JSX.Element => (
     <path d="M448 0H224C188.7 0 160 28.65 160 64v224c0 35.35 28.65 64 64 64h224c35.35 0 64-28.65 64-64V64C512 28.65 483.3 0 448 0zM464 288c0 8.822-7.178 16-16 16H224C215.2 304 208 296.8 208 288V64c0-8.822 7.178-16 16-16h224c8.822 0 16 7.178 16 16V288zM304 448c0 8.822-7.178 16-16 16H64c-8.822 0-16-7.178-16-16V224c0-8.822 7.178-16 16-16h64V160H64C28.65 160 0 188.7 0 224v224c0 35.35 28.65 64 64 64h224c35.35 0 64-28.65 64-64v-64h-48V448z" />
   </svg>
 );
+
+export const BackCircleIcon = ({ size, color }: IconProps): JSX.Element => (
+  <svg
+    width={size}
+    height={size}
+    id="Icons"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs></defs>
+    <path
+      fill={color ?? "currentColor"}
+      d="M12,1A11,11,0,1,0,23,12,11,11,0,0,0,12,1Zm6,12H8.414l2.293,2.293a1,1,0,1,1-1.414,1.414l-4-4a1,1,0,0,1,0-1.414l4-4a1,1,0,1,1,1.414,1.414L8.414,11H18a1,1,0,0,1,0,2Z"
+    />
+  </svg>
+);
+
+export const BackArrowIcon = ({ size, color }: IconProps): JSX.Element => (
+  <svg
+    width={size}
+    height={size}
+    fill={color ?? "currentColor"}
+    id="Layer_1"
+    enableBackground="new 0 0 32 32"
+    version="1.1"
+    viewBox="0 0 32 32"
+    xmlSpace="preserve"
+    xmlns="http://www.w3.org/2000/svg"
+    xmlnsXlink="http://www.w3.org/1999/xlink"
+  >
+    <path d="M28,14H8.8l4.62-4.62C13.814,8.986,14,8.516,14,8c0-0.984-0.813-2-2-2c-0.531,0-0.994,0.193-1.38,0.58l-7.958,7.958  C2.334,14.866,2,15.271,2,16s0.279,1.08,0.646,1.447l7.974,7.973C11.006,25.807,11.469,26,12,26c1.188,0,2-1.016,2-2  c0-0.516-0.186-0.986-0.58-1.38L8.8,18H28c1.104,0,2-0.896,2-2S29.104,14,28,14z" />
+  </svg>
+);
+
+export const BackDoorIcon = ({
+  size,
+  color,
+  flip,
+}: IconProps & { flip: boolean }): JSX.Element => (
+  <svg
+    width={size}
+    height={size}
+    fill="none"
+    viewBox="0 0 24 24"
+    xmlns="http://www.w3.org/2000/svg"
+    className={flip ? "rotate-180" : ""}
+  >
+    <path
+      clipRule="evenodd"
+      d="M6 4C5.44772 4 5 4.44771 5 5L5 19C5 19.5523 5.44772 20 6 20H14C14.5523 20 15 20.4477 15 21C15 21.5523 14.5523 22 14 22H6C4.34315 22 3 20.6569 3 19L3 5C3 3.34314 4.34315 2 6 2L14 2C14.5523 2 15 2.44772 15 3C15 3.55229 14.5523 4 14 4L6 4ZM15.2929 7.29289C15.6834 6.90237 16.3166 6.90237 16.7071 7.29289L20.7071 11.2929C21.0976 11.6834 21.0976 12.3166 20.7071 12.7071L16.7071 16.7071C16.3166 17.0976 15.6834 17.0976 15.2929 16.7071C14.9024 16.3166 14.9024 15.6834 15.2929 15.2929L17.5858 13H9C8.44772 13 8 12.5523 8 12C8 11.4477 8.44772 11 9 11H17.5858L15.2929 8.70711C14.9024 8.31658 14.9024 7.68342 15.2929 7.29289Z"
+      fill={color ?? "currentColor"}
+      fillRule="evenodd"
+    />
+  </svg>
+);

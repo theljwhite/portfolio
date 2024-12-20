@@ -133,21 +133,10 @@ return data.greeting;
 };
 
 const QuickLinks = () => {
-  const {
-    cameraValues,
-    setActiveLaptopContent,
-    resetCameraValues,
-    zoomOutCameraFromPos,
-  } = useSceneStore((state) => state);
+  const { setActiveLaptopContent } = useSceneStore((state) => state);
 
   return (
     <div className="w-[334px] h-[216px] bg-primary-5">
-      <button
-        onClick={() => zoomOutCameraFromPos()}
-        className="text-white text-sm ml-2 underline hover:opacity-75"
-      >
-        Leave laptop
-      </button>
       <div className="flex justify-center flex-col pt-4 items-center">
         <h1 className="text-white text-xl">LJ&apos;s Quick Links</h1>
         <div className="text-primary-2 text-sm flex flex-row items-center justify-center gap-1">

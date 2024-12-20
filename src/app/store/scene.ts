@@ -1,6 +1,10 @@
 import { create } from "zustand";
 
-//zustand so that I can easily expand this later on in the future
+export enum LocationMarkers {
+  Laptop = 0,
+  Krk = 1,
+  Projects = 2,
+}
 
 type AudioDetails = {
   artist: string;
@@ -17,6 +21,7 @@ type CameraValues = {
   target: number[];
   autoRotate: boolean;
   orbitEnabled: boolean;
+  activeMarker?: number;
 };
 
 export interface HomeSceneState {
@@ -32,6 +37,7 @@ export interface HomeSceneState {
   isOrbitEnabled: boolean;
   isAnimating: boolean;
   isImmediate: boolean;
+  activeMarker: number | null;
   setIsOverlayHidden: (isOverlayHidden: boolean) => void;
   setIsProjectsOpen: (isProjectsOpen: boolean) => void;
   setIsAudioPlaying: (isAudioPlaying: boolean) => void;
@@ -44,8 +50,8 @@ export interface HomeSceneState {
   setIsOrbitEnabled: (isOrbitEnabled: boolean) => void;
   setIsAnimating: (isAnimating: boolean) => void;
   setIsImmediate: (isImmediate: boolean) => void;
+  setActiveMarker: (activeMarker: number | null) => void;
   zoomOutCameraFromPos: () => void;
-  resetCameraValues: () => void;
   resetLaptopContent: () => void;
   reset: () => void;
 }
@@ -74,11 +80,12 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
       pos: [0, 0, 4],
       target: [0, 0, 0],
       autoRotate: true,
-      orbitEnabled: false,
+      orbitEnabled: true,
     },
     isOrbitEnabled: true,
     isAnimating: false,
     isImmediate: true,
+    activeMarker: null,
   };
 
   return {
@@ -98,6 +105,7 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
     setIsOrbitEnabled: (isOrbitEnabled: boolean) => set({ isOrbitEnabled }),
     setIsAnimating: (isAnimating: boolean) => set({ isAnimating }),
     setIsImmediate: (isImmediate: boolean) => set({ isImmediate }),
+    setActiveMarker: (activeMarker: number | null) => set({ activeMarker }),
     zoomOutCameraFromPos: () =>
       set({
         cameraValues: {
@@ -107,10 +115,10 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
           target: [0, 0, 0],
           autoRotate: true,
           orbitEnabled: true,
+          activeMarker: undefined,
         },
+        activeMarker: null,
       }),
-
-    resetCameraValues: () => set({ cameraValues: initialState.cameraValues }),
     resetLaptopContent: () => set({ activeLaptopContent: 0 }),
     reset: () => set({ ...initialState }),
   };
