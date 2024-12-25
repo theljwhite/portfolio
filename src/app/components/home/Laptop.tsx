@@ -4,7 +4,7 @@ import { Html, useGLTF } from "@react-three/drei";
 import { useSceneStore, LocationMarkers } from "@/app/store/scene";
 import LaptopContent from "./LaptopContent";
 import Marker from "./Marker";
-import { BackArrowIcon, BackCircleIcon, BackDoorIcon } from "../UI/Icons";
+import { BackArrowIcon } from "../UI/Icons";
 
 //TODO - fix any types
 
@@ -46,9 +46,6 @@ export default function Laptop() {
       <Marker
         position={[-0.3, 2, -1.7]}
         title="Leave Laptop"
-        textColor="text-white"
-        circleBoxColor="bg-white"
-        circleBoxText="text-black text-xl"
         visible={activeMarker === LocationMarkers.Laptop}
         onClickAction={() => {
           zoomOutCameraFromPos();

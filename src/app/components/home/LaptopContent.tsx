@@ -6,7 +6,7 @@ import Editor from "react-simple-code-editor";
 import hljs from "highlight.js";
 import "./laptop-themes.css";
 
-//TODO check if statement, etc css styling for themes
+//TODO check if statement token scopes, etc css styling for themes
 //TODO mobile
 //TODO in future, add more to faux editor sidebar
 

@@ -19,9 +19,9 @@ import CameraControls from "./CameraControls";
 import Laptop from "./Laptop";
 import EthStatue from "./EthStatue";
 import KrkDynamic from "./KrkDynamic";
-import PictureFrame from "./PictureFrame";
 import BitcoinDisplay from "./BitcoinDisplay";
-import ProjectsStage from "./ProjectsStage";
+// import ProjectsStage from "./ProjectsStage";
+import Projects from "./Projects";
 
 //TODO - fix 'any' type casts and any's in general
 //TODO - some of this code can be consolidated and modularized
@@ -56,6 +56,8 @@ const Desk = () => {
   return (
     <primitive
       onClick={(e: ThreeEvent<MouseEvent>) => e.stopPropagation()}
+      onPointerOver={(e: ThreeEvent<PointerEvent>) => e.stopPropagation()}
+      onPointerOut={(e: ThreeEvent<PointerEvent>) => e.stopPropagation()}
       rotation={[0, 10, 0]}
       scale={1}
       object={scene}
@@ -100,26 +102,6 @@ const RedbullSingle = ({ handleClick }: { handleClick: () => void }) => {
       position={[1.0, 1.16, -1]}
       scale={0.1}
       object={scene}
-    />
-  );
-};
-
-const ProjectsFrame = () => {
-  const bounds = useBounds();
-
-  const moveToProjectFrames = (): void => {
-    bounds.moveTo([-4.4, 1.2, -3.6]);
-  };
-
-  return (
-    <PictureFrame
-      imageUrl="./projects.png"
-      color={0x000000}
-      name="projects-frame"
-      scale={[0.6, 0.6, 0.05] as any} //TODO
-      position={[-1.4, 1.2, -1.95] as any} //TODO
-      rotation={[0, 0.58, 0] as any} //TODO
-      onClick={moveToProjectFrames}
     />
   );
 };
@@ -198,7 +180,6 @@ export default function Scene() {
               <Bounds clip={false} observe maxDuration={0}>
                 <group position={[0, -0.5, 0]}>
                   <Desk />
-                  <ProjectsFrame />
                   <Laptop />
                   <BitcoinDisplay />
                   <Redbulls />
@@ -207,7 +188,7 @@ export default function Scene() {
                   />
                   <EthStatue />
                   <KrkDynamic />
-                  <ProjectsStage />
+                  <Projects />
 
                   <group scale={0.3} position={[0, 0, -1.2]}>
                     <Center rotation={[0, -0.4, 0]} position={[-2, 1, -2]}>

@@ -7,7 +7,9 @@ import { useSceneStore } from "@/app/store/scene";
 //that's why the z indexes here are so high for now.
 
 export default function Overlay() {
-  const { setIsAudioPlaying } = useSceneStore((state) => state);
+  const { isOverlayHidden, setIsAudioPlaying } = useSceneStore(
+    (state) => state
+  );
 
   const router = useRouter();
 
@@ -17,7 +19,11 @@ export default function Overlay() {
   };
 
   return (
-    <div>
+    <div
+      className={`${
+        isOverlayHidden ? "opacity-0" : "opacity-100"
+      } transition-opacity duration-200`}
+    >
       <div className="absolute text-white top-[40px] right-[160px] text-[15px] text-right z-[8388637]">
         LJ WHITE
         <br />

@@ -1,12 +1,12 @@
 import * as THREE from "three";
-import { Html } from "@react-three/drei";
+import { Html, Circle } from "@react-three/drei";
 
 interface MarkerProps {
-  title: string;
+  title?: string;
   position: number[];
-  textColor: string;
-  circleBoxColor: string;
-  circleBoxText: string;
+  titleTextClass?: string;
+  circleBoxColor?: string;
+  circleBoxText?: string;
   children: React.ReactNode;
   visible: boolean;
   onClickAction?: (...args: any[]) => any;
@@ -15,7 +15,7 @@ interface MarkerProps {
 export default function Marker({
   title,
   position,
-  textColor,
+  titleTextClass,
   circleBoxColor,
   circleBoxText,
   children,
@@ -32,13 +32,23 @@ export default function Marker({
           flex justify-start  transition-opacity duration-200 items-center min-w-[7em]`}
         >
           <div
-            className={`${circleBoxColor} ${circleBoxText} w-[1.5em] h-[1.5em] rounded-full text-center font-bold`}
+            className={`${circleBoxColor ?? "bg-white"} ${
+              circleBoxText ?? "text-black text-xl"
+            } w-[1.5em] h-[1.5em] rounded-full text-center font-bold`}
           >
             <div className="inline-block align-middle">{children}</div>
           </div>
-          <div className="inline-block align-middle">
-            <h1 className={`${textColor} text-lg min-w-[7em] pl-2`}>{title}</h1>
-          </div>
+          {title && (
+            <div className="inline-block align-middle">
+              <h1
+                className={`${
+                  titleTextClass ?? "text-white"
+                } text-lg min-w-[10em] pl-2`}
+              >
+                {title}
+              </h1>
+            </div>
+          )}
         </div>
       </Html>
     </mesh>

@@ -8,10 +8,10 @@ import { easing } from "maath";
 interface PictureFrameProps {
   imageUrl: string;
   color: number;
-  scale: THREE.Vector3;
+  scale?: number[];
   name: string;
-  position: THREE.Vector3;
-  rotation?: THREE.Euler;
+  position: number[];
+  rotation?: number[];
   onClick?: (e: ThreeEvent<MouseEvent>) => void;
 }
 
@@ -49,12 +49,16 @@ export default function PictureFrame({
   });
 
   return (
-    <group onClick={onClick} position={position} rotation={rotation}>
+    <group
+      onClick={onClick}
+      position={new THREE.Vector3(...position)}
+      rotation={new THREE.Euler(...(rotation ?? []))}
+    >
       <mesh
         name={name}
         onPointerOver={(e) => (e.stopPropagation(), setIsHover(true))}
         onPointerOut={() => setIsHover(false)}
-        scale={scale}
+        scale={new THREE.Vector3(...(scale ?? [0.7, 0.7, 0.05]))}
         position={[0, GOLDEN_RATIO / 2, 0]}
       >
         <boxGeometry />

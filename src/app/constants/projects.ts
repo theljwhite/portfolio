@@ -6,6 +6,8 @@ export type Project = {
   url: string | null;
   description: string | null;
   articlePath: string | null;
+  selected?: boolean;
+  tech: string[];
 };
 
 export const PROJECTS: Project[] = [
@@ -15,8 +17,18 @@ export const PROJECTS: Project[] = [
     images: ["https://i.ibb.co/Gs4fMqF/dashboard-One-New.png"],
     githubUrl: "https://github.com/theljwhite/loyalty",
     url: null,
-    description: "TODO",
+    description:
+      "Allows entities to create, deploy, and manage customizable on-chain loyalty program smart contracts & reward users with cryptocurrencies",
     articlePath: "/loyalty",
+    tech: [
+      "TypeScript",
+      "NextJS",
+      "Tailwind",
+      "TRPC",
+      "Prisma",
+      "Solidity",
+      "Zustand",
+    ],
   },
   {
     id: 1,
@@ -26,6 +38,15 @@ export const PROJECTS: Project[] = [
     url: null,
     description: "TODO",
     articlePath: "/blocklingo",
+    tech: [
+      "TypeScript",
+      "React/Vite",
+      "Tailwind",
+      "C#",
+      "ASP.NET",
+      "Solidity",
+      "Zustand",
+    ],
   },
   {
     id: 2,
@@ -35,6 +56,15 @@ export const PROJECTS: Project[] = [
     url: null,
     description: "TODO",
     articlePath: "/loyalty",
+    tech: [
+      "TypeScript",
+      "NextJS",
+      "Tailwind",
+      "TRPC",
+      "Prisma",
+      "Solidity",
+      "Zustand",
+    ],
   },
   {
     id: 3,
@@ -44,6 +74,15 @@ export const PROJECTS: Project[] = [
     url: null,
     description: "TODO",
     articlePath: "/blocklingo",
+    tech: [
+      "TypeScript",
+      "NextJS",
+      "Tailwind",
+      "TRPC",
+      "Prisma",
+      "Solidity",
+      "Zustand",
+    ],
   },
   {
     id: 4,
@@ -53,6 +92,15 @@ export const PROJECTS: Project[] = [
     url: null,
     description: "TODO",
     articlePath: "/loyalty",
+    tech: [
+      "TypeScript",
+      "NextJS",
+      "Tailwind",
+      "TRPC",
+      "Prisma",
+      "Solidity",
+      "Zustand",
+    ],
   },
   {
     id: 5,
@@ -62,5 +110,14 @@ export const PROJECTS: Project[] = [
     url: null,
     description: "TODO",
     articlePath: "/blocklingo",
+    tech: [
+      "TypeScript",
+      "NextJS",
+      "Tailwind",
+      "TRPC",
+      "Prisma",
+      "Solidity",
+      "Zustand",
+    ],
   },
 ];
