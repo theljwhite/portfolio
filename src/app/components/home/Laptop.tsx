@@ -44,7 +44,7 @@ export default function Laptop() {
       cachedTarget: cameraValues.target,
       pos: [0, 0, 4],
       target: LAPTOP_INTERACT_VIEW,
-      autoRotate: false,
+
       orbitEnabled: false,
       activeMarker: LocationMarkers.Laptop,
     });

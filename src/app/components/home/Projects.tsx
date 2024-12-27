@@ -18,14 +18,13 @@ const PROJ_Z_SPACING = 0.02;
 const PROJ_Y_SPACING = 1;
 
 const PROJ_TEXT_ANIMATE_TO = [0.2, 0.9, 2];
-const PROJ_LOCATION_MARKER_POS = [-0.4, 2.4, -2.7];
+const PROJ_LOCATION_MARKER_POS = [-0.1, 2.5, -2.7];
 
 const ProjectsFrame = () => {
   const {
     cameraValues,
     setCameraValues,
     setLocationMarker,
-    setActiveMarker,
     setIsOverlayHidden,
   } = useSceneStore((state) => state);
 
@@ -41,10 +40,10 @@ const ProjectsFrame = () => {
           cachedTarget: cameraValues.target,
           pos: [0, 0, 4],
           target: [0, 0, 0],
-          autoRotate: true,
           orbitEnabled: true,
           activeMarker: undefined,
         });
+        setIsOverlayHidden(false);
       },
     });
 
@@ -53,12 +52,10 @@ const ProjectsFrame = () => {
       cachedTarget: cameraValues.target,
       pos: PROJECTS_INTERACT_VIEW,
       target: [0, 0, 0],
-      autoRotate: false,
       orbitEnabled: false,
       activeMarker: LocationMarkers.Projects,
     });
 
-    setActiveMarker(LocationMarkers.Projects);
     setIsOverlayHidden(true);
   };
 
@@ -78,6 +75,8 @@ const ProjectsFrame = () => {
 export default function Projects() {
   const [projects, setProjects] = useState<Project[]>(PROJECTS);
   const [activeProj, setActiveProj] = useState<Project | null>(null);
+
+  const { setIsMarkerHidden } = useSceneStore((state) => state);
 
   const groupRef = useRef<THREE.Group>(null);
   const textGroupRef = useRef<THREE.Group>(null);
@@ -105,6 +104,7 @@ export default function Projects() {
     if (activeProject?.id === clickedProjId) {
       setActiveProj(null);
       setProjects(PROJECTS);
+      setIsMarkerHidden(false);
       return false;
     }
 
@@ -120,6 +120,7 @@ export default function Projects() {
 
     setActiveProj(selection);
     setProjects(projectsWithSelection);
+    setIsMarkerHidden(true);
 
     springApi.start({
       to: { scale: 1, pos: PROJ_TEXT_ANIMATE_TO },

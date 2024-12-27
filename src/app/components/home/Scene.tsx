@@ -110,7 +110,7 @@ const RedbullSingle = ({ handleClick }: { handleClick: () => void }) => {
 export default function Scene() {
   const [physicsPaused, setPhysicsPaused] = useState<boolean>(true);
 
-  const { locationMarker, activeMarker } = useSceneStore((state) => state);
+  const { activeMarker, isMarkerHidden } = useSceneStore((state) => state);
 
   const socialRefs = useRef<Record<string, HTMLAnchorElement>>({});
   const rigidBodyRefs = useRef<Record<string, RapierRigidBody | null>>({
@@ -183,7 +183,7 @@ export default function Scene() {
               <Bounds clip={false} observe maxDuration={0}>
                 <group position={[0, -0.5, 0]}>
                   <Desk />
-                  <LocationMarker visible={!!activeMarker} />
+                  <LocationMarker visible={!!activeMarker && !isMarkerHidden} />
                   <Laptop />
                   <BitcoinDisplay />
                   <Redbulls />

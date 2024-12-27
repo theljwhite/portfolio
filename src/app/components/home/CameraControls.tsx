@@ -79,7 +79,6 @@ export default function CameraControls() {
         makeDefault
         fov={isMobile ? 94 : 65}
         position={spring.pos as unknown as THREE.Vector3}
-        // rotation={spring.rotation as unknown as THREE.Euler}
       />
     </>
   );

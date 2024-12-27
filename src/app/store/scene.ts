@@ -19,7 +19,6 @@ type CameraValues = {
   cachedTarget: number[];
   pos: number[];
   target: number[];
-  autoRotate: boolean;
   orbitEnabled: boolean;
   activeMarker?: number;
 };
@@ -45,6 +44,7 @@ export interface HomeSceneState {
   isImmediate: boolean;
   activeMarker: number | null;
   locationMarker: LocationMarker;
+  isMarkerHidden: boolean;
   setIsOverlayHidden: (isOverlayHidden: boolean) => void;
   setIsProjectsOpen: (isProjectsOpen: boolean) => void;
   setIsAudioPlaying: (isAudioPlaying: boolean) => void;
@@ -59,6 +59,7 @@ export interface HomeSceneState {
   setIsImmediate: (isImmediate: boolean) => void;
   setActiveMarker: (activeMarker: number | null) => void;
   setLocationMarker: (locationMarker: LocationMarker) => void;
+  setIsMarkerHidden: (isMarkerHidden: boolean) => void;
   zoomOutCameraFromPos: () => void;
   resetLaptopContent: () => void;
   reset: () => void;
@@ -87,7 +88,6 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
       cachedTarget: [0, 0, 0],
       pos: [0, 0, 4],
       target: [0, 0, 0],
-      autoRotate: true,
       orbitEnabled: true,
     },
     isOrbitEnabled: true,
@@ -99,6 +99,7 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
       position: [-0.3, 2, -1.7],
       visible: false,
     },
+    isMarkerHidden: false,
   };
 
   return {
@@ -121,6 +122,7 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
     setActiveMarker: (activeMarker: number | null) => set({ activeMarker }),
     setLocationMarker: (locationMarker: LocationMarker) =>
       set({ locationMarker }),
+    setIsMarkerHidden: (isMarkerHidden: boolean) => set({ isMarkerHidden }),
     zoomOutCameraFromPos: () =>
       set({
         cameraValues: {
@@ -128,7 +130,6 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
           cachedTarget: get().cameraValues.target,
           pos: [0, 0, 4],
           target: [0, 0, 0],
-          autoRotate: true,
           orbitEnabled: true,
           activeMarker: undefined,
         },
