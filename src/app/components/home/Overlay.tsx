@@ -60,7 +60,6 @@ export default function Overlay() {
         </div>
         <br />
       </div>
-      {/* TODO AudioPlayer will go here */}
     </div>
   );
 }

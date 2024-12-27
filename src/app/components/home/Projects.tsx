@@ -2,13 +2,14 @@ import { useState, useRef } from "react";
 import { useSceneStore, LocationMarkers } from "@/app/store/scene";
 import { useSpring, animated, config } from "@react-spring/three";
 import * as THREE from "three";
-import { type ThreeEvent } from "@react-three/fiber";
+import { useThree, type ThreeEvent } from "@react-three/fiber";
 import { Text, Billboard } from "@react-three/drei";
+import { EffectComposer, Vignette } from "@react-three/postprocessing";
+import { BlendFunction } from "postprocessing";
 import { Project, PROJECTS } from "../../constants/projects";
 import { navOutWithGhostAnchor } from "@/app/utils/anchor";
 import PictureFrame from "./PictureFrame";
 import ProjectFrame from "./ProjectFrame";
-import Marker from "./Marker";
 
 const PROJECTS_INTERACT_VIEW = [-2.5, 1.4, -4.5];
 const PROJ_COLUMNS = 3;
@@ -16,11 +17,50 @@ const PROJ_X_SPACING = 1.3;
 const PROJ_Z_SPACING = 0.02;
 const PROJ_Y_SPACING = 1;
 
-const PROJ_TEXT_ANIMATE_TO = [0.2, 0.78, 2]; //Y was 0.95
+const PROJ_TEXT_ANIMATE_TO = [0.2, 0.9, 2];
+const PROJ_LOCATION_MARKER_POS = [-0.4, 2.4, -2.7];
 
 const ProjectsFrame = () => {
-  const { cameraValues, setCameraValues, setActiveMarker, setIsOverlayHidden } =
-    useSceneStore((state) => state);
+  const {
+    cameraValues,
+    setCameraValues,
+    setLocationMarker,
+    setActiveMarker,
+    setIsOverlayHidden,
+  } = useSceneStore((state) => state);
+
+  const onProjectsEnterClick = (e: ThreeEvent<MouseEvent>): void => {
+    e.stopPropagation();
+
+    setLocationMarker({
+      title: "Leave Projects",
+      position: PROJ_LOCATION_MARKER_POS,
+      onClickAction: () => {
+        setCameraValues({
+          cachedPos: PROJECTS_INTERACT_VIEW,
+          cachedTarget: cameraValues.target,
+          pos: [0, 0, 4],
+          target: [0, 0, 0],
+          autoRotate: true,
+          orbitEnabled: true,
+          activeMarker: undefined,
+        });
+      },
+    });
+
+    setCameraValues({
+      cachedPos: cameraValues.pos,
+      cachedTarget: cameraValues.target,
+      pos: PROJECTS_INTERACT_VIEW,
+      target: [0, 0, 0],
+      autoRotate: false,
+      orbitEnabled: false,
+      activeMarker: LocationMarkers.Projects,
+    });
+
+    setActiveMarker(LocationMarkers.Projects);
+    setIsOverlayHidden(true);
+  };
 
   return (
     <PictureFrame
@@ -30,20 +70,7 @@ const ProjectsFrame = () => {
       scale={[0.6, 0.6, 0.05]}
       position={[-1.4, 1.2, -1.95]}
       rotation={[0, 0.58, 0]}
-      onClick={(e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation();
-        setCameraValues({
-          cachedPos: cameraValues.pos,
-          cachedTarget: cameraValues.target,
-          pos: PROJECTS_INTERACT_VIEW,
-          target: [0, 0, 0],
-          autoRotate: false,
-          orbitEnabled: false,
-          activeMarker: LocationMarkers.Projects,
-        });
-        setActiveMarker(LocationMarkers.Projects);
-        setIsOverlayHidden(true);
-      }}
+      onClick={onProjectsEnterClick}
     />
   );
 };
@@ -53,6 +80,9 @@ export default function Projects() {
   const [activeProj, setActiveProj] = useState<Project | null>(null);
 
   const groupRef = useRef<THREE.Group>(null);
+  const textGroupRef = useRef<THREE.Group>(null);
+
+  const { viewport } = useThree();
 
   const [groupProps, springApi] = useSpring(
     {
@@ -65,16 +95,20 @@ export default function Projects() {
     []
   );
 
-  const onProjectClick = (e: ThreeEvent<MouseEvent>): void => {
+  const handleProjectSelection = (
+    e: ThreeEvent<MouseEvent>
+  ): boolean | null => {
     e.stopPropagation();
     const clickedProjId = Number(e.object.name.split("-")[2]);
-
     const activeProject = projects.find((project) => project.selected) ?? null;
 
     if (activeProject?.id === clickedProjId) {
       setActiveProj(null);
-      return;
+      setProjects(PROJECTS);
+      return false;
     }
+
+    if (activeProject && activeProject.id !== clickedProjId) return null;
 
     const projectsWithSelection = projects.map((project) => ({
       ...project,
@@ -93,6 +127,8 @@ export default function Projects() {
       config: config.default,
       reset: true,
     });
+
+    return true;
   };
 
   return (
@@ -116,19 +152,21 @@ export default function Projects() {
               key={project.id}
               project={project}
               position={[xPos, yPos, zPos]}
-              onClick={onProjectClick}
+              handleProjectSelection={handleProjectSelection}
             />
           );
         })}
         <animated.group
           position={groupProps.pos as unknown as THREE.Vector3}
           scale={groupProps.scale as unknown as THREE.Vector3}
+          ref={textGroupRef}
         >
-          <Billboard>
+          <Billboard position={[0, 0, 0]}>
             <Text
               maxWidth={0.2}
               position={[0, 0, 0]}
-              fontSize={0.04}
+              anchorX="center"
+              fontSize={viewport.width / 268}
               letterSpacing={-0.06}
               lineHeight={0.9}
             >
@@ -137,6 +175,7 @@ export default function Projects() {
             <Text
               maxWidth={0.2}
               position={[0, -0.18, 0]}
+              anchorX="center"
               fontSize={0.016}
               letterSpacing={-0.01}
               lineHeight={1.2}
@@ -146,6 +185,7 @@ export default function Projects() {
             <Text
               maxWidth={0.2}
               position={[0, -0.3, 0]}
+              anchorX="center"
               fontSize={0.016}
               letterSpacing={-0.01}
               lineHeight={1.2}
@@ -155,8 +195,9 @@ export default function Projects() {
             <Text
               onClick={() => navOutWithGhostAnchor(activeProj?.githubUrl ?? "")}
               position={[-0.07, -0.38, 0]}
+              anchorX="center"
               fontSize={0.02}
-              letterSpacing={-0.08}
+              letterSpacing={-0.02}
               fontStyle="italic"
             >
               {activeProj && "🔗Github"}
@@ -164,6 +205,16 @@ export default function Projects() {
           </Billboard>
         </animated.group>
       </group>
+      {activeProj && (
+        <EffectComposer enabled={!!activeProj} multisampling={0}>
+          <Vignette
+            offset={0.2}
+            darkness={0.9}
+            eskil={false}
+            blendFunction={BlendFunction.NORMAL}
+          />
+        </EffectComposer>
+      )}
     </>
   );
 }

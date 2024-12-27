@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useRef, useEffect } from "react";
+import { Suspense, useState, useRef } from "react";
 import { SOCIALS } from "../../constants/socials";
 import {
   Center,
@@ -12,6 +12,7 @@ import {
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { CanvasWrapper } from "@isaac_ua/drei-html-fix";
 import { Physics, RigidBody, type RapierRigidBody } from "@react-three/rapier";
+import { useSceneStore } from "@/app/store/scene";
 import { useGLTF, useBounds, useCursor } from "@react-three/drei";
 import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
 import SceneLoadingCircle from "./SceneLoadingCircle";
@@ -20,8 +21,8 @@ import Laptop from "./Laptop";
 import EthStatue from "./EthStatue";
 import KrkDynamic from "./KrkDynamic";
 import BitcoinDisplay from "./BitcoinDisplay";
-// import ProjectsStage from "./ProjectsStage";
 import Projects from "./Projects";
+import LocationMarker from "./LocationMarker";
 
 //TODO - fix 'any' type casts and any's in general
 //TODO - some of this code can be consolidated and modularized
@@ -109,6 +110,8 @@ const RedbullSingle = ({ handleClick }: { handleClick: () => void }) => {
 export default function Scene() {
   const [physicsPaused, setPhysicsPaused] = useState<boolean>(true);
 
+  const { locationMarker, activeMarker } = useSceneStore((state) => state);
+
   const socialRefs = useRef<Record<string, HTMLAnchorElement>>({});
   const rigidBodyRefs = useRef<Record<string, RapierRigidBody | null>>({
     github: null,
@@ -180,6 +183,7 @@ export default function Scene() {
               <Bounds clip={false} observe maxDuration={0}>
                 <group position={[0, -0.5, 0]}>
                   <Desk />
+                  <LocationMarker visible={!!activeMarker} />
                   <Laptop />
                   <BitcoinDisplay />
                   <Redbulls />

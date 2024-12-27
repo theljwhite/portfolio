@@ -1,9 +1,9 @@
 import { create } from "zustand";
 
 export enum LocationMarkers {
-  Laptop = 0,
-  Krk = 1,
-  Projects = 2,
+  Laptop = 1,
+  Krk = 2,
+  Projects = 3,
 }
 
 type AudioDetails = {
@@ -24,6 +24,12 @@ type CameraValues = {
   activeMarker?: number;
 };
 
+type LocationMarker = {
+  title: string;
+  position: number[];
+  onClickAction?: (...args: any) => any;
+};
+
 export interface HomeSceneState {
   isOverlayHidden: boolean;
   isProjectsOpen: boolean;
@@ -38,6 +44,7 @@ export interface HomeSceneState {
   isAnimating: boolean;
   isImmediate: boolean;
   activeMarker: number | null;
+  locationMarker: LocationMarker;
   setIsOverlayHidden: (isOverlayHidden: boolean) => void;
   setIsProjectsOpen: (isProjectsOpen: boolean) => void;
   setIsAudioPlaying: (isAudioPlaying: boolean) => void;
@@ -51,6 +58,7 @@ export interface HomeSceneState {
   setIsAnimating: (isAnimating: boolean) => void;
   setIsImmediate: (isImmediate: boolean) => void;
   setActiveMarker: (activeMarker: number | null) => void;
+  setLocationMarker: (locationMarker: LocationMarker) => void;
   zoomOutCameraFromPos: () => void;
   resetLaptopContent: () => void;
   reset: () => void;
@@ -86,6 +94,11 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
     isAnimating: false,
     isImmediate: true,
     activeMarker: null,
+    locationMarker: {
+      title: "Leave Laptop",
+      position: [-0.3, 2, -1.7],
+      visible: false,
+    },
   };
 
   return {
@@ -106,6 +119,8 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
     setIsAnimating: (isAnimating: boolean) => set({ isAnimating }),
     setIsImmediate: (isImmediate: boolean) => set({ isImmediate }),
     setActiveMarker: (activeMarker: number | null) => set({ activeMarker }),
+    setLocationMarker: (locationMarker: LocationMarker) =>
+      set({ locationMarker }),
     zoomOutCameraFromPos: () =>
       set({
         cameraValues: {

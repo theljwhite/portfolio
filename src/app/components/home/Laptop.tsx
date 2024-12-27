@@ -3,10 +3,6 @@ import * as THREE from "three";
 import { Html, useGLTF } from "@react-three/drei";
 import { useSceneStore, LocationMarkers } from "@/app/store/scene";
 import LaptopContent from "./LaptopContent";
-import Marker from "./Marker";
-import { BackArrowIcon } from "../UI/Icons";
-
-//TODO - fix any types
 
 const LAPTOP_INTERACT_VIEW = [0.15, 0, -6.8];
 
@@ -19,6 +15,7 @@ export default function Laptop() {
     activeMarker,
     setCameraValues,
     setActiveLaptopContent,
+    setLocationMarker,
     zoomOutCameraFromPos,
   } = useSceneStore((state) => state);
 
@@ -28,7 +25,19 @@ export default function Laptop() {
   const macNodes = nodes as Record<string, any>;
 
   const onLaptopClick = (): void => {
+    if (activeMarker) return;
+
     setIsLaptopContentChange(!isLaptopContentChange);
+
+    setLocationMarker({
+      title: "Leave Laptop",
+      position: [-0.3, 2, -1.7],
+      onClickAction: () => {
+        zoomOutCameraFromPos();
+        setIsLaptopContentChange(false);
+        setActiveLaptopContent(0);
+      },
+    });
 
     setCameraValues({
       cachedPos: cameraValues.pos,
@@ -43,18 +52,6 @@ export default function Laptop() {
 
   return (
     <>
-      <Marker
-        position={[-0.3, 2, -1.7]}
-        title="Leave Laptop"
-        visible={activeMarker === LocationMarkers.Laptop}
-        onClickAction={() => {
-          zoomOutCameraFromPos();
-          setIsLaptopContentChange(false);
-          setActiveLaptopContent(0);
-        }}
-      >
-        <BackArrowIcon size={20} />
-      </Marker>
       <group
         onClick={onLaptopClick}
         ref={group}

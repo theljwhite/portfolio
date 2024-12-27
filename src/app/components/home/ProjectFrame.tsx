@@ -11,18 +11,18 @@ interface ProjectFrameProps {
   project: Project;
   position: number[];
   scale?: number[];
-  onClick: (e: ThreeEvent<MouseEvent>) => void;
+  handleProjectSelection: (e: ThreeEvent<MouseEvent>) => boolean | null;
 }
 
 const GOLDEN_RATIO = 1.61803398875;
-const ANIMATE_FRAME_POS = [0.9, -0.2, 2]; //x was 1
+const ANIMATE_FRAME_POS = [0.9, -0.2, 2];
 const ANIMATE_FRAME_ROTATION = [-0.1, -0.08, 0];
 
 export default function ProjectFrame({
   project,
   position,
   scale,
-  onClick,
+  handleProjectSelection,
 }: ProjectFrameProps) {
   const [isHover, setIsHover] = useState<boolean>(false);
   const pictureFrameRef = useRef<any>(null);
@@ -49,16 +49,17 @@ export default function ProjectFrame({
   useFrame((_, dt) => {
     easing.dampC(
       pictureFrameRef.current.material.color,
-      isHover ? "orange" : "black",
+      isHover || project.selected ? "orange" : "black",
       0.1,
       dt
     );
   });
 
-  const extendedOnProjectClick = (e: ThreeEvent<MouseEvent>): void => {
+  const onProjectClick = (e: ThreeEvent<MouseEvent>): void => {
     if (activeMarker !== LocationMarkers.Projects) return;
 
-    onClick(e);
+    if (handleProjectSelection(e) === null) return;
+
     springApi.start({
       to: {
         pos: project.selected ? position : ANIMATE_FRAME_POS,
@@ -75,15 +76,14 @@ export default function ProjectFrame({
 
   return (
     <animated.group
-      onClick={extendedOnProjectClick}
+      onClick={onProjectClick}
       position={groupProps.pos as unknown as THREE.Vector3}
-      // rotation={new THREE.Euler(...(rotation ?? []))}
       rotation={groupProps.rotation as unknown as THREE.Euler}
     >
       <mesh
         name={`projects-frame-${project.id}`}
         onPointerOver={(e) => (e.stopPropagation(), setIsHover(true))}
-        onPointerOut={() => setIsHover(false)}
+        onPointerOut={(e) => (e.stopPropagation(), setIsHover(false))}
         scale={new THREE.Vector3(...(scale ?? [0.7, 0.7, 0.05]))}
         position={[0, GOLDEN_RATIO / 2, 0]}
       >
