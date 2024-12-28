@@ -4,7 +4,12 @@ import { useSpring, animated, config } from "@react-spring/three";
 import * as THREE from "three";
 import { useThree, type ThreeEvent } from "@react-three/fiber";
 import { Text, Billboard } from "@react-three/drei";
-import { EffectComposer, Vignette } from "@react-three/postprocessing";
+import {
+  DepthOfField,
+  EffectComposer,
+  Sepia,
+  Vignette,
+} from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
 import { Project, PROJECTS } from "../../constants/projects";
 import { navOutWithGhostAnchor } from "@/app/utils/anchor";
@@ -213,6 +218,11 @@ export default function Projects() {
             darkness={0.9}
             eskil={false}
             blendFunction={BlendFunction.NORMAL}
+          />
+          <DepthOfField
+            focusDistance={0} // where to focus
+            focalLength={0.02} // focal length
+            bokehScale={2} // bokeh size
           />
         </EffectComposer>
       )}

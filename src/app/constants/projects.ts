@@ -29,6 +29,7 @@ export const PROJECTS: Project[] = [
       "Solidity",
       "Zustand",
       "Zod",
+      "NextAuth",
       "Ethers",
       "Wagmi",
     ],
@@ -40,7 +41,7 @@ export const PROJECTS: Project[] = [
     githubUrl: "https://github.com/theljwhite/blocklingo",
     url: null,
     description:
-      "Multi step browser word puzzle game, similar to the games Connections & Contexto. Earn crypto while you solve world puzzles.",
+      "Multi step browser word puzzle game, similar to the games Connections & Contexto. Earn crypto while you solve word puzzles.",
     articlePath: "/blocklingo",
     tech: [
       "TypeScript",
@@ -73,9 +74,9 @@ export const PROJECTS: Project[] = [
     name: "My Portfolio App (Inception)",
     images: ["https://i.postimg.cc/XWmxsCQY/Screenshot-2024-11-15-163452.png"],
     githubUrl: "https://github.com/theljwhite/portfolio",
-    url: null,
+    url: "https://ljwhite.is",
     description:
-      "My portfolio website, which is very much still a work in progress. But thanks for visiting!",
+      "My portfolio website, which is very much still a work in progress. If you're reading this, you are here. Thanks a lot for visiting!",
     articlePath: "/portfolio",
     tech: [
       "TypeScript",
@@ -86,12 +87,12 @@ export const PROJECTS: Project[] = [
       "React Three Fiber",
       "React Three Drei",
       "React Three Rapier",
-      "React Three/Spring",
+      "React Spring / Three",
     ],
   },
   {
     id: 4,
-    name: "Tags - Web3 Link in Bio",
+    name: "Tags - Web3 Homepage & Link in Bio Tool",
     images: [
       "https://i.postimg.cc/RS0knVDr/tagsHome.jpg",
       "https://i.postimg.cc/9W13Mq1t/tags-Link-Editor1.jpg",
@@ -110,6 +111,7 @@ export const PROJECTS: Project[] = [
       "NextJS",
       "Tailwind",
       "TRPC",
+      "NextAuth",
       "Prisma",
       "Solidity",
       "Zustand",
