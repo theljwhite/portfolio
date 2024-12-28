@@ -15,18 +15,18 @@ const BitcoinPrice = ({ isMobile }: { isMobile: boolean | null }) => {
   });
   const bitcoinIsUp = data && data.rate_close >= data.rate_open;
 
-  const formattedPrice = data?.rate_close.toLocaleString("en-US", {
+  const formattedPrice = data?.rate_close?.toLocaleString("en-US", {
     maximumFractionDigits: 2,
     minimumFractionDigits: 2,
   });
 
   return (
     <>
-      {error ? (
+      {error || !formattedPrice ? (
         <Text
           position={isMobile ? [1.7, 1.6, 1.2] : [1.8, 1.5, 1.3]}
           rotation={[0, -1, 0]}
-          fontSize={isMobile ? 0.15 : 4}
+          fontSize={isMobile ? 0.15 : 0.2}
           letterSpacing={-0.2}
         >
           🚀🚀🚀🚀🚀

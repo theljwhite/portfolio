@@ -3,11 +3,10 @@ import { useSceneStore, LocationMarkers } from "@/app/store/scene";
 import { useSpring, animated, config } from "@react-spring/three";
 import * as THREE from "three";
 import { useThree, type ThreeEvent } from "@react-three/fiber";
-import { Text, Billboard } from "@react-three/drei";
+import { useTexture, Text, Billboard } from "@react-three/drei";
 import {
   DepthOfField,
   EffectComposer,
-  Sepia,
   Vignette,
 } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
@@ -24,6 +23,10 @@ const PROJ_Y_SPACING = 1;
 
 const PROJ_TEXT_ANIMATE_TO = [0.2, 0.9, 2];
 const PROJ_LOCATION_MARKER_POS = [-0.1, 2.5, -2.7];
+
+const allProjectImages = PROJECTS.flatMap((project) => project.images);
+
+allProjectImages.map((image) => useTexture.preload(image));
 
 const ProjectsFrame = () => {
   const {
@@ -219,11 +222,7 @@ export default function Projects() {
             eskil={false}
             blendFunction={BlendFunction.NORMAL}
           />
-          <DepthOfField
-            focusDistance={0} // where to focus
-            focalLength={0.02} // focal length
-            bokehScale={2} // bokeh size
-          />
+          <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={4} />
         </EffectComposer>
       )}
     </>

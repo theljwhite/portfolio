@@ -27,7 +27,7 @@ export default function LocationMarker({ visible }: LocationMarkerProps) {
             flex justify-start  transition-opacity duration-200 items-center min-w-[7em]`}
         >
           <div className="bg-white text-black text-xl w-[1.5em] h-[1.5em] rounded-full text-center font-bold">
-            <div className="inline-block align-middle">
+            <div className="inline-block align-middle mb-0.5">
               <BackArrowIcon size={20} />
             </div>
           </div>

@@ -1,3 +1,5 @@
+import * as THREE from "three";
+
 export type Project = {
   id: number;
   name: string;
@@ -6,8 +8,8 @@ export type Project = {
   url: string | null;
   description: string | null;
   articlePath: string | null;
-  selected?: boolean;
   tech: string[];
+  selected?: boolean;
 };
 
 export const PROJECTS: Project[] = [
