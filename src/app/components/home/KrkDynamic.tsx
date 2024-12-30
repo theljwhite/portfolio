@@ -45,7 +45,9 @@ export default function KrkDynamic() {
   const [colorIndex, setColorIndex] = useState<number>(0);
   const [speedMultiplier, setSpeedMultiplier] = useState<number>(1);
 
-  const { isAudioPlaying, setIsAudioPlaying } = useSceneStore((state) => state);
+  const { isAudioPlaying, activeMarker, setIsAudioPlaying } = useSceneStore(
+    (state) => state
+  );
 
   const rightSpotlightRef = useRef<TSpotLight>(null);
   const leftSpotlightRef = useRef<TSpotLight>(null);
@@ -126,6 +128,8 @@ export default function KrkDynamic() {
   });
 
   const onSpeakerClick = (e: ThreeEvent<any>): void => {
+    if (activeMarker !== null) return;
+
     setIsAudioPlaying(!isAudioPlaying);
     e.stopPropagation();
 

@@ -1,5 +1,3 @@
-import * as THREE from "three";
-
 export type Project = {
   id: number;
   name: string;
@@ -16,7 +14,17 @@ export const PROJECTS: Project[] = [
   {
     id: 0,
     name: "Lotta - Loyalty Programs on Blockchain",
-    images: ["https://i.ibb.co/Gs4fMqF/dashboard-One-New.png"],
+    images: [
+      "https://i.ibb.co/Gs4fMqF/dashboard-One-New.png",
+      "https://i.ibb.co/YP9Zb3g/connect-Wallet-New.png",
+      "https://i.ibb.co/6Dm0MWn/dashboard-One-Light.png",
+      "https://i.ibb.co/s6tNT1m/create-Obj.png",
+      "https://i.ibb.co/t2VSpD7/deploy-Summary.png",
+      "https://i.ibb.co/LvCdvPS/overview-New.png",
+      "https://i.ibb.co/6tfBvGJ/escrow-Wallet-New.png",
+      "https://i.ibb.co/Kmdz9zf/erc721-Deposit.png",
+      "https://i.ibb.co/1JGjG0r/reset-New2.png",
+    ],
     githubUrl: "https://github.com/theljwhite/loyalty",
     url: null,
     description:
@@ -39,7 +47,11 @@ export const PROJECTS: Project[] = [
   {
     id: 1,
     name: "Blocklingo - P2E Crypto Word Puzzle Game",
-    images: ["https://i.postimg.cc/kqSyw30k/Screenshot-2024-10-29-130516.png"],
+    images: [
+      "https://i.postimg.cc/kqSyw30k/Screenshot-2024-10-29-130516.png",
+      "https://i.postimg.cc/RSSRpR6r/Blocklingo3.png",
+      "https://i.postimg.cc/sjTJkh7M/Screenshot-2024-11-19-153707.png",
+    ],
     githubUrl: "https://github.com/theljwhite/blocklingo",
     url: null,
     description:
@@ -61,8 +73,8 @@ export const PROJECTS: Project[] = [
     id: 2,
     name: "TRNEE - Tournament Bracket Generator",
     images: [
-      "https://i.postimg.cc/kgqjsbwZ/Tourney1.png",
       "https://i.postimg.cc/PTpkCsgn/Home1.png",
+      "https://i.postimg.cc/kgqjsbwZ/Tourney1.png",
     ],
     githubUrl: "https://github.com/theljwhite/trnee",
     url: null,

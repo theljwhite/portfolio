@@ -12,6 +12,7 @@ interface PictureFrameProps {
   name: string;
   position: number[];
   rotation?: number[];
+  disabled?: boolean;
   onClick?: (e: ThreeEvent<MouseEvent>) => void;
 }
 
@@ -24,6 +25,7 @@ export default function PictureFrame({
   name,
   position,
   rotation,
+  disabled,
   onClick,
 }: PictureFrameProps) {
   const [isHover, setIsHover] = useState<boolean>(false);
@@ -36,7 +38,7 @@ export default function PictureFrame({
   useFrame((_, dt) => {
     easing.dampC(
       pictureFrameRef.current.material.color,
-      isHover ? "orange" : color ?? "black",
+      isHover && !disabled ? "orange" : color ?? "black",
       0.1,
       dt
     );
@@ -50,7 +52,7 @@ export default function PictureFrame({
 
   return (
     <group
-      onClick={onClick}
+      onClick={disabled ? undefined : onClick}
       position={new THREE.Vector3(...position)}
       rotation={new THREE.Euler(...(rotation ?? []))}
     >

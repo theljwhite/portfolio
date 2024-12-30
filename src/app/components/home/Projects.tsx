@@ -31,6 +31,7 @@ allProjectImages.map((image) => useTexture.preload(image));
 const ProjectsFrame = () => {
   const {
     cameraValues,
+    activeMarker,
     setCameraValues,
     setLocationMarker,
     setIsOverlayHidden,
@@ -69,12 +70,13 @@ const ProjectsFrame = () => {
 
   return (
     <PictureFrame
-      imageUrl="./projects.png"
+      imageUrl="./projectbrack.png"
       color={0x000000}
       name="projects-frame"
       scale={[0.6, 0.6, 0.05]}
       position={[-1.4, 1.2, -1.95]}
       rotation={[0, 0.58, 0]}
+      disabled={activeMarker !== null}
       onClick={onProjectsEnterClick}
     />
   );
@@ -223,6 +225,12 @@ export default function Projects() {
             blendFunction={BlendFunction.NORMAL}
           />
           <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={4} />
+          {/* <DepthOfField
+            focusDistance={0}
+            focalLength={0.005}
+            bokehScale={4}
+            // blendFunction={BlendFunction.SRC}
+          /> */}
         </EffectComposer>
       )}
     </>

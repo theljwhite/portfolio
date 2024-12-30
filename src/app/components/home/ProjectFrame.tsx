@@ -27,7 +27,6 @@ export default function ProjectFrame({
   const [isHover, setIsHover] = useState<boolean>(false);
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
 
-  const activeImageIndexRef = useRef<number>(0);
   const pictureFrameRef = useRef<any>(null);
 
   const { activeMarker } = useSceneStore((state) => state);
@@ -63,6 +62,8 @@ export default function ProjectFrame({
 
     if (handleProjectSelection(e) === null) return;
 
+    if (project.selected) setActiveImageIndex(0);
+
     springApi.start({
       to: {
         pos: project.selected ? position : ANIMATE_FRAME_POS,
@@ -80,22 +81,7 @@ export default function ProjectFrame({
   const onImageSlideClick = (e: ThreeEvent<MouseEvent>): void => {
     const caret = e.object.name;
     if (caret === "forward") {
-      if (activeImageIndexRef.current === project.images.length - 1) return;
-
-      activeImageIndexRef.current += 1;
-    }
-
-    if (caret === "back") {
-      if (activeImageIndexRef.current === 0) return;
-      activeImageIndexRef.current -= 1;
-    }
-  };
-
-  const onImageSlideClickState = (e: ThreeEvent<MouseEvent>): void => {
-    const caret = e.object.name;
-    if (caret === "forward") {
       if (activeImageIndex === project.images.length - 1) return;
-
       setActiveImageIndex(activeImageIndex + 1);
     }
 
@@ -151,23 +137,27 @@ export default function ProjectFrame({
         </Suspense>
 
         {project.selected && project.images.length > 1 && (
-          <group onClick={onImageSlideClickState} position={[1.2, 0, 0]}>
+          <group onClick={onImageSlideClick} position={[1.2, 0, 0]}>
             <Text
               name="forward"
               position={[-0.4, 0, 0]}
-              fontSize={0.3}
+              fontSize={0.5}
               color={
                 activeImageIndex === project.images.length - 1
                   ? 0x8e8e8e
                   : 0xffffff
               }
-            >{`>`}</Text>
+            >
+              &#8250;
+            </Text>
             <Text
               name="back"
               position={[-2, 0, 0]}
-              fontSize={0.3}
+              fontSize={0.5}
               color={activeImageIndex === 0 ? 0x8e8e8e : 0xffffff}
-            >{`<`}</Text>
+            >
+              &#8249;
+            </Text>
           </group>
         )}
       </mesh>

@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Text, useGLTF, useBounds, useCursor } from "@react-three/drei";
 import { useSceneStore } from "@/app/store/scene";
-import type { CoinApiTimeReturn } from "@/app/api/btc-price/route";
+import type { BitcoinPriceReturn } from "@/app/api/btc-price/route";
 import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
 import useSWR from "swr";
 
@@ -10,12 +10,16 @@ const fetcher = (url: string) => fetch(url).then((response) => response.json());
 const BitcoinPrice = ({ isMobile }: { isMobile: boolean | null }) => {
   const { isBitcoinDisplayOpen } = useSceneStore((state) => state);
 
-  const { data, error } = useSWR<CoinApiTimeReturn>("/api/btc-price", fetcher, {
-    refreshInterval: isBitcoinDisplayOpen ? 5000 : undefined,
-  });
-  const bitcoinIsUp = data && data.rate_close >= data.rate_open;
+  const { data, error } = useSWR<BitcoinPriceReturn>(
+    "/api/btc-price",
+    fetcher,
+    {
+      refreshInterval: isBitcoinDisplayOpen ? 5000 : undefined,
+      revalidateOnFocus: false,
+    }
+  );
 
-  const formattedPrice = data?.rate_close?.toLocaleString("en-US", {
+  const formattedPrice = data?.price?.toLocaleString("en-US", {
     maximumFractionDigits: 2,
     minimumFractionDigits: 2,
   });
@@ -37,9 +41,9 @@ const BitcoinPrice = ({ isMobile }: { isMobile: boolean | null }) => {
           rotation={[0, -1, 0]}
           fontSize={isMobile ? 0.15 : 0.2}
           letterSpacing={-0.02}
-          color={bitcoinIsUp ? 0x00cc00 : 0xff0000}
+          color={data?.isBitcoinUp ? 0x00cc00 : 0xff0000}
         >
-          {"$" + formattedPrice} {bitcoinIsUp ? "▲" : "▼"}
+          {"$" + formattedPrice} {data?.isBitcoinUp ? "▲" : "▼"}
         </Text>
       )}
     </>
