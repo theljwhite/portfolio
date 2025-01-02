@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useSceneStore } from "@/app/store/scene";
-import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
+import { useScreenSize } from "./ScreenSize";
 import { useSpring, animated, config } from "@react-spring/three";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import * as THREE from "three";
@@ -37,7 +37,7 @@ export default function CameraControls() {
     ]
   );
 
-  const isMobile = useClientMediaQuery("(max-width: 600px)");
+  const { isMobile } = useScreenSize();
 
   const [spring] = useSpring(
     {
@@ -67,9 +67,8 @@ export default function CameraControls() {
         autoRotate={false}
         maxPolarAngle={Math.PI / 2.3}
         minPolarAngle={Math.PI / 2.8}
-        maxAzimuthAngle={isMobile ? 1 : Infinity}
-        minAzimuthAngle={isMobile ? 5.6 : Infinity}
-        enableZoom={!!isMobile}
+        maxAzimuthAngle={isMobile && !isOrbitEnabled ? 1 : Infinity}
+        minAzimuthAngle={isMobile && !isOrbitEnabled ? 5.6 : Infinity}
         minDistance={2}
         maxDistance={7}
         enablePan={true}

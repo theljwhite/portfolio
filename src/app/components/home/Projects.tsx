@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { useSceneStore, LocationMarkers } from "@/app/store/scene";
+import { useScreenSize } from "./ScreenSize";
 import { useSpring, animated, config } from "@react-spring/three";
 import * as THREE from "three";
 import { useThree, type ThreeEvent } from "@react-three/fiber";
@@ -15,13 +16,17 @@ import { navOutWithGhostAnchor } from "@/app/utils/anchor";
 import PictureFrame from "./PictureFrame";
 import ProjectFrame from "./ProjectFrame";
 
+//TODO - make this more responsive based on viewport width
+
 const PROJECTS_INTERACT_VIEW = [-2.5, 1.4, -4.5];
+const PROJECTS_INTERACT_VIEW_MOBILE = [-3, 1.4, -5];
 const PROJ_COLUMNS = 3;
 const PROJ_X_SPACING = 1.3;
 const PROJ_Z_SPACING = 0.02;
 const PROJ_Y_SPACING = 1;
 
 const PROJ_TEXT_ANIMATE_TO = [0.2, 0.9, 2];
+const PROJ_TEXT_ANIMATE_TO_MOBILE = [0, 1.5, 2];
 const PROJ_LOCATION_MARKER_POS = [-0.1, 2.5, -2.7];
 
 const allProjectImages = PROJECTS.flatMap((project) => project.images);
@@ -37,6 +42,12 @@ const ProjectsFrame = () => {
     setIsOverlayHidden,
   } = useSceneStore((state) => state);
 
+  const { isMobile } = useScreenSize();
+
+  const projectsView = isMobile
+    ? PROJECTS_INTERACT_VIEW_MOBILE
+    : PROJECTS_INTERACT_VIEW;
+
   const onProjectsEnterClick = (e: ThreeEvent<MouseEvent>): void => {
     e.stopPropagation();
 
@@ -45,7 +56,7 @@ const ProjectsFrame = () => {
       position: PROJ_LOCATION_MARKER_POS,
       onClickAction: () => {
         setCameraValues({
-          cachedPos: PROJECTS_INTERACT_VIEW,
+          cachedPos: projectsView,
           cachedTarget: cameraValues.target,
           pos: [0, 0, 4],
           target: [0, 0, 0],
@@ -59,7 +70,7 @@ const ProjectsFrame = () => {
     setCameraValues({
       cachedPos: cameraValues.pos,
       cachedTarget: cameraValues.target,
-      pos: PROJECTS_INTERACT_VIEW,
+      pos: projectsView,
       target: [0, 0, 0],
       orbitEnabled: false,
       activeMarker: LocationMarkers.Projects,
@@ -92,10 +103,22 @@ export default function Projects() {
   const textGroupRef = useRef<THREE.Group>(null);
 
   const { viewport } = useThree();
+  const { size, isMobile } = useScreenSize();
+
+  const billboardResponseRatio = Math.abs(window.innerWidth / 2000 - 0.8);
+  const billboardXPos =
+    size === "xxl" ? 0 : isMobile ? 0.75 : billboardResponseRatio;
+
+  const billboardScaleRatio =
+    size === "xxl" ? viewport.width / 10 : viewport.width / 8;
+
+  const textAnimatePos = isMobile
+    ? PROJ_TEXT_ANIMATE_TO_MOBILE
+    : PROJ_TEXT_ANIMATE_TO;
 
   const [groupProps, springApi] = useSpring(
     {
-      to: { scale: 1, pos: PROJ_TEXT_ANIMATE_TO },
+      to: { scale: 1, pos: textAnimatePos },
       from: { scale: 0, pos: [2, 2, 2] },
       config: config.default,
       reset: true,
@@ -133,7 +156,7 @@ export default function Projects() {
     setIsMarkerHidden(true);
 
     springApi.start({
-      to: { scale: 1, pos: PROJ_TEXT_ANIMATE_TO },
+      to: { scale: 1, pos: textAnimatePos },
       from: { scale: 0, pos: [2, 2, 2] },
       config: config.default,
       reset: true,
@@ -172,12 +195,15 @@ export default function Projects() {
           scale={groupProps.scale as unknown as THREE.Vector3}
           ref={textGroupRef}
         >
-          <Billboard position={[0, 0, 0]}>
+          <Billboard
+            position={[billboardXPos, 0, 0]}
+            scale={isMobile ? 2.6 : billboardScaleRatio}
+          >
             <Text
               maxWidth={0.2}
               position={[0, 0, 0]}
               anchorX="center"
-              fontSize={viewport.width / 268}
+              fontSize={0.04}
               letterSpacing={-0.06}
               lineHeight={0.9}
             >
@@ -185,7 +211,7 @@ export default function Projects() {
             </Text>
             <Text
               maxWidth={0.2}
-              position={[0, -0.18, 0]}
+              position={isMobile ? [0, -0.58, 0] : [0, -0.18, 0]}
               anchorX="center"
               fontSize={0.016}
               letterSpacing={-0.01}
@@ -195,7 +221,7 @@ export default function Projects() {
             </Text>
             <Text
               maxWidth={0.2}
-              position={[0, -0.3, 0]}
+              position={isMobile ? [0, -0.7, 0] : [0, -0.3, 0]}
               anchorX="center"
               fontSize={0.016}
               letterSpacing={-0.01}
@@ -205,7 +231,7 @@ export default function Projects() {
             </Text>
             <Text
               onClick={() => navOutWithGhostAnchor(activeProj?.githubUrl ?? "")}
-              position={[-0.07, -0.38, 0]}
+              position={isMobile ? [-0.07, -0.8, 0] : [-0.07, -0.38, 0]}
               anchorX="center"
               fontSize={0.02}
               letterSpacing={-0.02}
@@ -225,12 +251,6 @@ export default function Projects() {
             blendFunction={BlendFunction.NORMAL}
           />
           <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={4} />
-          {/* <DepthOfField
-            focusDistance={0}
-            focalLength={0.005}
-            bokehScale={4}
-            // blendFunction={BlendFunction.SRC}
-          /> */}
         </EffectComposer>
       )}
     </>

@@ -1,3 +1,6 @@
+"use client";
+
+import { ScreenSizeProvider } from "./components/home/ScreenSize";
 import Scene from "./components/home/Scene";
 import Overlay from "./components/home/Overlay";
 import DonateEthModal from "./components/home/DonateEthModal";
@@ -5,7 +8,9 @@ import DonateEthModal from "./components/home/DonateEthModal";
 export default function Home() {
   return (
     <>
-      <Scene />
+      <ScreenSizeProvider>
+        <Scene />
+      </ScreenSizeProvider>
       <Overlay />
       <DonateEthModal />
     </>

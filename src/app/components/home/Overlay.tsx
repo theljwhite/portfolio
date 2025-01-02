@@ -21,7 +21,9 @@ export default function Overlay() {
   return (
     <div
       className={`${
-        isOverlayHidden ? "opacity-0" : "opacity-100"
+        isOverlayHidden
+          ? "opacity-0 pointer-events-none"
+          : "opacity-100 pointer-events-auto"
       } transition-opacity duration-200`}
     >
       <div className="absolute text-white top-[40px] right-[160px] text-[15px] text-right z-[8388637]">

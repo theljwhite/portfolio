@@ -14,7 +14,8 @@ import { CanvasWrapper } from "@isaac_ua/drei-html-fix";
 import { Physics, RigidBody, type RapierRigidBody } from "@react-three/rapier";
 import { useSceneStore } from "@/app/store/scene";
 import { useGLTF, useBounds, useCursor } from "@react-three/drei";
-import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
+import { useScreenSize } from "./ScreenSize";
+import { navOutWithGhostAnchor } from "@/app/utils/anchor";
 import SceneLoadingCircle from "./SceneLoadingCircle";
 import CameraControls from "./CameraControls";
 import Laptop from "./Laptop";
@@ -26,9 +27,6 @@ import LocationMarker from "./LocationMarker";
 
 //TODO - fix 'any' type casts and any's in general
 //TODO - some of this code can be consolidated and modularized
-
-//TODO - bounds animation duration can be turned up when this is fixed: https://github.com/pmndrs/drei/issues/1801
-//so that the camera zooms in slowly over time.
 
 interface SocialModelProps {
   url: string;
@@ -112,16 +110,14 @@ export default function Scene() {
 
   const { activeMarker, isMarkerHidden } = useSceneStore((state) => state);
 
-  const socialRefs = useRef<Record<string, HTMLAnchorElement>>({});
   const rigidBodyRefs = useRef<Record<string, RapierRigidBody | null>>({
     github: null,
     x: null,
     soundcloud: null,
     linkedin: null,
   });
-  const redbullAnchorRef = useRef<HTMLAnchorElement | null>(null);
 
-  const isMobile = useClientMediaQuery("(max-width: 600px)");
+  const { isMobile } = useScreenSize();
 
   const handleSocialClick = (social: string): void => {
     setPhysicsPaused(false);
@@ -136,35 +132,12 @@ export default function Scene() {
     });
 
     setTimeout(() => {
-      if (socialRefs.current[social]) {
-        socialRefs.current[social].click();
-      }
+      navOutWithGhostAnchor(SOCIALS[social]);
     }, 3000);
   };
 
   return (
     <div className="w-dvh h-dvh bg-black">
-      <div className="hidden">
-        {Object.keys(SOCIALS).map((social, index) => {
-          return (
-            <a
-              key={index}
-              target="_blank"
-              href={SOCIALS[social]}
-              rel="noreferrer"
-              ref={(el) => (socialRefs.current[social] = el!) as any}
-              className="hidden"
-            />
-          );
-        })}
-        <a
-          className="hidden"
-          target="_blank"
-          href="https://www.walmart.com/ip/Red-Bull-Winter-Edition-Iced-Vanilla-Berry-Energy-Drink-12-fl-oz-4-pack-cans/5340366890"
-          rel="noreferrer"
-          ref={redbullAnchorRef}
-        />
-      </div>
       <Suspense fallback={<SceneLoadingCircle />}>
         <CanvasWrapper>
           <Canvas dpr={[1, 2]} shadows>
@@ -188,7 +161,11 @@ export default function Scene() {
                   <BitcoinDisplay />
                   <Redbulls />
                   <RedbullSingle
-                    handleClick={() => redbullAnchorRef?.current?.click()}
+                    handleClick={() =>
+                      navOutWithGhostAnchor(
+                        "https://www.walmart.com/ip/Red-Bull-Winter-Edition-Iced-Vanilla-Berry-Energy-Drink-12-fl-oz-4-pack-cans/5340366890"
+                      )
+                    }
                   />
                   <EthStatue />
                   <KrkDynamic />
