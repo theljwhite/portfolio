@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useSceneStore } from "@/app/store/scene";
 import { useScreenSize } from "./ScreenSize";
 import { useSpring, animated, config } from "@react-spring/three";
@@ -15,10 +15,13 @@ import * as THREE from "three";
 //right now it allows orbit to be disabled when an obj is animated towards (zoomed in on) which is intended
 //it doesnt work with camera values orbitEnabled so for now I'm leaving it like it is, this is just a first pass to get things working
 
+//NOTE - useSpring anims dont work properly on mobile without isAnimating state to allow azimuth angles to be Infinity while animating
+
 const AnimatedOrbitControls = animated(OrbitControls);
 const AnimatedPerspectiveCamera = animated(PerspectiveCamera);
 
 export default function CameraControls() {
+  const [isAnimating, setIsAnimating] = useState<boolean>(false);
   const {
     cameraValues,
     isImmediate,
@@ -53,8 +56,12 @@ export default function CameraControls() {
       onStart: () => {
         if (memoizedCamValues.orbitEnabled) setIsOrbitEnabled(true);
         setActiveMarker(memoizedCamValues.activeMarker ?? null);
+        setIsAnimating(true);
       },
-      onRest: () => !memoizedCamValues.orbitEnabled && setIsOrbitEnabled(false),
+      onRest: () => {
+        if (!memoizedCamValues.orbitEnabled) setIsOrbitEnabled(false);
+        setIsAnimating(false);
+      },
     },
     [memoizedCamValues]
   );
@@ -67,8 +74,8 @@ export default function CameraControls() {
         autoRotate={false}
         maxPolarAngle={Math.PI / 2.3}
         minPolarAngle={Math.PI / 2.8}
-        maxAzimuthAngle={isMobile && !isOrbitEnabled ? 1 : Infinity}
-        minAzimuthAngle={isMobile && !isOrbitEnabled ? 5.6 : Infinity}
+        maxAzimuthAngle={isMobile && !isAnimating ? 1 : Infinity}
+        minAzimuthAngle={isMobile && !isAnimating ? 5.6 : Infinity}
         minDistance={2}
         maxDistance={7}
         enablePan={true}
