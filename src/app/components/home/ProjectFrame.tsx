@@ -1,4 +1,4 @@
-import { useState, useRef, Suspense } from "react";
+import { useState, useRef, Suspense, memo } from "react";
 import { useSpring, animated, config } from "@react-spring/three";
 import * as THREE from "three";
 import { useFrame, useThree, type ThreeEvent } from "@react-three/fiber";
@@ -11,6 +11,7 @@ import { easing } from "maath";
 interface ProjectFrameProps {
   project: Project;
   position: number[];
+  selectedProjId: number | null;
   handleProjectSelection: (e: ThreeEvent<MouseEvent>) => boolean | null;
 }
 
@@ -21,13 +22,16 @@ const ANIMATE_FRAME_ROTATION = [-0.1, -0.08, 0];
 const ANIMATE_FRAME_ROTATION_MOBILE = [0, 0, 0];
 const FRAME_MESH_UNSELECTED_SCALE = [0.7, 0.7, 0.05];
 
-export default function ProjectFrame({
+function ProjectFrame({
   project,
   position,
+  selectedProjId,
   handleProjectSelection,
 }: ProjectFrameProps) {
   const [isHover, setIsHover] = useState<boolean>(false);
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
+
+  const selected = selectedProjId === project.id;
 
   const { activeMarker } = useSceneStore((state) => state);
 
@@ -58,6 +62,7 @@ export default function ProjectFrame({
   const frameRotation = isMobile
     ? ANIMATE_FRAME_ROTATION_MOBILE
     : ANIMATE_FRAME_ROTATION;
+
   const frameAnimatePos = isMobile
     ? ANIMATE_FRAME_POS_MOBILE
     : ANIMATE_FRAME_POS;
@@ -67,7 +72,7 @@ export default function ProjectFrame({
   useFrame((_, dt) => {
     easing.dampC(
       pictureFrameRef.current.material.color,
-      isHover || project.selected ? "orange" : "black",
+      isHover || selected ? "orange" : "black",
       0.1,
       dt
     );
@@ -78,17 +83,17 @@ export default function ProjectFrame({
 
     if (handleProjectSelection(e) === null) return;
 
-    if (project.selected) setActiveImageIndex(0);
+    if (selected) setActiveImageIndex(0);
 
     springApi.start({
       to: {
-        pos: project.selected ? position : frameAnimatePos,
+        pos: selected ? position : frameAnimatePos,
 
-        rotation: project.selected ? [0, 0, 0] : frameRotation,
+        rotation: selected ? [0, 0, 0] : frameRotation,
       },
       from: {
-        pos: project.selected ? frameAnimatePos : position,
-        rotation: project.selected ? frameRotation : [0, 0, 0],
+        pos: selected ? frameAnimatePos : position,
+        rotation: selected ? frameRotation : [0, 0, 0],
       },
       config: config.default,
     });
@@ -119,7 +124,7 @@ export default function ProjectFrame({
         onPointerOut={(e) => (e.stopPropagation(), setIsHover(false))}
         scale={
           new THREE.Vector3(
-            ...(project.selected
+            ...(selected
               ? [responsiveFrameSize, responsiveFrameSize, 0.05]
               : FRAME_MESH_UNSELECTED_SCALE)
           )
@@ -158,7 +163,7 @@ export default function ProjectFrame({
           />
         </Suspense>
 
-        {project.selected && project.images.length > 1 && (
+        {selected && project.images.length > 1 && (
           <group onClick={onImageSlideClick} position={[1.2, 0, 0]}>
             <Text
               name="forward"
@@ -186,3 +191,5 @@ export default function ProjectFrame({
     </animated.group>
   );
 }
+
+export default memo(ProjectFrame);

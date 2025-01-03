@@ -8,6 +8,7 @@ import { useTexture, Text, Billboard } from "@react-three/drei";
 import {
   DepthOfField,
   EffectComposer,
+  ToneMapping,
   Vignette,
 } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
@@ -94,7 +95,6 @@ const ProjectsFrame = () => {
 };
 
 export default function Projects() {
-  const [projects, setProjects] = useState<Project[]>(PROJECTS);
   const [activeProj, setActiveProj] = useState<Project | null>(null);
 
   const { setIsMarkerHidden } = useSceneStore((state) => state);
@@ -131,28 +131,21 @@ export default function Projects() {
     e: ThreeEvent<MouseEvent>
   ): boolean | null => {
     e.stopPropagation();
-    const clickedProjId = Number(e.object.name.split("-")[2]);
-    const activeProject = projects.find((project) => project.selected) ?? null;
+    const objId = Number(e.object.name.split("-")[2]);
 
-    if (activeProject?.id === clickedProjId) {
+    const clickedProj = PROJECTS.find((project) => project.id === objId);
+
+    if (activeProj?.id === objId) {
       setActiveProj(null);
-      setProjects(PROJECTS);
       setIsMarkerHidden(false);
       return false;
     }
 
-    if (activeProject && activeProject.id !== clickedProjId) return null;
+    if (activeProj !== null && clickedProj?.id !== activeProj?.id) {
+      return null;
+    }
 
-    const projectsWithSelection = projects.map((project) => ({
-      ...project,
-      selected: project.id === clickedProjId,
-    }));
-
-    const selection =
-      projectsWithSelection.find((project) => project.selected) ?? null;
-
-    setActiveProj(selection);
-    setProjects(projectsWithSelection);
+    setActiveProj(clickedProj ?? null);
     setIsMarkerHidden(true);
 
     springApi.start({
@@ -173,7 +166,7 @@ export default function Projects() {
         position={[-0.4, 1, -2.66]}
         rotation={[0, -2.55, 0]}
       >
-        {projects.map((project, index) => {
+        {PROJECTS.map((project, index) => {
           const col = index % PROJ_COLUMNS;
           const row = Math.floor(index / PROJ_COLUMNS);
 
@@ -186,6 +179,7 @@ export default function Projects() {
               key={project.id}
               project={project}
               position={[xPos, yPos, zPos]}
+              selectedProjId={activeProj?.id ?? null}
               handleProjectSelection={handleProjectSelection}
             />
           );
@@ -242,15 +236,27 @@ export default function Projects() {
           </Billboard>
         </animated.group>
       </group>
-      {activeProj && (
-        <EffectComposer enabled={!!activeProj} multisampling={0}>
+      {activeProj && !isMobile && (
+        <EffectComposer enabled={!!activeProj && !isMobile} multisampling={0}>
           <Vignette
             offset={0.2}
             darkness={0.9}
             eskil={false}
             blendFunction={BlendFunction.NORMAL}
           />
+
           <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={4} />
+
+          {/* <ToneMapping
+            blendFunction={BlendFunction.NORMAL}
+            adaptive={true}
+            resolution={256}
+            middleGrey={0.6}
+            // minLuminance={4}
+            maxLuminance={16.0}
+            averageLuminance={1}
+            adaptationRate={1.0}
+          /> */}
         </EffectComposer>
       )}
     </>
