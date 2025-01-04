@@ -34,7 +34,6 @@ const ANIMATE_FRAME_POS = [0.9, -0.2, 2];
 const ANIMATE_FRAME_POS_MOBILE = [0.93, -0.2, 2];
 const ANIMATE_FRAME_ROTATION = [-0.1, -0.08, 0];
 const ANIMATE_FRAME_ROTATION_MOBILE = [0, 0, 0];
-const FRAME_MESH_UNSELECTED_SCALE = [0.7, 0.7, 0.05];
 
 const allProjectImages = PROJECTS.flatMap((project) => project.images);
 
@@ -102,7 +101,6 @@ const ProjectsFrame = () => {
 
 export default function Projects() {
   const [activeProj, setActiveProj] = useState<Project | null>(null);
-  const [activeProjImgIndex, setActiveProjImgIndex] = useState<number>(0);
 
   const { activeMarker, setIsMarkerHidden } = useSceneStore((state) => state);
 
@@ -199,7 +197,6 @@ export default function Projects() {
     if (isAlreadySelected) {
       setActiveProj(null);
       setIsMarkerHidden(false);
-      setActiveProjImgIndex(0);
       return;
     }
 
@@ -234,8 +231,6 @@ export default function Projects() {
                 key={project.id}
                 project={project}
                 selectedProjId={activeProj?.id ?? null}
-                // activeImageIndex={activeProjImgIndex}
-                // setActiveImageIndex={setActiveProjImgIndex}
               />
             </animated.group>
           );
