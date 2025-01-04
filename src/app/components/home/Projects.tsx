@@ -1,7 +1,7 @@
 import { useState, useRef } from "react";
 import { useSceneStore, LocationMarkers } from "@/app/store/scene";
 import { useScreenSize } from "./ScreenSize";
-import { useSpring, animated, config } from "@react-spring/three";
+import { useSpring, useSprings, animated, config } from "@react-spring/three";
 import * as THREE from "three";
 import { useThree, type ThreeEvent } from "@react-three/fiber";
 import { useTexture, Text, Billboard } from "@react-three/drei";
@@ -29,6 +29,12 @@ const PROJ_Y_SPACING = 1;
 const PROJ_TEXT_ANIMATE_TO = [0.2, 0.9, 2];
 const PROJ_TEXT_ANIMATE_TO_MOBILE = [0, 1.5, 2];
 const PROJ_LOCATION_MARKER_POS = [-0.1, 2.5, -2.7];
+
+const ANIMATE_FRAME_POS = [0.9, -0.2, 2];
+const ANIMATE_FRAME_POS_MOBILE = [0.93, -0.2, 2];
+const ANIMATE_FRAME_ROTATION = [-0.1, -0.08, 0];
+const ANIMATE_FRAME_ROTATION_MOBILE = [0, 0, 0];
+const FRAME_MESH_UNSELECTED_SCALE = [0.7, 0.7, 0.05];
 
 const allProjectImages = PROJECTS.flatMap((project) => project.images);
 
@@ -96,8 +102,9 @@ const ProjectsFrame = () => {
 
 export default function Projects() {
   const [activeProj, setActiveProj] = useState<Project | null>(null);
+  const [activeProjImgIndex, setActiveProjImgIndex] = useState<number>(0);
 
-  const { setIsMarkerHidden } = useSceneStore((state) => state);
+  const { activeMarker, setIsMarkerHidden } = useSceneStore((state) => state);
 
   const groupRef = useRef<THREE.Group>(null);
   const textGroupRef = useRef<THREE.Group>(null);
@@ -116,7 +123,25 @@ export default function Projects() {
     ? PROJ_TEXT_ANIMATE_TO_MOBILE
     : PROJ_TEXT_ANIMATE_TO;
 
-  const [groupProps, springApi] = useSpring(
+  const frameRotation = isMobile
+    ? ANIMATE_FRAME_ROTATION_MOBILE
+    : ANIMATE_FRAME_ROTATION;
+
+  const frameAnimatePos = isMobile
+    ? ANIMATE_FRAME_POS_MOBILE
+    : ANIMATE_FRAME_POS;
+
+  const projectsWithPositions = PROJECTS.map((project, index) => {
+    const col = index % PROJ_COLUMNS;
+    const row = Math.floor(index / PROJ_COLUMNS);
+
+    const xPos = col * PROJ_X_SPACING;
+    const zPos = col * PROJ_Z_SPACING;
+    const yPos = -row * PROJ_Y_SPACING;
+    return { ...project, position: [xPos, yPos, zPos] };
+  });
+
+  const [textProps, textSpringApi] = useSpring(
     {
       to: { scale: 1, pos: textAnimatePos },
       from: { scale: 0, pos: [2, 2, 2] },
@@ -127,35 +152,66 @@ export default function Projects() {
     []
   );
 
-  const handleProjectSelection = (
-    e: ThreeEvent<MouseEvent>
-  ): boolean | null => {
+  const [frameProps, frameSpringApi] = useSprings(
+    projectsWithPositions.length,
+    projectsWithPositions.map((project) => {
+      return {
+        pos: project.position,
+        rotation: [0, 0, 0],
+        from: {
+          pos: project.position,
+          rotation: [0, 0, 0],
+        },
+        config: config.default,
+        reset: false,
+        immediate: true,
+      };
+    }),
+    []
+  );
+
+  const handleProjectSelection = (e: ThreeEvent<MouseEvent>): void => {
     e.stopPropagation();
+
+    if (activeMarker !== LocationMarkers.Projects) return;
+
     const objId = Number(e.object.name.split("-")[2]);
 
-    const clickedProj = PROJECTS.find((project) => project.id === objId);
+    const clickedProj = projectsWithPositions.find(
+      (project) => project.id === objId
+    );
+    const isAlreadySelected = activeProj?.id === objId;
 
-    if (activeProj?.id === objId) {
+    if (activeProj && clickedProj?.id !== activeProj.id) return;
+
+    frameSpringApi.current[objId].start({
+      to: {
+        pos: isAlreadySelected ? clickedProj?.position : frameAnimatePos,
+        rotation: isAlreadySelected ? [0, 0, 0] : frameRotation,
+      },
+      from: {
+        pos: isAlreadySelected ? frameAnimatePos : clickedProj?.position,
+        rotation: isAlreadySelected ? frameRotation : [0, 0, 0],
+      },
+      config: config.default,
+    });
+
+    if (isAlreadySelected) {
       setActiveProj(null);
       setIsMarkerHidden(false);
-      return false;
-    }
-
-    if (activeProj !== null && clickedProj?.id !== activeProj?.id) {
-      return null;
+      setActiveProjImgIndex(0);
+      return;
     }
 
     setActiveProj(clickedProj ?? null);
     setIsMarkerHidden(true);
 
-    springApi.start({
+    textSpringApi.start({
       to: { scale: 1, pos: textAnimatePos },
       from: { scale: 0, pos: [2, 2, 2] },
       config: config.default,
       reset: true,
     });
-
-    return true;
   };
 
   return (
@@ -166,27 +222,27 @@ export default function Projects() {
         position={[-0.4, 1, -2.66]}
         rotation={[0, -2.55, 0]}
       >
-        {PROJECTS.map((project, index) => {
-          const col = index % PROJ_COLUMNS;
-          const row = Math.floor(index / PROJ_COLUMNS);
-
-          const xPos = col * PROJ_X_SPACING;
-          const zPos = col * PROJ_Z_SPACING;
-          const yPos = -row * PROJ_Y_SPACING;
-
+        {projectsWithPositions.map((project, index) => {
           return (
-            <ProjectFrame
+            <animated.group
               key={project.id}
-              project={project}
-              position={[xPos, yPos, zPos]}
-              selectedProjId={activeProj?.id ?? null}
-              handleProjectSelection={handleProjectSelection}
-            />
+              position={frameProps[index].pos as unknown as THREE.Vector3}
+              rotation={frameProps[index].rotation as unknown as THREE.Euler}
+              onClick={handleProjectSelection}
+            >
+              <ProjectFrame
+                key={project.id}
+                project={project}
+                selectedProjId={activeProj?.id ?? null}
+                // activeImageIndex={activeProjImgIndex}
+                // setActiveImageIndex={setActiveProjImgIndex}
+              />
+            </animated.group>
           );
         })}
         <animated.group
-          position={groupProps.pos as unknown as THREE.Vector3}
-          scale={groupProps.scale as unknown as THREE.Vector3}
+          position={textProps.pos as unknown as THREE.Vector3}
+          scale={textProps.scale as unknown as THREE.Vector3}
           ref={textGroupRef}
         >
           <Billboard

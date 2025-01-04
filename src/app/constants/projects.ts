@@ -7,7 +7,7 @@ export type Project = {
   description: string | null;
   articlePath: string | null;
   tech: string[];
-  selected?: boolean;
+  position?: number[];
 };
 
 export const PROJECTS: Project[] = [
