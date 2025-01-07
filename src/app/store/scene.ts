@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { type Project } from "../constants/projects";
 
 export enum LocationMarkers {
   Laptop = 1,
@@ -45,6 +46,7 @@ export interface HomeSceneState {
   activeMarker: number | null;
   locationMarker: LocationMarker;
   isMarkerHidden: boolean;
+  activeProj: Project | null;
   setIsOverlayHidden: (isOverlayHidden: boolean) => void;
   setIsProjectsOpen: (isProjectsOpen: boolean) => void;
   setIsAudioPlaying: (isAudioPlaying: boolean) => void;
@@ -60,6 +62,7 @@ export interface HomeSceneState {
   setActiveMarker: (activeMarker: number | null) => void;
   setLocationMarker: (locationMarker: LocationMarker) => void;
   setIsMarkerHidden: (isMarkerHidden: boolean) => void;
+  setActiveProj: (activeProj: Project | null) => void;
   zoomOutCameraFromPos: () => void;
   resetLaptopContent: () => void;
   reset: () => void;
@@ -100,6 +103,7 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
       visible: false,
     },
     isMarkerHidden: false,
+    activeProj: null,
   };
 
   return {
@@ -123,6 +127,7 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
     setLocationMarker: (locationMarker: LocationMarker) =>
       set({ locationMarker }),
     setIsMarkerHidden: (isMarkerHidden: boolean) => set({ isMarkerHidden }),
+    setActiveProj: (activeProj: Project | null) => set({ activeProj }),
     zoomOutCameraFromPos: () =>
       set({
         cameraValues: {

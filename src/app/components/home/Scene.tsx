@@ -8,6 +8,7 @@ import {
   MeshReflectorMaterial,
   Stars,
   Bounds,
+  PerformanceMonitor,
 } from "@react-three/drei";
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { CanvasWrapper } from "@isaac_ua/drei-html-fix";
@@ -19,11 +20,13 @@ import { navOutWithGhostAnchor } from "@/app/utils/anchor";
 import SceneLoadingCircle from "./SceneLoadingCircle";
 import CameraControls from "./CameraControls";
 import Laptop from "./Laptop";
-import EthStatue from "./EthStatue";
 import KrkDynamic from "./KrkDynamic";
 import BitcoinDisplay from "./BitcoinDisplay";
+import ProjectsFrame from "./ProjectsFrame";
 import Projects from "./Projects";
 import LocationMarker from "./LocationMarker";
+
+import { Perf } from "r3f-perf";
 
 //TODO - fix 'any' type casts and any's in general
 //TODO - some of this code can be consolidated and modularized
@@ -44,7 +47,6 @@ const ALL_MODELS = [
   "./3D/github.glb",
   "./3D/x.glb",
   "./3D/krk_single.glb",
-  "./3D/eth_donate.glb",
   "./3D/mac-draco.glb",
 ];
 
@@ -107,6 +109,7 @@ const RedbullSingle = ({ handleClick }: { handleClick: () => void }) => {
 
 export default function Scene() {
   const [physicsPaused, setPhysicsPaused] = useState<boolean>(true);
+  const [dpr, setDpr] = useState<number>(1.5);
 
   const { activeMarker, isMarkerHidden } = useSceneStore((state) => state);
 
@@ -140,7 +143,12 @@ export default function Scene() {
     <div className="w-dvh h-dvh bg-black">
       <Suspense fallback={<SceneLoadingCircle />}>
         <CanvasWrapper>
-          <Canvas dpr={[1, 2]} shadows>
+          <Canvas dpr={dpr}>
+            <PerformanceMonitor
+              onIncline={() => setDpr(2)}
+              onDecline={() => setDpr(1)}
+            />
+            <Perf />
             <Physics paused={physicsPaused} key={0} timeStep={1 / 60}>
               <fog attach="fog" args={["rgb(16,16,16)", 0, 10]} />
               <Environment preset="city" />
@@ -167,8 +175,9 @@ export default function Scene() {
                       )
                     }
                   />
-                  <EthStatue />
+                  {/* <EthStatue /> */}
                   <KrkDynamic />
+                  <ProjectsFrame />
                   <Projects />
 
                   <group scale={0.3} position={[0, 0, -1.2]}>

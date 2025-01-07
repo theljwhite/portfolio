@@ -8,19 +8,27 @@ import { easing } from "maath";
 
 interface ProjectFrameProps {
   project: Project;
-  selectedProjId: number | null;
+  activeProjRef: React.RefObject<Project | null>;
 }
+
+type Mesh = THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
 
 const GOLDEN_RATIO = 1.61803398875;
 const FRAME_MESH_UNSELECTED_SCALE = [0.7, 0.7, 0.05];
 
-function ProjectFrame({ project, selectedProjId }: ProjectFrameProps) {
+function ProjectFrame({ project, activeProjRef }: ProjectFrameProps) {
   const [isHover, setIsHover] = useState<boolean>(false);
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
 
-  const selected = selectedProjId === project.id;
+  const projectFrameRef = useRef<Mesh>(null);
+  const pictureFrameRef = useRef<Mesh>(null);
+  const caretGroupRef = useRef<THREE.Group>(null);
 
-  const pictureFrameRef = useRef<any>(null);
+  const forwardCaretRef = useRef<Mesh>(null);
+
+  const backCaretRef = useRef<Mesh>(null);
+
+  const activeImgIndexRef = useRef<number>(0);
 
   const { viewport } = useThree();
   const { size, isMobile } = useScreenSize();
@@ -32,39 +40,66 @@ function ProjectFrame({ project, selectedProjId }: ProjectFrameProps) {
   useCursor(isHover);
 
   useFrame((_, dt) => {
-    easing.dampC(
-      pictureFrameRef.current.material.color,
-      isHover || selected ? "orange" : "black",
-      0.1,
-      dt
-    );
+    const selected = project.id === activeProjRef.current?.id;
+    if (
+      pictureFrameRef.current &&
+      caretGroupRef.current &&
+      projectFrameRef.current &&
+      forwardCaretRef.current &&
+      backCaretRef.current
+    ) {
+      easing.dampC(
+        pictureFrameRef.current.material.color,
+        isHover || selected ? "orange" : "black",
+        0.1,
+        dt
+      );
+      caretGroupRef.current.visible = selected && project.images.length > 1;
+
+      if (selected) {
+        projectFrameRef.current.scale.set(
+          responsiveFrameSize,
+          responsiveFrameSize,
+          0.05
+        );
+
+        forwardCaretRef.current.material.color.set(
+          activeImgIndexRef.current === project.images.length - 1
+            ? 0x8e8e8e
+            : 0xffffff
+        );
+
+        backCaretRef.current.material.color.set(
+          activeImgIndexRef.current === 0 ? 0x8e8e8e : 0xffffff
+        );
+      } else {
+        projectFrameRef.current.scale.set(0.7, 0.7, 0.05);
+        activeImgIndexRef.current = 0;
+      }
+    }
   });
 
   const onImageSlideClick = (e: ThreeEvent<MouseEvent>): void => {
     const caret = e.object.name;
     if (caret === "forward") {
-      if (activeImageIndex === project.images.length - 1) return;
-      setActiveImageIndex(activeImageIndex + 1);
+      if (activeImgIndexRef.current === project.images.length - 1) return;
+      activeImgIndexRef.current += 1;
     }
 
     if (caret === "back") {
-      if (activeImageIndex === 0) return;
-      setActiveImageIndex(activeImageIndex - 1);
+      if (activeImgIndexRef.current === 0) return;
+      activeImgIndexRef.current -= 1;
     }
+
+    setActiveImageIndex(activeImgIndexRef.current);
   };
 
   return (
     <mesh
+      ref={projectFrameRef}
       name={`projects-frame-${project.id}`}
       onPointerOver={(e) => (e.stopPropagation(), setIsHover(true))}
       onPointerOut={(e) => (e.stopPropagation(), setIsHover(false))}
-      scale={
-        new THREE.Vector3(
-          ...(selected
-            ? [responsiveFrameSize, responsiveFrameSize, 0.05]
-            : FRAME_MESH_UNSELECTED_SCALE)
-        )
-      }
       position={[0, GOLDEN_RATIO / 2, 0]}
     >
       <boxGeometry />
@@ -92,37 +127,36 @@ function ProjectFrame({ project, selectedProjId }: ProjectFrameProps) {
         }
       >
         <Image
+          name="project-frame-image"
           raycast={() => null}
-          url={project.images[activeImageIndex ?? 0]}
+          url={project.images[activeImageIndex]}
           position={[0, 0, 0.7]}
           zoom={1}
         />
       </Suspense>
-
-      {selected && project.images.length > 1 && (
-        <group onClick={onImageSlideClick} position={[1.2, 0, 0]}>
-          <Text
-            name="forward"
-            position={[-0.4, 0, 0]}
-            fontSize={0.5}
-            color={
-              activeImageIndex === project.images.length - 1
-                ? 0x8e8e8e
-                : 0xffffff
-            }
-          >
-            &#8250;
-          </Text>
-          <Text
-            name="back"
-            position={[-2, 0, 0]}
-            fontSize={0.5}
-            color={activeImageIndex === 0 ? 0x8e8e8e : 0xffffff}
-          >
-            &#8249;
-          </Text>
-        </group>
-      )}
+      <group
+        ref={caretGroupRef}
+        visible={false}
+        onClick={onImageSlideClick}
+        position={[1.2, 0, 0]}
+      >
+        <Text
+          ref={forwardCaretRef}
+          name="forward"
+          position={[-0.4, 0, 0]}
+          fontSize={0.5}
+        >
+          &#8250;
+        </Text>
+        <Text
+          ref={backCaretRef}
+          name="back"
+          position={[-2, 0, 0]}
+          fontSize={0.5}
+        >
+          &#8249;
+        </Text>
+      </group>
     </mesh>
   );
 }
