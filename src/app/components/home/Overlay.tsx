@@ -2,14 +2,15 @@
 
 import { useRouter } from "next/navigation";
 import { useSceneStore } from "@/app/store/scene";
+import { useCameraStore } from "@/app/store/camera";
 
 //TODO - temp fix for three JS canvas getting high zIndex of 8388636 when occlude = "blending" is set,
 //that's why the z indexes here are so high for now.
 
 export default function Overlay() {
-  const { isOverlayHidden, setIsAudioPlaying } = useSceneStore(
-    (state) => state
-  );
+  const { setIsAudioPlaying } = useSceneStore((state) => state);
+
+  const { isOverlayHidden } = useCameraStore((state) => state);
 
   const router = useRouter();
 
@@ -21,7 +22,7 @@ export default function Overlay() {
   return (
     <div
       className={`${
-        isOverlayHidden
+        isOverlayHidden.current
           ? "opacity-0 pointer-events-none"
           : "opacity-100 pointer-events-auto"
       } transition-opacity duration-200`}

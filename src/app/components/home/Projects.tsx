@@ -1,14 +1,13 @@
 import { useMemo, useRef, memo } from "react";
-import { useSceneStore, LocationMarkers } from "@/app/store/scene";
+import { useCameraStore, LocationMarkers } from "@/app/store/camera";
 import { useScreenSize } from "./ScreenSize";
 import { useSpring, useSprings, animated, config } from "@react-spring/three";
 import * as THREE from "three";
-import { useThree, useFrame, type ThreeEvent } from "@react-three/fiber";
+import { useThree, type ThreeEvent } from "@react-three/fiber";
 import { useTexture, Text, Billboard } from "@react-three/drei";
 import {
   DepthOfField,
   EffectComposer,
-  ToneMapping,
   Vignette,
 } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
@@ -29,7 +28,7 @@ const PROJ_Z_SPACING = 0.02;
 const PROJ_Y_SPACING = 1;
 
 const PROJ_TEXT_ANIMATE_TO = [0.2, 0.9, 2];
-const PROJ_TEXT_ANIMATE_TO_MOBILE = [0, 1.5, 2];
+const PROJ_TEXT_ANIMATE_TO_MOBILE = [-0.1, 1.5, 2];
 
 const ANIMATE_FRAME_POS = [0.9, -0.2, 2];
 const ANIMATE_FRAME_POS_MOBILE = [0.93, -0.2, 2];
@@ -41,7 +40,7 @@ const allProjectImages = PROJECTS.flatMap((project) => project.images);
 allProjectImages.map((image) => useTexture.preload(image));
 
 function Projects() {
-  const { activeMarker } = useSceneStore((state) => state);
+  const { activeMarker, setIsMarkerHidden } = useCameraStore((state) => state);
 
   const groupRef = useRef<THREE.Group>(null);
   const textGroupRef = useRef<THREE.Group>(null);
@@ -124,7 +123,7 @@ function Projects() {
   const handleProjectSelection = (e: ThreeEvent<MouseEvent>): void => {
     e.stopPropagation();
 
-    if (activeMarker !== LocationMarkers.Projects) return;
+    if (activeMarker.current !== LocationMarkers.Projects) return;
 
     const objId = Number(e.object.name.split("-")[2]);
 
@@ -155,6 +154,7 @@ function Projects() {
     if (isAlreadySelected) {
       activeProjRef.current = null;
       changeProjTextVisible(false);
+      setIsMarkerHidden(false);
       return;
     }
 
@@ -168,6 +168,7 @@ function Projects() {
     textRefs.current.tech.text = project.tech.join(", ");
 
     changeProjTextVisible(true);
+    setIsMarkerHidden(true);
 
     textSpringApi.start({
       to: { scale: 1, pos: textAnimatePos },
@@ -276,19 +277,7 @@ function Projects() {
             eskil={false}
             blendFunction={BlendFunction.NORMAL}
           />
-
           <DepthOfField focusDistance={0} focalLength={0.02} bokehScale={4} />
-
-          {/* <ToneMapping
-            blendFunction={BlendFunction.NORMAL}
-            adaptive={true}
-            resolution={256}
-            middleGrey={0.6}
-            // minLuminance={4}
-            maxLuminance={16.0}
-            averageLuminance={1}
-            adaptationRate={1.0}
-          /> */}
         </EffectComposer>
       )}
     </>

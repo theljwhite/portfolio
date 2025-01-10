@@ -1,24 +1,18 @@
-import { useSceneStore, LocationMarkers } from "@/app/store/scene";
+import { useCameraStore, LocationMarkers } from "@/app/store/camera";
 import { useScreenSize } from "./ScreenSize";
+import useAnimateCamera from "@/app/utils/useAnimateCamera";
 import { type ThreeEvent } from "@react-three/fiber";
 import PictureFrame from "./PictureFrame";
-
-import { useCameraStore } from "@/app/store/camera";
 
 const PROJECTS_INTERACT_VIEW = [-2.5, 1.4, -4.5];
 const PROJECTS_INTERACT_VIEW_MOBILE = [-3, 1.4, -5];
 const PROJ_LOCATION_MARKER_POS = [-0.1, 2.5, -2.7];
 
 export default function ProjectsFrame() {
-  const {
-    cameraValues,
-    activeMarker,
-    setCameraValues,
-    setLocationMarker,
-    setIsOverlayHidden,
-  } = useSceneStore((state) => state);
-
+  const { activeMarker, setIsOverlayHidden } = useCameraStore((state) => state);
   const { isMobile } = useScreenSize();
+
+  const { camGoTo } = useAnimateCamera();
 
   const projectsView = isMobile
     ? PROJECTS_INTERACT_VIEW_MOBILE
@@ -27,30 +21,20 @@ export default function ProjectsFrame() {
   const onProjectsEnterClick = (e: ThreeEvent<MouseEvent>): void => {
     e.stopPropagation();
 
-    setLocationMarker({
-      title: "Leave Projects",
-      position: PROJ_LOCATION_MARKER_POS,
-      onClickAction: () => {
-        setCameraValues({
-          cachedPos: projectsView,
-          cachedTarget: cameraValues.target,
-          pos: [0, 0, 4],
-          target: [0, 0, 0],
-          orbitEnabled: true,
-          activeMarker: undefined,
-        });
-        setIsOverlayHidden(false);
+    camGoTo(
+      {
+        pos: projectsView,
+        target: [0, 0, 0],
+        orbitEnabled: false,
+        activeMarker: LocationMarkers.Projects,
       },
-    });
-
-    setCameraValues({
-      cachedPos: cameraValues.pos,
-      cachedTarget: cameraValues.target,
-      pos: projectsView,
-      target: [0, 0, 0],
-      orbitEnabled: false,
-      activeMarker: LocationMarkers.Projects,
-    });
+      {
+        title: "Leave Projects",
+        position: PROJ_LOCATION_MARKER_POS,
+        camPos: projectsView,
+        camTarget: [0, 0, 0],
+      }
+    );
 
     setIsOverlayHidden(true);
   };
@@ -63,7 +47,7 @@ export default function ProjectsFrame() {
       scale={[0.6, 0.6, 0.05]}
       position={[-1.4, 1.2, -1.95]}
       rotation={[0, 0.58, 0]}
-      disabled={activeMarker !== null}
+      disabled={activeMarker.current !== null}
       onClick={onProjectsEnterClick}
     />
   );

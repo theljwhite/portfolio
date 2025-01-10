@@ -14,7 +14,6 @@ interface ProjectFrameProps {
 type Mesh = THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>;
 
 const GOLDEN_RATIO = 1.61803398875;
-const FRAME_MESH_UNSELECTED_SCALE = [0.7, 0.7, 0.05];
 
 function ProjectFrame({ project, activeProjRef }: ProjectFrameProps) {
   const [isHover, setIsHover] = useState<boolean>(false);

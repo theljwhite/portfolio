@@ -1,36 +1,30 @@
 import { useState, useRef, useEffect } from "react";
 import { useSceneStore } from "@/app/store/scene";
-import useClientMediaQuery from "@/app/utils/useClientMediaQuery";
+import { useCameraStore, LocationMarkers } from "@/app/store/camera";
+import useAnimateCamera from "@/app/utils/useAnimateCamera";
+import { useScreenSize } from "./ScreenSize";
 import * as THREE from "three";
-import { SpotLight, useBounds, useGLTF } from "@react-three/drei";
+import { SpotLight, useGLTF, useCursor } from "@react-three/drei";
 import { useFrame } from "@react-three/fiber";
 import type { ThreeEvent } from "@react-three/fiber";
-import type {
-  SpotLight as TSpotLight,
-  InstancedMesh as TInstancedMesh,
-} from "three";
 import { suspend } from "suspend-react";
 import { createAudio } from "../../utils/audio";
 
-//TODO fix any type's, optimizations
+//TODO - set spotlight color changes in useFrame instead of setting reactive state
 
 //TODO figure a way to eliminate useEffects and setting state in intervals.
 //according to this r3f docs: https://r3f.docs.pmnd.rs/advanced/pitfalls,
 //it's better to do all in useFrame but I think for now the intervals are neccessary to achieve what I need it to do
 
-//TODO - because of HTML occlude="blending" bug, the onPointerOver's here,
-//for now have to use the document.body to set cursor pointer.
-//when fixed, they can use gl.domElement.style.cursor = "pointer" from useThree's gl
-
-//TODO - the way in which the audio is created and works is going to be refactored here,
-//because it seems a little hacky but also, it'll need to be because I plan on
-//making it an audio player in which different songs can be played, not just 1 from a file.
-//so this works for now but will be changed.
-
 //spotlights originally used visible={isAudioPlaying} to hide the lights until speaker click,
 //but with this, there was a slight "lag" when clicking
 //the speaker to start the audio, so instead for now it is using position to "hide" them,
 //and it gets rid of the lag when speaker is clicked but more processing on initial render. for now I will leave it this way.
+
+type VisualizerMesh = THREE.InstancedMesh<
+  THREE.SphereGeometry,
+  THREE.MeshBasicMaterial
+>;
 
 const SPOT_COLOR_CHANGE_MS = 12_000;
 const SPOT_SPEED_CHANGE_MS = 24_000;
@@ -41,22 +35,29 @@ const ANALYSER_Y_POS = 1500;
 const LEFT_SPOT_COLORS = [0xb00c3f, 0xa855f7, 0x006cff, 0xff00b9];
 const RIGHT_SPOT_COLORS = [0x1d4ed8, 0x22c55e, 0xff9300, 0x00ff46];
 
+const KRK_INTERACT_POS = [-3, 0, 1];
+const KRK_INTERACT_TARGET = [-3, 0, 0];
+const KRK_LOCATION_MARKER_POS = [-3.8, 1.6, 0];
 export default function KrkDynamic() {
   const [colorIndex, setColorIndex] = useState<number>(0);
   const [speedMultiplier, setSpeedMultiplier] = useState<number>(1);
+  const [isHover, setIsHover] = useState<boolean>(false);
 
-  const { isAudioPlaying, activeMarker, setIsAudioPlaying } = useSceneStore(
-    (state) => state
-  );
+  const { isAudioPlaying, setIsAudioPlaying } = useSceneStore((state) => state);
+  const { activeMarker } = useCameraStore((state) => state);
 
-  const rightSpotlightRef = useRef<TSpotLight>(null);
-  const leftSpotlightRef = useRef<TSpotLight>(null);
-  const visualiserRef = useRef<TInstancedMesh>(null);
+  const { camGoTo, camReset } = useAnimateCamera();
+
+  const rightSpotlightRef = useRef<THREE.SpotLight>(null);
+  const leftSpotlightRef = useRef<THREE.SpotLight>(null);
+  const visualiserRef = useRef<VisualizerMesh>(null);
 
   const { scene } = useGLTF("./3D/krk_single.glb");
   const obj = new THREE.Object3D();
-  const bounds = useBounds();
-  const isMobile = useClientMediaQuery("(max-width: 600px)");
+
+  const { isMobile } = useScreenSize();
+
+  useCursor(isHover);
 
   const {
     gain,
@@ -116,50 +117,69 @@ export default function KrkDynamic() {
         visualiserRef.current.setMatrixAt(i, obj.matrix);
       }
 
-      (visualiserRef.current.material as any).color.setHSL(
-        avg / 100,
-        0.75,
-        0.75
-      );
+      visualiserRef.current.material.color.setHSL(avg / 100, 0.75, 0.75);
 
       visualiserRef.current.instanceMatrix.needsUpdate = true;
       visualiserRef.current.updateMatrixWorld();
     }
   });
 
-  const onSpeakerClick = (e: ThreeEvent<any>): void => {
-    if (activeMarker !== null) return;
-
-    setIsAudioPlaying(!isAudioPlaying);
+  const onSpeakerClick = (e: ThreeEvent<MouseEvent>): void => {
     e.stopPropagation();
 
-    if (isAudioPlaying) {
-      gain.disconnect();
-
-      if (isMobile) {
-        bounds.moveTo([0, 0, 4]).lookAt({ target: [-1, 0, -2] });
-      }
-    } else {
-      gain.connect(ctx.destination);
-      ctx.resume();
-
-      if (isMobile) {
-        bounds.moveTo([-3, 0, 1]).lookAt({ target: [-3, 0, 0] });
-      }
+    if (
+      activeMarker.current !== null &&
+      activeMarker.current !== LocationMarkers.Krk
+    ) {
+      return;
     }
+    setIsAudioPlaying(!isAudioPlaying);
+
+    if (isAudioPlaying) endRave();
+    else startRave();
+  };
+
+  const startRave = (): void => {
+    gain.connect(ctx.destination);
+    ctx.resume();
+
+    if (isMobile) {
+      camGoTo(
+        {
+          pos: KRK_INTERACT_POS,
+          target: KRK_INTERACT_TARGET,
+          orbitEnabled: true,
+          activeMarker: LocationMarkers.Krk,
+        },
+        {
+          title: "Leave Speaker",
+          position: KRK_LOCATION_MARKER_POS,
+          camPos: KRK_INTERACT_POS,
+          camTarget: KRK_INTERACT_TARGET,
+          clickHandler: () => {
+            setIsAudioPlaying(false);
+            gain.disconnect();
+          },
+        }
+      );
+    }
+  };
+
+  const endRave = (): void => {
+    gain.disconnect();
+    if (isMobile) camReset(KRK_INTERACT_POS, KRK_INTERACT_TARGET);
   };
 
   return (
     <>
       <primitive
-        onClick={(e: ThreeEvent<MouseEvent>) => onSpeakerClick(e)}
-        onPointerOver={(e: ThreeEvent<MouseEvent>) => {
-          e.stopPropagation();
-          document.body.style.cursor = "pointer";
-        }}
-        onPointerOut={() => {
-          document.body.style.cursor = "auto";
-        }}
+        onClick={onSpeakerClick}
+        onPointerOver={(e: ThreeEvent<PointerEvent>) => (
+          e.stopPropagation(), setIsHover(true)
+        )}
+        onPointerOut={(e: ThreeEvent<PointerEvent>) => (
+          e.stopPropagation(), setIsHover(false)
+        )}
         rotation={[0, 0.6, 0]}
         position={[-3, 0, 0]}
         scale={0.4}

@@ -1,23 +1,21 @@
 import { useState, useRef } from "react";
 import * as THREE from "three";
 import { Html, useGLTF } from "@react-three/drei";
-import { useSceneStore, LocationMarkers } from "@/app/store/scene";
+import { useSceneStore } from "@/app/store/scene";
+import { useCameraStore, LocationMarkers } from "@/app/store/camera";
+import useAnimateCamera from "@/app/utils/useAnimateCamera";
 import LaptopContent from "./LaptopContent";
 
 const LAPTOP_INTERACT_VIEW = [0.15, 0, -6.8];
+const LAPTOP_LOCATION_MARKER_POS = [-0.3, 2, -1.7];
 
 export default function Laptop() {
   const [isLaptopContentChange, setIsLaptopContentChange] =
     useState<boolean>(false);
 
-  const {
-    cameraValues,
-    activeMarker,
-    setCameraValues,
-    setActiveLaptopContent,
-    setLocationMarker,
-    zoomOutCameraFromPos,
-  } = useSceneStore((state) => state);
+  const { setActiveLaptopContent } = useSceneStore((state) => state);
+  const { activeMarker } = useCameraStore((state) => state);
+  const { camGoTo } = useAnimateCamera();
 
   const group = useRef<THREE.Group>(null);
 
@@ -25,29 +23,28 @@ export default function Laptop() {
   const macNodes = nodes as Record<string, any>;
 
   const onLaptopClick = (): void => {
-    if (activeMarker) return;
+    if (activeMarker.current) return;
 
     setIsLaptopContentChange(!isLaptopContentChange);
 
-    setLocationMarker({
-      title: "Leave Laptop",
-      position: [-0.3, 2, -1.7],
-      onClickAction: () => {
-        zoomOutCameraFromPos();
-        setIsLaptopContentChange(false);
-        setActiveLaptopContent(0);
+    camGoTo(
+      {
+        pos: [0, 0, 4],
+        target: LAPTOP_INTERACT_VIEW,
+        orbitEnabled: false,
+        activeMarker: LocationMarkers.Laptop,
       },
-    });
-
-    setCameraValues({
-      cachedPos: cameraValues.pos,
-      cachedTarget: cameraValues.target,
-      pos: [0, 0, 4],
-      target: LAPTOP_INTERACT_VIEW,
-
-      orbitEnabled: false,
-      activeMarker: LocationMarkers.Laptop,
-    });
+      {
+        title: "Leave Laptop",
+        position: LAPTOP_LOCATION_MARKER_POS,
+        camPos: [0, 0, 0],
+        camTarget: LAPTOP_INTERACT_VIEW,
+        clickHandler: () => {
+          setIsLaptopContentChange(false);
+          setActiveLaptopContent(0);
+        },
+      }
+    );
   };
 
   return (
