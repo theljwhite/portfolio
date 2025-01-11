@@ -5,10 +5,8 @@ import { CopyIcon } from "../UI/Icons";
 import Editor from "react-simple-code-editor";
 import hljs from "highlight.js";
 import "./laptop-themes.css";
-// import "highlight.js/styles/github-dark.css";
 
-//TODO check if statement token scopes, etc css styling for themes
-//TODO mobile
+//TODO check "if statement" token scopes, etc css styling for themes
 //TODO in future, add more to faux editor sidebar
 
 type LaptopContent = {
@@ -124,8 +122,8 @@ const VSCodeTheme = () => {
               hljs.highlight(code, { language: "typescript" }).value
             }
             padding={10}
+            className="text-base lg:text-xs"
             style={{
-              fontSize: 12,
               width: "250px",
               height: "100%",
             }}

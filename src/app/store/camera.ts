@@ -4,10 +4,10 @@ import { SpringRef, type Lookup } from "@react-spring/three";
 
 //using these refs to control UI is temporary
 //see: https://github.com/pmndrs/zustand/discussions/1140
-//idea is to reduce re-renders of the complex 3D scene, although this can probably be achieved by restructuring component tree
+//idea is to reduce re-renders of scene, although this can probably be achieved by restructuring component tree
 //I realize this is unconventional and prob a bit hacky, but this works for now
-//obvious drawback is each setter creating a new ref
-//benefits are preventing re-renders before refactoring, halting FPS drops when animating
+//obvious drawback is each setter creating a new ref, breaking some rules
+//benefits are preventing re-renders before I refactor some, halting FPS drops when animating
 
 export type CameraValues = {
   pos: number[];

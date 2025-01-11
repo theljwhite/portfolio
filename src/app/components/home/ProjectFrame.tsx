@@ -40,6 +40,7 @@ function ProjectFrame({ project, activeProjRef }: ProjectFrameProps) {
 
   useFrame((_, dt) => {
     const selected = project.id === activeProjRef.current?.id;
+    const active = activeProjRef.current !== null;
     if (
       pictureFrameRef.current &&
       caretGroupRef.current &&
@@ -49,10 +50,11 @@ function ProjectFrame({ project, activeProjRef }: ProjectFrameProps) {
     ) {
       easing.dampC(
         pictureFrameRef.current.material.color,
-        isHover || selected ? "orange" : "black",
+        selected || (!active && isHover) ? "orange" : "black",
         0.1,
         dt
       );
+
       caretGroupRef.current.visible = selected && project.images.length > 1;
 
       if (selected) {

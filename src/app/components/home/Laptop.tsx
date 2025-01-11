@@ -4,10 +4,16 @@ import { Html, useGLTF } from "@react-three/drei";
 import { useSceneStore } from "@/app/store/scene";
 import { useCameraStore, LocationMarkers } from "@/app/store/camera";
 import useAnimateCamera from "@/app/utils/useAnimateCamera";
+import { useScreenSize } from "./ScreenSize";
 import LaptopContent from "./LaptopContent";
 
-const LAPTOP_INTERACT_VIEW = [0.15, 0, -6.8];
+const LAPTOP_INTERACT_POS = [0, 0, 4];
+const LAPTOP_INTERACT_TARGET = [0.15, 0, -6.8];
 const LAPTOP_LOCATION_MARKER_POS = [-0.3, 2, -1.7];
+
+const LAPTOP_INTERACT_POS_MOBILE = [0.1, 1.5, -0.5]; //was [0, 1.5, 0];
+const LAPTOP_INTERACT_TARGET_MOBILE = [0.15, 0, -6.8];
+const LAPTOP_LOCATION_MARKER_POS_MOBILE = [-0.3, 2.1, -1.7];
 
 export default function Laptop() {
   const [isLaptopContentChange, setIsLaptopContentChange] =
@@ -17,10 +23,24 @@ export default function Laptop() {
   const { activeMarker } = useCameraStore((state) => state);
   const { camGoTo } = useAnimateCamera();
 
+  const { isMobile } = useScreenSize();
+
   const group = useRef<THREE.Group>(null);
 
   const { nodes, materials } = useGLTF("./3D/mac-draco.glb");
   const macNodes = nodes as Record<string, any>;
+
+  const laptopCamPos = isMobile
+    ? LAPTOP_INTERACT_POS_MOBILE
+    : LAPTOP_INTERACT_POS;
+
+  const laptopCamTarget = isMobile
+    ? LAPTOP_INTERACT_TARGET_MOBILE
+    : LAPTOP_INTERACT_TARGET;
+
+  const laptopMarkerPos = isMobile
+    ? LAPTOP_LOCATION_MARKER_POS_MOBILE
+    : LAPTOP_LOCATION_MARKER_POS;
 
   const onLaptopClick = (): void => {
     if (activeMarker.current) return;
@@ -29,16 +49,16 @@ export default function Laptop() {
 
     camGoTo(
       {
-        pos: [0, 0, 4],
-        target: LAPTOP_INTERACT_VIEW,
+        pos: laptopCamPos,
+        target: laptopCamTarget,
         orbitEnabled: false,
         activeMarker: LocationMarkers.Laptop,
       },
       {
         title: "Leave Laptop",
-        position: LAPTOP_LOCATION_MARKER_POS,
+        position: laptopMarkerPos,
         camPos: [0, 0, 0],
-        camTarget: LAPTOP_INTERACT_VIEW,
+        camTarget: laptopCamTarget,
         clickHandler: () => {
           setIsLaptopContentChange(false);
           setActiveLaptopContent(0);

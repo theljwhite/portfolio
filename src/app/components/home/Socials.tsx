@@ -7,6 +7,8 @@ import { RigidBody, type RapierRigidBody } from "@react-three/rapier";
 import { SOCIALS } from "@/app/constants/socials";
 import { navOutWithGhostAnchor } from "@/app/utils/anchor";
 
+//TODO fix any types
+
 interface SocialModelProps {
   url: string;
   onSocialClick: () => void;
