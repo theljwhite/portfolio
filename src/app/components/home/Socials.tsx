@@ -37,7 +37,7 @@ const SocialModel = ({ url, onSocialClick }: SocialModelProps) => {
 
 export default function Socials({ setPhysicsPaused, isMobile }: SocialsProps) {
   const { activeMarker } = useCameraStore((state) => state);
-  const { camGoTo } = useAnimateCamera();
+  const { camGoTo, isLocationDisabled } = useAnimateCamera();
 
   const rigidBodyRefs = useRef<Record<string, RapierRigidBody | null>>({
     github: null,
@@ -47,14 +47,9 @@ export default function Socials({ setPhysicsPaused, isMobile }: SocialsProps) {
   });
 
   const handleSocialClick = (social: string): void => {
-    if (
-      activeMarker.current !== null &&
-      activeMarker.current !== LocationMarkers.Socials
-    ) {
-      return;
-    }
+    if (isLocationDisabled(LocationMarkers.Socials)) return;
 
-    if (activeMarker.current === null) {
+    if (activeMarker.current === null && isMobile) {
       camGoTo(
         {
           pos: SOCIALS_INTERACT_POS,

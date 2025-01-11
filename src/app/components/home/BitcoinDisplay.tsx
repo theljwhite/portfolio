@@ -14,7 +14,7 @@ import useSWR from "swr";
 
 const BTC_INTERACT_POS = [1.3, 0, 1.5];
 const BTC_INTERACT_TARGET = [1.5, 0, 1.1];
-const BTC_LOCATION_MARKER_POS = [1.6, 1, 1.1];
+const BTC_LOCATION_MARKER_POS = [1.8, 1, 1.1];
 
 const fetcher = (url: string) => fetch(url).then((response) => response.json());
 
@@ -69,12 +69,14 @@ export default function BitcoinDisplay() {
 
   const { scene } = useGLTF("./3D/bitcoin_atm.glb");
 
-  const { camGoTo, camReset } = useAnimateCamera();
+  const { camGoTo, camReset, isLocationDisabled } = useAnimateCamera();
   const { isMobile } = useScreenSize();
 
   useCursor(isHover);
 
   const startBitcoinDisplay = (): void => {
+    if (isLocationDisabled(LocationMarkers.BitcoinDisplay)) return;
+
     setIsBitcoinDisplayOpen(true);
 
     if (isMobile) {

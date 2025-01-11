@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useSceneStore } from "@/app/store/scene";
-import { useCameraStore, LocationMarkers } from "@/app/store/camera";
+import { LocationMarkers } from "@/app/store/camera";
 import useAnimateCamera from "@/app/utils/useAnimateCamera";
 import { useScreenSize } from "./ScreenSize";
 import * as THREE from "three";
@@ -44,9 +44,8 @@ export default function KrkDynamic() {
   const [isHover, setIsHover] = useState<boolean>(false);
 
   const { isAudioPlaying, setIsAudioPlaying } = useSceneStore((state) => state);
-  const { activeMarker } = useCameraStore((state) => state);
 
-  const { camGoTo, camReset } = useAnimateCamera();
+  const { camGoTo, camReset, isLocationDisabled } = useAnimateCamera();
 
   const rightSpotlightRef = useRef<THREE.SpotLight>(null);
   const leftSpotlightRef = useRef<THREE.SpotLight>(null);
@@ -127,12 +126,8 @@ export default function KrkDynamic() {
   const onSpeakerClick = (e: ThreeEvent<MouseEvent>): void => {
     e.stopPropagation();
 
-    if (
-      activeMarker.current !== null &&
-      activeMarker.current !== LocationMarkers.Krk
-    ) {
-      return;
-    }
+    if (isLocationDisabled(LocationMarkers.Krk)) return;
+
     setIsAudioPlaying(!isAudioPlaying);
 
     if (isAudioPlaying) endRave();

@@ -5,6 +5,7 @@ import { CopyIcon } from "../UI/Icons";
 import Editor from "react-simple-code-editor";
 import hljs from "highlight.js";
 import "./laptop-themes.css";
+// import "highlight.js/styles/github-dark.css";
 
 //TODO check if statement token scopes, etc css styling for themes
 //TODO mobile
@@ -33,15 +34,15 @@ const VideoDisplay = ({ url }: { url: string }) => {
 
 const VSCodeTheme = () => {
   const defaultCode = `//Write some TS/JS to preview theme
-type DoGreeting = (msg: string) => void; 
-let isFunny = true; 
+  type DoGreeting = (msg: string) => void;
+  let isFunny = true;
 
-async function get (id: number): Promise<string> {
-const res = await fetch("/greet/" + id);
-const data = await res.json();
-return data.greeting;
-}
-`;
+  async function get (id: number): Promise<string> {
+  const res = await fetch("/greet/" + id);
+  const data = await res.json();
+  return data.greeting;
+  }
+  `;
 
   const themeOptions = [
     {
@@ -112,7 +113,10 @@ return data.greeting;
             Explorer
           </span>
         </div>
-        <div data-theme={themeOptions[activeTheme].name}>
+        <div
+          className="code-container"
+          data-theme={themeOptions[activeTheme].name}
+        >
           <Editor
             value={code}
             onValueChange={(code) => setCode(code)}

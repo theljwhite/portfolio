@@ -12,7 +12,7 @@ export default function ProjectsFrame() {
   const { activeMarker, setIsOverlayHidden } = useCameraStore((state) => state);
   const { isMobile } = useScreenSize();
 
-  const { camGoTo } = useAnimateCamera();
+  const { camGoTo, isLocationDisabled } = useAnimateCamera();
 
   const projectsView = isMobile
     ? PROJECTS_INTERACT_VIEW_MOBILE
@@ -20,6 +20,8 @@ export default function ProjectsFrame() {
 
   const onProjectsEnterClick = (e: ThreeEvent<MouseEvent>): void => {
     e.stopPropagation();
+
+    if (isLocationDisabled(LocationMarkers.Projects)) return;
 
     camGoTo(
       {

@@ -8,6 +8,7 @@ import { config } from "@react-spring/three";
 export default function useAnimateCamera() {
   const {
     springRef,
+    activeMarker,
     setIsOrbit,
     setIsAnimating,
     setActiveMarker,
@@ -62,5 +63,9 @@ export default function useAnimateCamera() {
     });
   };
 
-  return { camGoTo, camReset };
+  const isLocationDisabled = (currMarker: number): boolean => {
+    return activeMarker.current !== null && activeMarker.current !== currMarker;
+  };
+
+  return { camGoTo, camReset, isLocationDisabled };
 }

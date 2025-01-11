@@ -30,24 +30,29 @@ export default function PictureFrame({
 }: PictureFrameProps) {
   const [isHover, setIsHover] = useState<boolean>(false);
 
-  const imageRef = useRef<any>(null);
-  const pictureFrameRef = useRef<any>(null);
+  const imageRef =
+    useRef<THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>>(null);
+  const pictureFrameRef =
+    useRef<THREE.Mesh<THREE.SphereGeometry, THREE.MeshBasicMaterial>>(null);
 
   useCursor(isHover);
 
   useFrame((_, dt) => {
-    easing.dampC(
-      pictureFrameRef.current.material.color,
-      isHover && !disabled ? "orange" : color ?? "black",
-      0.1,
-      dt
-    );
-    easing.damp3(
-      imageRef.current.scale,
-      [0.85 * (isHover ? 0.99 : 1), 0.9 * (isHover ? 0.905 : 1), 1],
-      0.1,
-      dt
-    );
+    if (pictureFrameRef.current && imageRef.current) {
+      easing.dampC(
+        pictureFrameRef.current.material.color,
+        isHover && !disabled ? "orange" : color ?? "black",
+        0.1,
+        dt
+      );
+
+      easing.damp3(
+        imageRef.current.scale,
+        [0.85 * (isHover ? 0.99 : 1), 0.9 * (isHover ? 0.905 : 1), 1],
+        0.1,
+        dt
+      );
+    }
   });
 
   return (
