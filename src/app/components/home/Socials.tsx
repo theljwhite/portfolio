@@ -8,6 +8,12 @@ import { SOCIALS } from "@/app/constants/socials";
 import { navOutWithGhostAnchor } from "@/app/utils/anchor";
 
 //TODO fix any types
+//TODO change soundcloud model/linked in model positions
+
+//TODO nav out ghost anchor not working on iOS mobile (safari at least blocking it)
+//works from a direct user interaction like button click,
+//but wont work with buttonRef.click() for example, which is what I need for the clickable socials 3d models.
+//in the mean time, I'll be looking into other ways to do this on iOS Safari.
 
 interface SocialModelProps {
   url: string;
@@ -78,8 +84,7 @@ export default function Socials({ setPhysicsPaused, isMobile }: SocialsProps) {
       const rigidBody = rigidBodyRefs.current[key];
 
       if (rigidBody) {
-        if (key === social) rigidBody.wakeUp();
-        else rigidBody.sleep();
+        key === social ? rigidBody.wakeUp() : rigidBody.sleep();
       }
     });
 
@@ -89,69 +94,71 @@ export default function Socials({ setPhysicsPaused, isMobile }: SocialsProps) {
   };
 
   return (
-    <group scale={0.3} position={[0, 0, -1.2]}>
-      <Center rotation={[0, -0.4, 0]} position={[-2, 1, -2]}>
-        <RigidBody
-          colliders="hull"
-          position={[0, 0, 0]}
-          enabledRotations={[true, false, false]}
-          restitution={1}
-          ref={(ref) => (rigidBodyRefs.current.soundcloud = ref) as any}
-          canSleep
-        >
-          <SocialModel
-            url="./3D/soundcloud.glb"
-            onSocialClick={() => handleSocialClick("soundcloud")}
-          />
-        </RigidBody>
-      </Center>
-      <Center rotation={[0, 0, 0]} position={[0.1, -0.01, -2]} top>
-        <RigidBody
-          colliders="hull"
-          position={[0, 0, 0]}
-          enabledRotations={[true, false, true]}
-          restitution={1}
-          ref={(ref) => (rigidBodyRefs.current.linkedin = ref) as any}
-          canSleep
-        >
-          <SocialModel
-            url="./3D/linkedin.glb"
-            onSocialClick={() => handleSocialClick("linkedin")}
-          />
-        </RigidBody>
-      </Center>
+    <>
+      <group scale={0.3} position={[0, 0, -1.2]}>
+        <Center rotation={[0, -0.4, 0]} position={[-2, 1, -2]}>
+          <RigidBody
+            colliders="hull"
+            position={[0, 0, 0]}
+            enabledRotations={[true, false, true]}
+            restitution={1}
+            ref={(ref) => (rigidBodyRefs.current.soundcloud = ref) as any}
+            canSleep
+          >
+            <SocialModel
+              url="./3D/soundcloud.glb"
+              onSocialClick={() => handleSocialClick("soundcloud")}
+            />
+          </RigidBody>
+        </Center>
+        <Center rotation={[0, 0, 0]} position={[0.1, -0.01, -2]} top>
+          <RigidBody
+            colliders="hull"
+            position={[0, 0, 0]}
+            enabledRotations={[true, false, true]}
+            restitution={1}
+            ref={(ref) => (rigidBodyRefs.current.linkedin = ref) as any}
+            canSleep
+          >
+            <SocialModel
+              url="./3D/linkedin.glb"
+              onSocialClick={() => handleSocialClick("linkedin")}
+            />
+          </RigidBody>
+        </Center>
 
-      <Center rotation={[0, -100, 0]} position={[-4, -0.01, -2]} top>
-        <RigidBody
-          colliders="hull"
-          position={[0, 0, 0]}
-          enabledRotations={[true, false, false]}
-          restitution={1}
-          ref={(ref) => (rigidBodyRefs.current.github = ref) as any}
-          canSleep
-        >
-          <SocialModel
-            url="./3D/github.glb"
-            onSocialClick={() => handleSocialClick("github")}
-          />
-        </RigidBody>
-      </Center>
+        <Center rotation={[0, -100, 0]} position={[-4, -0.01, -2]} top>
+          <RigidBody
+            colliders="hull"
+            position={[0, 0, 0]}
+            enabledRotations={[true, false, false]}
+            restitution={1}
+            ref={(ref) => (rigidBodyRefs.current.github = ref) as any}
+            canSleep
+          >
+            <SocialModel
+              url="./3D/github.glb"
+              onSocialClick={() => handleSocialClick("github")}
+            />
+          </RigidBody>
+        </Center>
 
-      <Center rotation={[0, -100, 0]} position={[2, -0.01, -2]} top>
-        <RigidBody
-          colliders="hull"
-          position={[0, 0, 0]}
-          enabledRotations={[true, false, true]}
-          restitution={1}
-          ref={(ref) => (rigidBodyRefs.current.x = ref) as any}
-          canSleep
-        >
-          <SocialModel
-            url="./3D/x.glb"
-            onSocialClick={() => handleSocialClick("x")}
-          />
-        </RigidBody>
-      </Center>
-    </group>
+        <Center rotation={[0, -100, 0]} position={[2, -0.01, -2]} top>
+          <RigidBody
+            colliders="hull"
+            position={[0, 0, 0]}
+            enabledRotations={[true, false, true]}
+            restitution={1}
+            ref={(ref) => (rigidBodyRefs.current.x = ref) as any}
+            canSleep
+          >
+            <SocialModel
+              url="./3D/x.glb"
+              onSocialClick={() => handleSocialClick("x")}
+            />
+          </RigidBody>
+        </Center>
+      </group>
+    </>
   );
 }

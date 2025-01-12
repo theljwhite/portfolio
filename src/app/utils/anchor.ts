@@ -8,3 +8,8 @@ export const navOutWithGhostAnchor = (href: string): void => {
   ghostAnchor.click();
   ghostAnchor.remove();
 };
+
+export const navOutWithWindowOpen = (href: string): void => {
+  const newWindow = window.open(href, "_blank", "noopener,noreferrer");
+  if (newWindow) newWindow.opener = null;
+};

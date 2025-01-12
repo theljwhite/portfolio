@@ -1,9 +1,11 @@
 import { useState } from "react";
+import Image from "next/image";
 import { useSceneStore } from "@/app/store/scene";
 import { copyTextToClipboard } from "@/app/utils/text";
+import hljs from "highlight.js";
 import { CopyIcon } from "../UI/Icons";
 import Editor from "react-simple-code-editor";
-import hljs from "highlight.js";
+import LaptopProfile from "./LaptopProfile";
 import "./laptop-themes.css";
 
 //TODO check "if statement" token scopes, etc css styling for themes
@@ -181,13 +183,13 @@ const laptopContent: LaptopContent[] = [
   },
   {
     id: 2,
-    title: "View a highly motivational video",
-    content: <VideoDisplay url="https://www.youtube.com/embed/_qzG28ZPFRY" />,
+    title: "More information about me",
+    content: <LaptopProfile />,
   },
   {
     id: 3,
-    title: "Find me a better quality version of this",
-    content: <VideoDisplay url="https://www.youtube.com/embed/Q9QcNmtED6g" />,
+    title: "View a highly motivational video",
+    content: <VideoDisplay url="https://www.youtube.com/embed/_qzG28ZPFRY" />,
   },
 ];
 
