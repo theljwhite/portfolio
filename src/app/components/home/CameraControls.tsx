@@ -1,6 +1,6 @@
 import { useCameraStore } from "@/app/store/camera";
 import { useScreenSize } from "./ScreenSize";
-import { useSpring, animated, config, useSpringRef } from "@react-spring/three";
+import { useSpring, animated } from "@react-spring/three";
 import { OrbitControls, PerspectiveCamera } from "@react-three/drei";
 import * as THREE from "three";
 
@@ -22,8 +22,6 @@ export default function CameraControls() {
     },
     []
   );
-
-  // console.log("CONTROLS: target:", spring.target, "pos:", spring.pos);
 
   return (
     <>
