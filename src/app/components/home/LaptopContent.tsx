@@ -1,5 +1,4 @@
 import { useState } from "react";
-import Image from "next/image";
 import { useSceneStore } from "@/app/store/scene";
 import { copyTextToClipboard } from "@/app/utils/text";
 import hljs from "highlight.js";
@@ -183,7 +182,7 @@ const laptopContent: LaptopContent[] = [
   },
   {
     id: 2,
-    title: "More information about me",
+    title: "Learn more about me",
     content: <LaptopProfile />,
   },
   {

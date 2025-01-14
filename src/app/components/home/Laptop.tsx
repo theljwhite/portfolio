@@ -97,7 +97,7 @@ export default function Laptop() {
                 transform
                 occlude="blending"
               >
-                <div onPointerDown={(e) => e.stopPropagation()}>
+                <div>
                   <div
                     onClick={onLaptopClick}
                     className={`${

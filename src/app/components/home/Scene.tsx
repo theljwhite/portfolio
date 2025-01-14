@@ -91,7 +91,7 @@ export default function Scene() {
       <Suspense fallback={<SceneLoadingCircle />}>
         <CanvasWrapper>
           <Canvas dpr={dpr}>
-            <Perf />
+            {/* <Perf /> */}
             <PerformanceMonitor
               onIncline={() => setDpr(2)}
               onDecline={() => setDpr(1)}
