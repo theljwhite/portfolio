@@ -16,10 +16,7 @@ import { createAudio } from "../../utils/audio";
 //according to this r3f docs: https://r3f.docs.pmnd.rs/advanced/pitfalls,
 //it's better to do all in useFrame but I think for now the intervals are neccessary to achieve what I need it to do
 
-//spotlights originally used visible={isAudioPlaying} to hide the lights until speaker click,
-//but with this, there was a slight "lag" when clicking
-//the speaker to start the audio, so instead for now it is using position to "hide" them,
-//and it gets rid of the lag when speaker is clicked but more processing on initial render. for now I will leave it this way.
+//spotlight.current.color.set (none of the setters work except setRGB but it doesnt change entire spotlight color), need to figure out why to eliminate useEffect and intervals
 
 type VisualizerMesh = THREE.InstancedMesh<
   THREE.SphereGeometry,
@@ -37,7 +34,8 @@ const RIGHT_SPOT_COLORS = [0x1d4ed8, 0x22c55e, 0xff9300, 0x00ff46];
 
 const KRK_INTERACT_POS = [-3, 0, 1];
 const KRK_INTERACT_TARGET = [-3, 0, 0];
-const KRK_LOCATION_MARKER_POS = [-3.8, 1.6, 0];
+const KRK_LOCATION_MARKER_POS = [-2.9, 0.1, 0.8]; //was [-3.8, 1.6, 0]
+
 export default function KrkDynamic() {
   const [colorIndex, setColorIndex] = useState<number>(0);
   const [speedMultiplier, setSpeedMultiplier] = useState<number>(1);

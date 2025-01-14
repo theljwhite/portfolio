@@ -85,10 +85,3 @@ const config: Config = {
   plugins: [],
 };
 export default config;
-
-// --darkPurple: #301934;
-// --lightPurple: #cbc3e3;
-// --brandPurple: #d580ff;
-// --projectsPurple: #9580ff;
-// --projectsPurpleTwo: #9d00ea;
-// background: rgb(17, 2, 24);
