@@ -1,6 +1,22 @@
+import { useEffect, useRef } from "react";
 import { useSceneStore } from "@/app/store/scene";
+import { hasTouchScreen } from "@/app/utils/device";
 
-import { useRef } from "react";
+/* 
+ISSUE - Drei <Html> "transform" prop (which I need) causes some issues here.
+The transform property is causing the scrollable parent div here to
+be treated as a layered element which does not natively support scrolling with touch.
+it scrolls on desktop, etc, just not on iOS unless <Html> transform prop is removed.
+
+touch events are propagating properly, so Drei <Html> isnt blocking touch (touch move and touch start both fire)
+mobile chrome and safari have a hard time converting the touch to scroll here.
+if you first select text and drag down from mobile, it scrolls fine because it probably,
+triggers a different browser behavior that forces the div to be treated as interactive and scrollable
+
+will continue to look for a better fix for this, because I want the profile to be scrollable and as interactive as possible on every device.
+although I've tried just about everything possible CSS/Drei related first, I got it to work w/ a useEffect notated below.
+but it is a temporary solution.
+*/
 
 const fakeNavLinks = [
   "Home",
@@ -75,12 +91,43 @@ const Interests = () => (
 export default function LaptopProfile() {
   const { resetLaptopContent } = useSceneStore((state) => state);
 
+  const lastTouchY = useRef<number | null>(null);
   const ctnRef = useRef<HTMLDivElement>(null);
+
+  //NOTE - this useEffect & lastTouchY is a temp fix for the issue described at the top of this file
+  useEffect(() => {
+    if (hasTouchScreen()) {
+      const ctn = ctnRef.current;
+
+      if (!ctn) return;
+
+      const handleTouchStart = (e: TouchEvent): void => {
+        lastTouchY.current = e.touches[0].clientY;
+      };
+
+      const handleTouchMove = (e: TouchEvent): void => {
+        if (lastTouchY.current !== null) {
+          const deltaY = e.touches[0].clientY - lastTouchY.current;
+          ctn.scrollTop -= deltaY;
+        }
+        lastTouchY.current = e.touches[0].clientY;
+      };
+
+      ctn.addEventListener("touchstart", handleTouchStart, { passive: true });
+      ctn.addEventListener("touchmove", handleTouchMove, { passive: true });
+
+      return () => {
+        ctn.removeEventListener("touchstart", handleTouchStart);
+        ctn.removeEventListener("touchmove", handleTouchMove);
+      };
+    }
+  }, []);
 
   return (
     <div
+      id="laptop-profile-container"
       ref={ctnRef}
-      className="w-[334px] h-[216px] bg-white overflow-y-auto my-2"
+      className="w-[334px] h-[216px] bg-white overflow-y-scroll my-2"
     >
       <nav>
         <div className="flex justify-between bg-[#1D4ED8] relative py-3.5 px-2.5">
