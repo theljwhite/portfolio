@@ -95,7 +95,7 @@ function Projects() {
     {
       to: { scale: 1, pos: textAnimatePos },
       from: { scale: 0, pos: [2, 2, 2] },
-      config: isMobile ? config.wobbly : config.default,
+      config: config.default,
       reset: false,
       immediate: false,
     },
@@ -112,7 +112,7 @@ function Projects() {
           pos: project.position,
           rotation: [0, 0, 0],
         },
-        config: isMobile ? config.wobbly : config.default,
+        config: config.default,
         reset: false,
         immediate: false,
       };
