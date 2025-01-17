@@ -55,10 +55,10 @@ export default function useAnimateCamera() {
         setIsOrbit(true);
         setActiveMarker(null);
         setIsAnimating(true);
+        setIsOverlayHidden(false);
       },
       onRest: () => {
         setIsAnimating(false);
-        setIsOverlayHidden(false);
       },
     });
   };

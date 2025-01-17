@@ -36,6 +36,7 @@ export default function CameraControls() {
         minDistance={2}
         maxDistance={7}
         enablePan={true}
+        enableZoom={false}
         target={spring.target as unknown as THREE.Vector3}
       />
       <AnimatedPerspectiveCamera

@@ -7,6 +7,7 @@ import PictureFrame from "./PictureFrame";
 const PROJECTS_INTERACT_VIEW = [-2.5, 1.4, -4.5];
 const PROJECTS_INTERACT_VIEW_MOBILE = [-3, 1.4, -5];
 const PROJ_LOCATION_MARKER_POS = [-0.1, 2.5, -2.7];
+const PROJ_LOCATION_MARKER_POS_MOBILE = [-0.1, 2.6, -2.7];
 
 export default function ProjectsFrame() {
   const { activeMarker, setIsOverlayHidden } = useCameraStore((state) => state);
@@ -32,7 +33,9 @@ export default function ProjectsFrame() {
       },
       {
         title: "Leave Projects",
-        position: PROJ_LOCATION_MARKER_POS,
+        position: isMobile
+          ? PROJ_LOCATION_MARKER_POS_MOBILE
+          : PROJ_LOCATION_MARKER_POS,
         camPos: projectsView,
         camTarget: [0, 0, 0],
       }

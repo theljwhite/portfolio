@@ -165,7 +165,11 @@ export default function LaptopProfile() {
             <span className="text-black">LJ White</span>
             <div>
               <div className="block float-left h-[80px] mr-4 mb-2">
-                <img src="./meFromGH.jpg" className="w-[80px] h-[80px]" />
+                <img
+                  src="./meFromGH.jpg"
+                  className="w-[80px] h-[80px]"
+                  alt="A picture of LJ White during a bad hair day, overlooking the New River Gorge Bridge"
+                />
               </div>
               <div className="w-full inline-block">
                 <p className="mb-1 text-xs text-black font-semibold">

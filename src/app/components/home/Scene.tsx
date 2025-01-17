@@ -6,17 +6,21 @@ import {
   MeshReflectorMaterial,
   Stars,
   PerformanceMonitor,
+  Gltf,
 } from "@react-three/drei";
 import { Perf } from "r3f-perf";
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { CanvasWrapper } from "@isaac_ua/drei-html-fix";
 import { Physics, RigidBody } from "@react-three/rapier";
-import { useGLTF, useCursor } from "@react-three/drei";
-import { useCameraStore } from "@/app/store/camera";
+import { useGLTF } from "@react-three/drei";
+import { useCameraStore, LocationMarkers } from "@/app/store/camera";
 import { useScreenSize } from "./ScreenSize";
-import { navOutWithGhostAnchor } from "@/app/utils/anchor";
+import { useErrorBoundary } from "use-error-boundary";
 import SceneLoadingCircle from "./SceneLoadingCircle";
+import SceneError from "./SceneError";
+import Fallback from "./Fallback";
 import CameraControls from "./CameraControls";
+import DeskItems from "./DeskItems";
 import Laptop from "./Laptop";
 import KrkDynamic from "./KrkDynamic";
 import BitcoinDisplay from "./BitcoinDisplay";
@@ -30,8 +34,7 @@ import Socials from "./Socials";
 const ALL_MODELS = [
   "./3D/desk1.glb",
   "./3D/bitcoin_atm.glb",
-  "./3D/redbulls.glb",
-  "./3D/redbull_single.glb",
+  "./3D/redbull_can.glb",
   "./3D/soundcloud.glb",
   "./3D/linkedin.glb",
   "./3D/github.glb",
@@ -42,41 +45,16 @@ const ALL_MODELS = [
 
 ALL_MODELS.forEach((model) => useGLTF.preload(model));
 
-const Desk = () => {
-  const { scene } = useGLTF("./3D/desk1.glb");
-  return (
-    <primitive
-      onClick={(e: ThreeEvent<MouseEvent>) => e.stopPropagation()}
-      onPointerOver={(e: ThreeEvent<PointerEvent>) => e.stopPropagation()}
-      onPointerOut={(e: ThreeEvent<PointerEvent>) => e.stopPropagation()}
-      rotation={[0, 10, 0]}
-      scale={1}
-      object={scene}
-    />
-  );
-};
-
-const Redbulls = () => {
-  const { scene } = useGLTF("./3D/redbulls.glb");
-  return <primitive position={[-3.4, -1.86, 2.0]} scale={3.8} object={scene} />;
-};
-
-const RedbullSingle = ({ handleClick }: { handleClick: () => void }) => {
-  const [isHover, setIsHover] = useState<boolean>(false);
-  const { scene } = useGLTF("./3D/redbull_single.glb");
-
-  useCursor(isHover);
-  return (
-    <primitive
-      onClick={handleClick}
-      onPointerOver={() => setIsHover(true)}
-      onPointerOut={() => setIsHover(false)}
-      position={[1.0, 1.16, -1]}
-      scale={0.1}
-      object={scene}
-    />
-  );
-};
+const Desk = () => (
+  <Gltf
+    src="./3D/desk1.glb"
+    onClick={(e: ThreeEvent<MouseEvent>) => e.stopPropagation()}
+    onPointerOver={(e: ThreeEvent<PointerEvent>) => e.stopPropagation()}
+    onPointerOut={(e: ThreeEvent<PointerEvent>) => e.stopPropagation()}
+    rotation={[0, 10, 0]}
+    scale={1}
+  />
+);
 
 export default function Scene() {
   const [physicsPaused, setPhysicsPaused] = useState<boolean>(true);
@@ -86,75 +64,88 @@ export default function Scene() {
 
   const { isMobile } = useScreenSize();
 
+  const { ErrorBoundary, didCatch, error } = useErrorBoundary();
+
+  const isLessBlur =
+    activeMarker.current === LocationMarkers.Projects && isMobile;
+
   return (
-    <div className="w-dvh h-dvh bg-black">
+    <div className="w-dvh h-dvh bg-black flex">
       <Suspense fallback={<SceneLoadingCircle />}>
-        <CanvasWrapper>
-          <Canvas dpr={dpr}>
-            {/* <Perf /> */}
-            <PerformanceMonitor
-              onIncline={() => setDpr(2)}
-              onDecline={() => setDpr(1)}
-            >
-              <Physics paused={physicsPaused} key={0} timeStep={1 / 60}>
-                <fog attach="fog" args={["rgb(16,16,16)", 0, 10]} />
-                <Environment preset="city" />
-                <Stars
-                  radius={100}
-                  depth={50}
-                  count={5000}
-                  factor={4}
-                  saturation={0}
-                  fade
-                  speed={1}
-                />
+        {didCatch ? (
+          <SceneError message={error.message} />
+        ) : (
+          <ErrorBoundary>
+            <CanvasWrapper>
+              <Canvas
+                dpr={dpr}
+                performance={{ current: 1, min: 0.5, max: 1, debounce: 200 }}
+                fallback={<Fallback />}
+              >
+                {/* <Perf /> */}
+                <PerformanceMonitor
+                  onIncline={() => setDpr(2)}
+                  onDecline={() => setDpr(1)}
+                >
+                  <Physics paused={physicsPaused} key={0} timeStep={1 / 60}>
+                    <fog attach="fog" args={["rgb(16,16,16)", 0, 10]} />
+                    <Environment preset="city" />
+                    <Stars
+                      radius={100}
+                      depth={50}
+                      count={5000}
+                      factor={4}
+                      saturation={0}
+                      fade
+                      speed={1}
+                    />
 
-                <group position={[0, -0.5, 0]}>
-                  <Desk />
-                  <LocationMarker
-                    visible={!!activeMarker.current && !isMarkerHidden.current}
-                  />
-                  <Laptop />
-                  <BitcoinDisplay />
-                  <Redbulls />
-                  <RedbullSingle
-                    handleClick={() =>
-                      navOutWithGhostAnchor(
-                        "https://www.walmart.com/ip/Red-Bull-Winter-Edition-Iced-Vanilla-Berry-Energy-Drink-12-fl-oz-4-pack-cans/5340366890"
-                      )
-                    }
-                  />
-                  <KrkDynamic />
-                  <ProjectsFrame />
-                  <Projects />
-
-                  <Socials
-                    setPhysicsPaused={setPhysicsPaused}
-                    isMobile={isMobile}
-                  />
-
-                  <RigidBody type="fixed" colliders="cuboid" name="floor">
-                    <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
-                      <planeGeometry args={[10, 10]} />
-                      <MeshReflectorMaterial
-                        blur={isMobile ? [40, 10] : [400, 100]}
-                        resolution={isMobile ? 512 : 1024}
-                        mixBlur={1}
-                        opacity={2}
-                        depthScale={1.1}
-                        minDepthThreshold={0.4}
-                        maxDepthThreshold={1.25}
-                        roughness={1}
-                        mirror={1}
+                    <group position={[0, -0.5, 0]}>
+                      <Desk />
+                      <DeskItems />
+                      <LocationMarker
+                        visible={
+                          !!activeMarker.current && !isMarkerHidden.current
+                        }
                       />
-                    </mesh>
-                  </RigidBody>
-                </group>
-                <CameraControls />
-              </Physics>
-            </PerformanceMonitor>
-          </Canvas>
-        </CanvasWrapper>
+                      <Laptop />
+                      <BitcoinDisplay />
+                      <KrkDynamic />
+                      <ProjectsFrame />
+                      <Projects />
+
+                      <Socials
+                        setPhysicsPaused={setPhysicsPaused}
+                        isMobile={isMobile}
+                      />
+
+                      <RigidBody type="fixed" colliders="cuboid" name="floor">
+                        <mesh
+                          rotation={[-Math.PI / 2, 0, 0]}
+                          position={[0, 0, 0]}
+                        >
+                          <planeGeometry args={[10, 10]} />
+                          <MeshReflectorMaterial
+                            blur={isLessBlur ? [40, 10] : [400, 100]}
+                            resolution={isMobile ? 512 : 1024}
+                            mixBlur={1}
+                            opacity={2}
+                            depthScale={1.1}
+                            minDepthThreshold={0.4}
+                            maxDepthThreshold={1.25}
+                            roughness={1}
+                            mirror={1}
+                          />
+                        </mesh>
+                      </RigidBody>
+                    </group>
+                    <CameraControls />
+                  </Physics>
+                </PerformanceMonitor>
+              </Canvas>
+            </CanvasWrapper>
+          </ErrorBoundary>
+        )}
       </Suspense>
     </div>
   );

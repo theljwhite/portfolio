@@ -177,13 +177,13 @@ const laptopContent: LaptopContent[] = [
   },
   {
     id: 1,
-    title: "Preview my VSCode theme",
-    content: <VSCodeTheme />,
+    title: "Learn a little bit more about me",
+    content: <LaptopProfile />,
   },
   {
     id: 2,
-    title: "Learn more about me",
-    content: <LaptopProfile />,
+    title: "Preview my VSCode theme",
+    content: <VSCodeTheme />,
   },
   {
     id: 3,

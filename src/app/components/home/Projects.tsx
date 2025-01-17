@@ -11,7 +11,7 @@ import {
   Vignette,
 } from "@react-three/postprocessing";
 import { BlendFunction } from "postprocessing";
-import { Project, PROJECTS } from "../../constants/projects";
+import { type Project, PROJECTS } from "../../constants/projects";
 import { navOutWithGhostAnchor } from "@/app/utils/anchor";
 import ProjectFrame from "./ProjectFrame";
 
@@ -22,6 +22,10 @@ import ProjectFrame from "./ProjectFrame";
 //or other things like memoizing. or also lerping anims w/ useFrame instead of the springs.
 //but this works for now for a first pass and is smooth using useRefs.
 
+//TODO - handle EffectComposer enable/disable without conditional rendering
+// EffectComposer itself affects how the rest of the scene looks even when enabled is false, which is not wanted.
+//a fix will have to be found for this & then can avoid the conditional rendering of the EffectComposer, which isnt performant
+
 const PROJ_COLUMNS = 3;
 const PROJ_X_SPACING = 1.3;
 const PROJ_Z_SPACING = 0.02;
@@ -31,7 +35,7 @@ const PROJ_TEXT_ANIMATE_TO = [0.2, 0.9, 2];
 const PROJ_TEXT_ANIMATE_TO_MOBILE = [-0.1, 1.5, 2];
 
 const ANIMATE_FRAME_POS = [0.9, -0.2, 2];
-const ANIMATE_FRAME_POS_MOBILE = [0.93, -0.2, 2];
+const ANIMATE_FRAME_POS_MOBILE = [0.93, -0.15, 2.3]; //was [0.93, -0.2, 2]
 const ANIMATE_FRAME_ROTATION = [-0.1, -0.08, 0];
 const ANIMATE_FRAME_ROTATION_MOBILE = [0, 0, 0];
 
@@ -227,7 +231,7 @@ function Projects() {
 
             <Text
               maxWidth={0.2}
-              position={isMobile ? [0, -0.58, 0] : [0, -0.18, 0]}
+              position={isMobile ? [0, -0.63, 0] : [0, -0.18, 0]}
               anchorX="center"
               fontSize={0.016}
               letterSpacing={-0.01}
@@ -239,7 +243,7 @@ function Projects() {
             </Text>
             <Text
               maxWidth={0.2}
-              position={isMobile ? [0, -0.7, 0] : [0, -0.3, 0]}
+              position={isMobile ? [0, -0.75, 0] : [0, -0.3, 0]}
               anchorX="center"
               fontSize={0.016}
               letterSpacing={-0.01}
@@ -253,9 +257,11 @@ function Projects() {
               onClick={() =>
                 navOutWithGhostAnchor(activeProjRef?.current?.githubUrl ?? "")
               }
-              position={isMobile ? [-0.07, -0.8, 0] : [-0.07, -0.38, 0]}
+              onPointerEnter={() => (document.body.style.cursor = "pointer")}
+              onPointerLeave={() => (document.body.style.cursor = "auto")}
+              position={isMobile ? [0.2, -0.69, 0] : [-0.07, -0.38, 0]}
               anchorX="center"
-              fontSize={0.02}
+              fontSize={isMobile ? 0.03 : 0.02}
               letterSpacing={-0.02}
               fontStyle="italic"
               ref={(el) => (textRefs.current.github = el)}
