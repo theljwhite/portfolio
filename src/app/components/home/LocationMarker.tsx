@@ -22,7 +22,11 @@ export default function LocationMarker({ visible }: LocationMarkerProps) {
   const { camReset } = useAnimateCamera();
 
   return (
-    <mesh position={new THREE.Vector3(...position)}>
+    <mesh
+      position={
+        new THREE.Vector3(...(visible ? position : [10_000, 10_000, 10_000]))
+      }
+    >
       <Html>
         <div
           onClick={() => {

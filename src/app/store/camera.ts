@@ -50,8 +50,8 @@ isMarkerHidden.current = false;
 isOverlayHidden.current = false;
 activeMarker.current = null;
 locationMarker.current = {
-  title: "Leave Laptop",
-  position: [-0.3, 2, -1.7],
+  title: "",
+  position: [10_000, 10_000, 10_000],
   camPos: [],
   camTarget: [],
 };
