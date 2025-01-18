@@ -27,6 +27,7 @@ const BitcoinPrice = ({ isMobile }: { isMobile: boolean | null }) => {
     {
       refreshInterval: isBitcoinDisplayOpen ? 5000 : undefined,
       revalidateOnFocus: false,
+      dedupingInterval: 0,
     }
   );
 

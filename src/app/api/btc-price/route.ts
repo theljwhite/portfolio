@@ -54,7 +54,6 @@ const fetchBackupApiPrice = async (): Promise<BitcoinPriceReturn> => {
 export async function GET() {
   try {
     const primaryData = await fetchCoinApiPrice();
-
     return NextResponse.json(primaryData);
   } catch (error) {
     try {
@@ -68,3 +67,5 @@ export async function GET() {
     }
   }
 }
+
+export const dynamic = "force-dynamic";

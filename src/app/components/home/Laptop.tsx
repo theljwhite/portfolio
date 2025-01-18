@@ -1,5 +1,4 @@
-import { useState, useRef } from "react";
-import * as THREE from "three";
+import { useState } from "react";
 import { Html, useGLTF } from "@react-three/drei";
 import { useSceneStore } from "@/app/store/scene";
 import { useCameraStore, LocationMarkers } from "@/app/store/camera";
@@ -24,8 +23,6 @@ export default function Laptop() {
   const { camGoTo } = useAnimateCamera();
 
   const { isMobile } = useScreenSize();
-
-  const group = useRef<THREE.Group>(null);
 
   const { nodes, materials } = useGLTF("./3D/mac-draco.glb");
   const macNodes = nodes as Record<string, any>;
@@ -71,7 +68,6 @@ export default function Laptop() {
     <>
       <group
         onClick={onLaptopClick}
-        ref={group}
         rotation={[0, -0.2, 0]}
         position={[0.1, 1.2, -1.7]}
         scale={0.125}
