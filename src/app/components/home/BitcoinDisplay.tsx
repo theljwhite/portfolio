@@ -7,11 +7,6 @@ import { LocationMarkers } from "@/app/store/camera";
 import type { BitcoinPriceReturn } from "@/app/api/btc-price/route";
 import useSWR from "swr";
 
-//TODO interact view can be improved here,
-//but with ideal cam positioning the animation experiences some jank here.
-//can be fixed possibly by allowing config to be passed as an arg to animate
-//but for now, it's fine.
-
 const BTC_INTERACT_POS = [1.3, 0, 1.5];
 const BTC_INTERACT_TARGET = [1.5, 0, 1.1];
 const BTC_LOCATION_MARKER_POS = [1.8, 1, 1.1];

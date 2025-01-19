@@ -46,7 +46,6 @@ allProjectImages.map((image) => useTexture.preload(image));
 function Projects() {
   const { activeMarker, setIsMarkerHidden } = useCameraStore((state) => state);
 
-  const groupRef = useRef<THREE.Group>(null);
   const textGroupRef = useRef<THREE.Group>(null);
   const activeProjRef = useRef<Project | null>(null);
 
@@ -186,11 +185,7 @@ function Projects() {
 
   return (
     <>
-      <group
-        ref={groupRef}
-        position={[-0.4, 1, -2.66]}
-        rotation={[0, -2.55, 0]}
-      >
+      <group position={[-0.4, 1, -2.66]} rotation={[0, -2.55, 0]}>
         {projectsWithPositions.map((project, index) => {
           return (
             <animated.group
