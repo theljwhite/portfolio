@@ -8,17 +8,16 @@ import {
   PerformanceMonitor,
   Gltf,
 } from "@react-three/drei";
-import { Perf } from "r3f-perf";
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
 import { useGLTF } from "@react-three/drei";
 import { useCameraStore, LocationMarkers } from "@/app/store/camera";
 import { useScreenSize } from "./ScreenSize";
 import { useErrorBoundary } from "use-error-boundary";
+import { CanvasWrapper } from "./CanvasWrapper";
 import SceneLoadingCircle from "./SceneLoadingCircle";
 import SceneError from "./SceneError";
 import Fallback from "./Fallback";
-import { CanvasWrapper } from "./CanvasWrapper";
 import CameraControls from "./CameraControls";
 import DeskItems from "./DeskItems";
 import Laptop from "./Laptop";
@@ -29,7 +28,8 @@ import Projects from "./Projects";
 import LocationMarker from "./LocationMarker";
 import Socials from "./Socials";
 
-//TODO - fix 'any' types
+//TODO - canvas doesnt always resize from small to large properly because of the CanvasWrapper fix needed to fix Drei <Html> being misaligned on Safari (its a safari bug but CanvasWrapper fixes it, allows the Laptop component to look good on mobile)
+//for now, its more important that the laptop is shown correctly on all devices. meanwhile, monitoring Drei/R3F updates, and exploring other temporary solutions (resize from large to small still works fine)
 
 const ALL_MODELS = [
   "./3D/desk1.glb",
@@ -70,7 +70,7 @@ export default function Scene() {
     activeMarker.current === LocationMarkers.Projects && isMobile;
 
   return (
-    <div className="w-dvh h-dvh bg-black flex">
+    <div className="w-dvh h-dvh bg-black flex overflow-hidden">
       <Suspense fallback={<SceneLoadingCircle />}>
         {didCatch ? (
           <SceneError message={error.message} />
@@ -78,7 +78,6 @@ export default function Scene() {
           <ErrorBoundary>
             <CanvasWrapper>
               <Canvas dpr={dpr} fallback={<Fallback />}>
-                {/* <Perf /> */}
                 <PerformanceMonitor
                   onIncline={() => setDpr(2)}
                   onDecline={() => setDpr(1)}
