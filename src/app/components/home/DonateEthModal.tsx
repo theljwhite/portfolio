@@ -79,7 +79,6 @@ export default function DonateEthModal() {
                 Cancel
               </button>
               <button
-                onClick={() => console.log("TODO")}
                 disabled={true}
                 className="flex items-center text-white justify-center bg-indigo-600 px-8 py-2 rounded-lg cursor-pointer disabled:bg-stone-400 disabled:text-stone-500 disabled:cursor-not-allowed"
               >
