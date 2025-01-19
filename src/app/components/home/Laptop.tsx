@@ -6,7 +6,7 @@ import useAnimateCamera from "@/app/utils/useAnimateCamera";
 import { useScreenSize } from "./ScreenSize";
 import LaptopContent from "./LaptopContent";
 
-const LAPTOP_INTERACT_POS = [0, 0, 4];
+const LAPTOP_INTERACT_POS = [0.1, 1.5, -0.3]; // was [0, 0, 4];
 const LAPTOP_INTERACT_TARGET = [0.15, 0, -6.8];
 const LAPTOP_LOCATION_MARKER_POS = [-0.3, 2, -1.7];
 

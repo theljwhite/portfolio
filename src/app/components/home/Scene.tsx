@@ -77,11 +77,7 @@ export default function Scene() {
         ) : (
           <ErrorBoundary>
             <CanvasWrapper>
-              <Canvas
-                dpr={dpr}
-                performance={{ current: 1, min: 0.5, max: 1, debounce: 200 }}
-                fallback={<Fallback />}
-              >
+              <Canvas dpr={dpr} fallback={<Fallback />}>
                 {/* <Perf /> */}
                 <PerformanceMonitor
                   onIncline={() => setDpr(2)}

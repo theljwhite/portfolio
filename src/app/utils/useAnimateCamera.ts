@@ -23,7 +23,10 @@ export default function useAnimateCamera() {
     if (locationMarker) setLocationMarker(locationMarker);
 
     springRef.start({
-      config: config.molasses,
+      config: {
+        ...config.molasses,
+        precision: 0.0001,
+      },
       pos: cam.pos,
       target: cam.target,
       from: {

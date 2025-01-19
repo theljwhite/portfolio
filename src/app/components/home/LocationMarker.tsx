@@ -15,7 +15,7 @@ interface LocationMarkerProps {
 }
 
 export default function LocationMarker({ visible }: LocationMarkerProps) {
-  const { locationMarker } = useCameraStore((state) => state);
+  const { locationMarker, isAnimating } = useCameraStore((state) => state);
   const { title, position, camPos, camTarget, clickHandler } =
     locationMarker.current;
 
@@ -30,6 +30,7 @@ export default function LocationMarker({ visible }: LocationMarkerProps) {
       <Html>
         <div
           onClick={() => {
+            if (isAnimating.current) return;
             camReset(camPos, camTarget);
             clickHandler?.();
           }}
