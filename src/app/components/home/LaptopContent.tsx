@@ -60,6 +60,11 @@ const VSCodeTheme = () => {
       sidebarBg: "#1b1e28",
       sidebarFg: "#767c9d",
     },
+    {
+      name: "ilyat-moegi",
+      sidebarBg: "#050505",
+      sidebarFg: "#7f7f7f",
+    },
   ];
 
   const [activeTheme, setActiveTheme] = useState<number>(0);
