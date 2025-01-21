@@ -81,7 +81,7 @@ const VSCodeTheme = () => {
         className="flex border-b border-[#1B1D23] py-1 px-3 w-full justify-between"
       >
         <a
-          href="https://github.com/theljwhite/ilyat"
+          href="https://marketplace.visualstudio.com/items?itemName=LJWhite-WV.ilyat-vscode"
           rel="noreferrer"
           target="_blank"
           className="underline text-white text-xs cursor-pointer hover:text-primary-2"
