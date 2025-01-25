@@ -50,6 +50,11 @@ const VSCodeTheme = () => {
       sidebarFg: "#00e8c6",
     },
     {
+      name: "ilyat-cosmic",
+      sidebarBg: "#191624",
+      sidebarFg: "#9892ad",
+    },
+    {
       name: "ilyat-mariana",
       sidebarBg: "#23262E",
       sidebarFg: "#00e8c6",

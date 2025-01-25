@@ -24,6 +24,26 @@ See: /components/LaptopContent.tsx
   --keyword: #a78cfa;
 }
 
+[data-theme="ilyat-cosmic"] {
+  --background-color: #221e30;
+  --text-color: #dcdde4;
+  --comment: #f8f2fd4f;
+  --operator: #ed9cc2;
+  --literal-color: #f6c177;
+  --literal-style: italic;
+  --number: #f6c177;
+  --template-var: #ff9da4;
+  --built-in: #a0c0d6;
+  --meta: #a0c0d6;
+  --link: #a0c0d6;
+  --attribute: #ffeead;
+  --string: #74ccaa;
+  --params: #f3a580;
+  --title: #5fb5be;
+  --title-class: #a0c0d6;
+  --keyword: #a0a5d6;
+}
+
 [data-theme="ilyat-mariana"] {
   --background-color: #262a33;
   --text-color: #d5ced9;
