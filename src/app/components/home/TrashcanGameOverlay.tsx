@@ -3,7 +3,7 @@ import { useSceneStore } from "@/app/store/scene";
 
 export default function TrashcanGameOverlay() {
   const { activeMarker } = useCameraStore((state) => state);
-  const { trashcanGameStatus, setTrashcanGameStatus } = useSceneStore(
+  const { trashcanGameStatus, trashcanAttempts, trashcanMakes } = useSceneStore(
     (state) => state
   );
 
@@ -15,21 +15,28 @@ export default function TrashcanGameOverlay() {
           : "opacity-0 pointer-events-none"
       } transition-opacity duration-200`}
     >
-      {trashcanGameStatus !== "started" && (
-        <>
-          <div className="absolute text-white top-[270px] left-[60px] text-lg text-right z-[8388637]">
-            Click/tap the screen to throw the paper
-          </div>
-          <div className="absolute text-white top-[340px] left-[150px] text-[15px] text-right z-[8388637]">
-            <button
-              onClick={() => setTrashcanGameStatus("started")}
-              className="px-5 py-2 rounded-lg bg-primary-4 font-semibold"
-            >
-              Start Game
-            </button>
-          </div>
-        </>
-      )}
+      {/* {trashcanGameStatus === "idle" && trashcanGameScore.attempts === 0 ? (
+        <div className="absolute text-center text-white max-w-[300px] top-[270px] left-[60px] text-lg z-[8388637]">
+          Click, drag, &amp; release the paper to shoot it in the trash
+        </div>
+      ) : (trashcanGameStatus === "dragging" ||
+          trashcanGameStatus === "thrown") &&
+        trashcanGameScore.attempts > 0 ? (
+        <div className="absolute text-center text-white max-w-[300px] top-[270px] left-[60px] text-lg z-[8388637]">
+          Attempts: {trashcanGameScore.attempts} Makes:{" "}
+          {trashcanGameScore.makes}
+        </div>
+      ) : (
+        <></>
+      )} */}
+      <>
+        <div className="absolute text-center text-white max-w-[300px] top-[270px] left-[60px] text-lg z-[8388637]">
+          Attempts: {trashcanAttempts}
+        </div>
+        <div className="absolute text-center text-white max-w-[300px] top-[270px] right-[60px] text-lg z-[8388637]">
+          Makes: {trashcanMakes}
+        </div>
+      </>
     </div>
   );
 }

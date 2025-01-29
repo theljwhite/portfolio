@@ -21,6 +21,8 @@ interface HomeSceneState {
   isPhysicsPaused: boolean;
   physicsKey: number;
   trashcanGameStatus: TrashcanGameStatus;
+  trashcanAttempts: number;
+  trashcanMakes: number;
   setIsProjectsOpen: (isProjectsOpen: boolean) => void;
   setIsAudioPlaying: (isAudioPlaying: boolean) => void;
   setAudioDetails: (audioDetails: AudioDetails) => void;
@@ -31,6 +33,8 @@ interface HomeSceneState {
   setIsPhysicsPaused: (isPhysicsPaused: boolean) => void;
   setPhysicsKey: (physicsKey: number) => void;
   setTrashcanGameStatus: (trashcanGameStatus: TrashcanGameStatus) => void;
+  setTrashcanAttempts: (trashcanAttempts: number) => void;
+  setTrashcanMakes: (trashcanMakes: number) => void;
   resetLaptopContent: () => void;
   reset: () => void;
 }
@@ -55,6 +59,8 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
     isPhysicsPaused: false, //TODO needs to start out as true
     physicsKey: 0,
     trashcanGameStatus: "idle" as TrashcanGameStatus,
+    trashcanAttempts: 0,
+    trashcanMakes: 0,
   };
 
   return {
@@ -72,6 +78,9 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
     setPhysicsKey: (physicsKey: number) => set({ physicsKey }),
     setTrashcanGameStatus: (trashcanGameStatus: TrashcanGameStatus) =>
       set({ trashcanGameStatus }),
+    setTrashcanAttempts: (trashcanAttempts: number) =>
+      set({ trashcanAttempts }),
+    setTrashcanMakes: (trashcanMakes: number) => set({ trashcanMakes }),
     resetLaptopContent: () => set({ activeLaptopContent: 0 }),
     reset: () => set({ ...initialState }),
   };

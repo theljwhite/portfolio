@@ -13,7 +13,7 @@ export default function Home() {
         <Scene />
       </ScreenSizeProvider>
       <Overlay />
-      {/* <TrashcanGameOverlay /> */}
+      <TrashcanGameOverlay />
       <DonateEthModal />
     </>
   );

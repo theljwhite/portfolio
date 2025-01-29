@@ -50,14 +50,16 @@ const ALL_MODELS = [
 ALL_MODELS.forEach((model) => useGLTF.preload(model));
 
 const Desk = () => (
-  <Gltf
-    src="./3D/desk1.glb"
-    onClick={(e: ThreeEvent<MouseEvent>) => e.stopPropagation()}
-    onPointerOver={(e: ThreeEvent<PointerEvent>) => e.stopPropagation()}
-    onPointerOut={(e: ThreeEvent<PointerEvent>) => e.stopPropagation()}
-    rotation={[0, 10, 0]}
-    scale={1}
-  />
+  <RigidBody type="fixed" colliders="trimesh">
+    <Gltf
+      src="./3D/desk1.glb"
+      onClick={(e: ThreeEvent<MouseEvent>) => e.stopPropagation()}
+      onPointerOver={(e: ThreeEvent<PointerEvent>) => e.stopPropagation()}
+      onPointerOut={(e: ThreeEvent<PointerEvent>) => e.stopPropagation()}
+      rotation={[0, 10, 0]}
+      scale={1}
+    />
+  </RigidBody>
 );
 
 export default function Scene() {
@@ -90,7 +92,7 @@ export default function Scene() {
                   paused={isPhysicsPaused}
                   key={physicsKey}
                   timeStep={1 / 60}
-                  debug={false}
+                  debug={true}
                 >
                   <fog attach="fog" args={["rgb(16,16,16)", 0, 10]} />
                   <Environment preset="city" />
