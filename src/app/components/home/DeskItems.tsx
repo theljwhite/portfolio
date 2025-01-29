@@ -6,7 +6,7 @@ const REDBULL_Y_POS = 1.19;
 const SINGLE_REDBULL_POS = [1, REDBULL_Y_POS, -1];
 
 const Redbull = (props: Partial<PrimitiveProps>) => {
-  return <Gltf src={"./3D/redbull_can.glb"} scale={1.8} {...props} />;
+  return <Gltf src="./3D/redbull_can.glb" scale={1.8} {...props} />;
 };
 
 export default function DeskItems() {

@@ -11,6 +11,7 @@ import {
 import { Canvas, type ThreeEvent } from "@react-three/fiber";
 import { Physics, RigidBody } from "@react-three/rapier";
 import { useGLTF } from "@react-three/drei";
+import { useSceneStore } from "@/app/store/scene";
 import { useCameraStore, LocationMarkers } from "@/app/store/camera";
 import { useScreenSize } from "./ScreenSize";
 import { useErrorBoundary } from "use-error-boundary";
@@ -27,6 +28,7 @@ import ProjectsFrame from "./ProjectsFrame";
 import Projects from "./Projects";
 import LocationMarker from "./LocationMarker";
 import Socials from "./Socials";
+import Trashcan from "./Trashcan";
 
 //TODO - canvas doesnt always resize from small to large properly because of the CanvasWrapper fix needed to fix Drei <Html> being misaligned on Safari (its a safari bug but CanvasWrapper fixes it, allows the Laptop component to look good on mobile)
 //for now, its more important that the laptop is shown correctly on all devices. meanwhile, monitoring Drei/R3F updates, and exploring other temporary solutions (resize from large to small still works fine)
@@ -41,6 +43,8 @@ const ALL_MODELS = [
   "./3D/x.glb",
   "./3D/krk_single.glb",
   "./3D/mac-draco.glb",
+  "./3D/trashcan.glb",
+  "./3D/paper.glb",
 ];
 
 ALL_MODELS.forEach((model) => useGLTF.preload(model));
@@ -57,9 +61,9 @@ const Desk = () => (
 );
 
 export default function Scene() {
-  const [physicsPaused, setPhysicsPaused] = useState<boolean>(true);
   const [dpr, setDpr] = useState<number>(1.5);
 
+  const { isPhysicsPaused, physicsKey } = useSceneStore((state) => state);
   const { activeMarker, isMarkerHidden } = useCameraStore((state) => state);
 
   const { isMobile } = useScreenSize();
@@ -82,7 +86,12 @@ export default function Scene() {
                   onIncline={() => setDpr(2)}
                   onDecline={() => setDpr(1)}
                 />
-                <Physics paused={physicsPaused} key={0} timeStep={1 / 60}>
+                <Physics
+                  paused={isPhysicsPaused}
+                  key={physicsKey}
+                  timeStep={1 / 60}
+                  debug={false}
+                >
                   <fog attach="fog" args={["rgb(16,16,16)", 0, 10]} />
                   <Environment preset="city" />
                   <Stars
@@ -109,10 +118,9 @@ export default function Scene() {
                     <ProjectsFrame />
                     <Projects />
 
-                    <Socials
-                      setPhysicsPaused={setPhysicsPaused}
-                      isMobile={isMobile}
-                    />
+                    {/* <Socials isMobile={isMobile} /> */}
+
+                    <Trashcan />
 
                     <RigidBody type="fixed" colliders="cuboid" name="floor">
                       <mesh

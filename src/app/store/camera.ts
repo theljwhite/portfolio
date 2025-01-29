@@ -22,6 +22,7 @@ export enum LocationMarkers {
   Projects = 3,
   BitcoinDisplay = 4,
   Socials = 5,
+  Trashcan = 6,
 }
 
 export type LocationMarker = {

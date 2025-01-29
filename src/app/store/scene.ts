@@ -8,6 +8,8 @@ type AudioDetails = {
   outlink?: string;
 };
 
+type TrashcanGameStatus = "idle" | "started" | "dragging" | "thrown";
+
 interface HomeSceneState {
   isProjectsOpen: boolean;
   isAudioPlaying: boolean;
@@ -16,6 +18,9 @@ interface HomeSceneState {
   isBitcoinDisplayOpen: boolean;
   donateAmount: string;
   activeLaptopContent: number | null;
+  isPhysicsPaused: boolean;
+  physicsKey: number;
+  trashcanGameStatus: TrashcanGameStatus;
   setIsProjectsOpen: (isProjectsOpen: boolean) => void;
   setIsAudioPlaying: (isAudioPlaying: boolean) => void;
   setAudioDetails: (audioDetails: AudioDetails) => void;
@@ -23,6 +28,9 @@ interface HomeSceneState {
   setIsBitcoinDisplayOpen: (isBitcoinDisplayOpen: boolean) => void;
   setDonateAmount: (donateAmount: string) => void;
   setActiveLaptopContent: (activeLaptopContent: number | null) => void;
+  setIsPhysicsPaused: (isPhysicsPaused: boolean) => void;
+  setPhysicsKey: (physicsKey: number) => void;
+  setTrashcanGameStatus: (trashcanGameStatus: TrashcanGameStatus) => void;
   resetLaptopContent: () => void;
   reset: () => void;
 }
@@ -44,6 +52,9 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
     isDonateOpen: false,
     donateAmount: "",
     activeLaptopContent: 0,
+    isPhysicsPaused: false, //TODO needs to start out as true
+    physicsKey: 0,
+    trashcanGameStatus: "idle" as TrashcanGameStatus,
   };
 
   return {
@@ -57,6 +68,10 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
     setDonateAmount: (donateAmount: string) => set({ donateAmount }),
     setActiveLaptopContent: (activeLaptopContent: number | null) =>
       set({ activeLaptopContent }),
+    setIsPhysicsPaused: (isPhysicsPaused: boolean) => set({ isPhysicsPaused }),
+    setPhysicsKey: (physicsKey: number) => set({ physicsKey }),
+    setTrashcanGameStatus: (trashcanGameStatus: TrashcanGameStatus) =>
+      set({ trashcanGameStatus }),
     resetLaptopContent: () => set({ activeLaptopContent: 0 }),
     reset: () => set({ ...initialState }),
   };

@@ -1,5 +1,6 @@
 import { useState, useRef } from "react";
 import { Center, useGLTF, useCursor } from "@react-three/drei";
+import { useSceneStore } from "@/app/store/scene";
 import { useCameraStore } from "@/app/store/camera";
 import useAnimateCamera from "@/app/utils/useAnimateCamera";
 import { LocationMarkers } from "@/app/store/camera";
@@ -20,11 +21,6 @@ interface SocialModelProps {
   onSocialClick: () => void;
 }
 
-interface SocialsProps {
-  setPhysicsPaused: React.Dispatch<React.SetStateAction<boolean>>;
-  isMobile: boolean;
-}
-
 const SOCIALS_INTERACT_POS = [0.4, 0, 2];
 const SOCIALS_LOCATION_MARKER_POS = [0, 0, 0];
 
@@ -43,7 +39,8 @@ const SocialModel = ({ url, onSocialClick }: SocialModelProps) => {
   );
 };
 
-export default function Socials({ setPhysicsPaused, isMobile }: SocialsProps) {
+export default function Socials({ isMobile }: { isMobile: boolean }) {
+  const { setIsPhysicsPaused } = useSceneStore((state) => state);
   const { activeMarker } = useCameraStore((state) => state);
   const { camGoTo, isLocationDisabled } = useAnimateCamera();
 
@@ -78,7 +75,7 @@ export default function Socials({ setPhysicsPaused, isMobile }: SocialsProps) {
   };
 
   const handlePhysicsAndNavOut = (social: string): void => {
-    setPhysicsPaused(false);
+    setIsPhysicsPaused(false);
 
     Object.keys(rigidBodyRefs.current).forEach((key) => {
       const rigidBody = rigidBodyRefs.current[key];
