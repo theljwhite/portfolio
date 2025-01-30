@@ -22,7 +22,7 @@ import { LocationMarkers } from "@/app/store/camera";
 
 const TRASHCAN_INTERACT_POS = [0.1, 0, 0.3];
 const TRASHCAN_INTERACT_TARGET = [0.7, 0, -0.7];
-const TRASHCAN_LOCATION_MARKER_POS = [0.5, 1.8, -0.2];
+const TRASHCAN_LOCATION_MARKER_POS = [0.9, 1.2, -0.6];
 
 const TRASHCAN_INTERACT_POS_MOBILE = [0.2, 0, 0.6];
 const TRASHCAN_INTERACT_TARGET_MOBILE = [1.4, 0, -1.4];
@@ -95,6 +95,17 @@ const Paper = ({ paperKey }: { paperKey: number }) => {
     }
   });
 
+  const onPointerDown = (): void => {
+    if (
+      activeMarker.current !== LocationMarkers.Trashcan ||
+      trashcanGameStatus === "thrown"
+    ) {
+      return;
+    }
+    setIsDragging(true);
+    setTrashcanGameStatus("started");
+  };
+
   return (
     <RigidBody
       key={paperKey}
@@ -105,11 +116,7 @@ const Paper = ({ paperKey }: { paperKey: number }) => {
       name="paper-ball"
     >
       <Gltf
-        onPointerDown={() => {
-          if (activeMarker.current !== LocationMarkers.Trashcan) return;
-          setIsDragging(true);
-          setTrashcanGameStatus("started");
-        }}
+        onPointerDown={onPointerDown}
         onPointerOver={() =>
           activeMarker.current === LocationMarkers.Trashcan &&
           (document.body.style.cursor = "grab")
