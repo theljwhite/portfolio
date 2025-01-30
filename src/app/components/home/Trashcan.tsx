@@ -4,6 +4,7 @@ import { useThree, useFrame } from "@react-three/fiber";
 import { useSceneStore } from "@/app/store/scene";
 import { useCameraStore } from "@/app/store/camera";
 import useAnimateCamera from "@/app/utils/useAnimateCamera";
+import { useScreenSize } from "./ScreenSize";
 import {
   CollisionEnterHandler,
   RapierRigidBody,
@@ -15,11 +16,17 @@ import { LocationMarkers } from "@/app/store/camera";
 //I first tried this flow with Drei DragControls,
 //but RigidBody doesnt work well onDrag w/ DragControls, it was causing isssues with the Paper RigidBody.
 //see: https://github.com/pmndrs/react-three-rapier/issues/688
-//the code was cleaner but it broke stuff, so for now had to use useFrame, useEffects and pointer window listener.
+//the code was cleaner but it broke stuff, so for now had to use useFrame, useEffects and pointer window listener sadly.
 
-const TRASHCAN_INTERACT_POS = [0.2, 0, 0.6];
-const TRASHCAN_INTERACT_TARGET = [1.4, 0, -1.4];
-const TRASHCAN_LOCATION_MARKER_POS = [0.9, 1.8, -0.6];
+//TODO bug when attempts > makes, because of second attempt after already thrown once
+
+const TRASHCAN_INTERACT_POS = [0.1, 0, 0.3];
+const TRASHCAN_INTERACT_TARGET = [0.7, 0, -0.7];
+const TRASHCAN_LOCATION_MARKER_POS = [0.5, 1.8, -0.2];
+
+const TRASHCAN_INTERACT_POS_MOBILE = [0.2, 0, 0.6];
+const TRASHCAN_INTERACT_TARGET_MOBILE = [1.4, 0, -1.4];
+const TRASHCAN_LOCATION_MARKER_POS_MOBILE = [0.9, 1.8, -0.6];
 
 const Paper = ({ paperKey }: { paperKey: number }) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -103,7 +110,10 @@ const Paper = ({ paperKey }: { paperKey: number }) => {
           setIsDragging(true);
           setTrashcanGameStatus("started");
         }}
-        onPointerOver={() => (document.body.style.cursor = "grab")}
+        onPointerOver={() =>
+          activeMarker.current === LocationMarkers.Trashcan &&
+          (document.body.style.cursor = "grab")
+        }
         onPointerOut={() => (document.body.style.cursor = "auto")}
         src="./3D/paper.glb"
         scale={0.1}
@@ -125,9 +135,22 @@ export default function Trashcan() {
   const { activeMarker, setIsOverlayHidden } = useCameraStore((state) => state);
 
   const { camGoTo, isLocationDisabled } = useAnimateCamera();
+  const { isMobile } = useScreenSize();
 
   const { nodes, materials } = useGLTF("./3D/trashcan.glb");
   const trashcanNodes = nodes as Record<string, any>;
+
+  const trashcanCamPos = isMobile
+    ? TRASHCAN_INTERACT_POS_MOBILE
+    : TRASHCAN_INTERACT_POS;
+
+  const trashcanCamTarget = isMobile
+    ? TRASHCAN_INTERACT_TARGET_MOBILE
+    : TRASHCAN_INTERACT_TARGET;
+
+  const trashcanMarkerPos = isMobile
+    ? TRASHCAN_LOCATION_MARKER_POS_MOBILE
+    : TRASHCAN_LOCATION_MARKER_POS;
 
   useEffect(() => {
     if (trashcanGameStatus === "thrown") {
@@ -148,16 +171,16 @@ export default function Trashcan() {
 
     camGoTo(
       {
-        pos: TRASHCAN_INTERACT_POS,
-        target: TRASHCAN_INTERACT_TARGET,
+        pos: trashcanCamPos,
+        target: trashcanCamTarget,
         orbitEnabled: true,
         activeMarker: LocationMarkers.Trashcan,
       },
       {
         title: "Leave Trashcan",
-        position: TRASHCAN_LOCATION_MARKER_POS,
-        camPos: TRASHCAN_INTERACT_POS,
-        camTarget: TRASHCAN_INTERACT_TARGET,
+        position: trashcanMarkerPos,
+        camPos: trashcanCamPos,
+        camTarget: trashcanCamTarget,
         clickHandler: resetTrashcanGame,
       }
     );
@@ -193,6 +216,11 @@ export default function Trashcan() {
               ? onTrashcanClick
               : undefined
           }
+          onPointerOver={() => {
+            activeMarker.current === null &&
+              (document.body.style.cursor = "pointer");
+          }}
+          onPointerOut={() => (document.body.style.cursor = "auto")}
           position={[0.9, 0.03, -0.4]}
           scale={0.2}
         >
