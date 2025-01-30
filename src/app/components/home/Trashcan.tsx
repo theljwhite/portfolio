@@ -17,13 +17,9 @@ import { LocationMarkers } from "@/app/store/camera";
 //see: https://github.com/pmndrs/react-three-rapier/issues/688
 //the code was cleaner but it broke stuff, so for now had to use useFrame, useEffects and pointer window listener.
 
-const TRASHCAN_POS = [0.9, 0.03, -0.4];
-
 const TRASHCAN_INTERACT_POS = [0.2, 0, 0.6];
 const TRASHCAN_INTERACT_TARGET = [1.4, 0, -1.4];
 const TRASHCAN_LOCATION_MARKER_POS = [0.9, 1.8, -0.6];
-
-const TRASHCAN_SCORE_POS = [0.7, 1.6, -0.6];
 
 const Paper = ({ paperKey }: { paperKey: number }) => {
   const [isDragging, setIsDragging] = useState<boolean>(false);
@@ -33,15 +29,14 @@ const Paper = ({ paperKey }: { paperKey: number }) => {
     mouse: null,
   });
 
-  const paperRef = useRef<RapierRigidBody>(null!);
-
-  const { trashcanGameStatus, setTrashcanGameStatus, setIsPhysicsPaused } =
-    useSceneStore((state) => state);
-
+  const { trashcanGameStatus, setTrashcanGameStatus } = useSceneStore(
+    (state) => state
+  );
   const { activeMarker, isOrbit, setIsOrbit } = useCameraStore(
     (state) => state
   );
 
+  const paperRef = useRef<RapierRigidBody>(null!);
   const { pointer } = useThree();
 
   useEffect(() => {
@@ -80,19 +75,12 @@ const Paper = ({ paperKey }: { paperKey: number }) => {
     if (isDragging) {
       if (!s.mouse) s.mouse = { x: pointer.x, y: pointer.y };
       else {
-        const dx = pointer.x - s.mouse.x;
-        const dy = pointer.y - s.mouse.y;
-
         const { x, y, z } = paperRef.current.translation();
 
-        const xTranslate = x + dx * 10;
-        const yTranslate = y + dy * 10;
-        const zTranslate = z + dx * 10;
-
         paperRef.current.setNextKinematicTranslation({
-          x: xTranslate,
-          y: yTranslate,
-          z: zTranslate,
+          x: x + (pointer.x - s.mouse.x) * 10,
+          y: y + (pointer.y - s.mouse.y) * 10,
+          z: z + (pointer.x - s.mouse.x) * 10,
         });
 
         s.mouse = { x: pointer.x, y: pointer.y };
@@ -110,14 +98,15 @@ const Paper = ({ paperKey }: { paperKey: number }) => {
       name="paper-ball"
     >
       <Gltf
-        onPointerDown={() => (
-          setIsDragging(true), setTrashcanGameStatus("started")
-        )}
+        onPointerDown={() => {
+          if (activeMarker.current !== LocationMarkers.Trashcan) return;
+          setIsDragging(true);
+          setTrashcanGameStatus("started");
+        }}
         onPointerOver={() => (document.body.style.cursor = "grab")}
         onPointerOut={() => (document.body.style.cursor = "auto")}
         src="./3D/paper.glb"
         scale={0.1}
-        // visible={activeMarker.current === LocationMarkers.Trashcan}
       />
     </RigidBody>
   );
@@ -191,6 +180,7 @@ export default function Trashcan() {
     setTrashcanGameStatus("idle");
     setTrashcanAttempts(0);
     setTrashcanMakes(0);
+    setPaperKey((prev) => prev + 1);
   };
 
   return (

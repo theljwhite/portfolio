@@ -1,6 +1,5 @@
-import { useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Center, useGLTF, useCursor } from "@react-three/drei";
-import { useSceneStore } from "@/app/store/scene";
 import { useCameraStore } from "@/app/store/camera";
 import useAnimateCamera from "@/app/utils/useAnimateCamera";
 import { LocationMarkers } from "@/app/store/camera";
@@ -40,7 +39,6 @@ const SocialModel = ({ url, onSocialClick }: SocialModelProps) => {
 };
 
 export default function Socials({ isMobile }: { isMobile: boolean }) {
-  const { setIsPhysicsPaused } = useSceneStore((state) => state);
   const { activeMarker } = useCameraStore((state) => state);
   const { camGoTo, isLocationDisabled } = useAnimateCamera();
 
@@ -50,6 +48,13 @@ export default function Socials({ isMobile }: { isMobile: boolean }) {
     soundcloud: null,
     linkedin: null,
   });
+
+  useEffect(() => {
+    Object.keys(rigidBodyRefs.current).forEach((key) => {
+      const rigidBody = rigidBodyRefs.current[key];
+      if (rigidBody) rigidBody.sleep();
+    });
+  }, []);
 
   const handleSocialClick = (social: string): void => {
     if (isLocationDisabled(LocationMarkers.Socials)) return;
@@ -75,8 +80,6 @@ export default function Socials({ isMobile }: { isMobile: boolean }) {
   };
 
   const handlePhysicsAndNavOut = (social: string): void => {
-    setIsPhysicsPaused(false);
-
     Object.keys(rigidBodyRefs.current).forEach((key) => {
       const rigidBody = rigidBodyRefs.current[key];
 

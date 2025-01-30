@@ -18,8 +18,6 @@ interface HomeSceneState {
   isBitcoinDisplayOpen: boolean;
   donateAmount: string;
   activeLaptopContent: number | null;
-  isPhysicsPaused: boolean;
-  physicsKey: number;
   trashcanGameStatus: TrashcanGameStatus;
   trashcanAttempts: number;
   trashcanMakes: number;
@@ -30,8 +28,6 @@ interface HomeSceneState {
   setIsBitcoinDisplayOpen: (isBitcoinDisplayOpen: boolean) => void;
   setDonateAmount: (donateAmount: string) => void;
   setActiveLaptopContent: (activeLaptopContent: number | null) => void;
-  setIsPhysicsPaused: (isPhysicsPaused: boolean) => void;
-  setPhysicsKey: (physicsKey: number) => void;
   setTrashcanGameStatus: (trashcanGameStatus: TrashcanGameStatus) => void;
   setTrashcanAttempts: (trashcanAttempts: number) => void;
   setTrashcanMakes: (trashcanMakes: number) => void;
@@ -39,7 +35,7 @@ interface HomeSceneState {
   reset: () => void;
 }
 
-export const useSceneStore = create<HomeSceneState>((set, get) => {
+export const useSceneStore = create<HomeSceneState>((set) => {
   const initialState = {
     stage: 0,
     isProjectsOpen: false,
@@ -56,8 +52,6 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
     isDonateOpen: false,
     donateAmount: "",
     activeLaptopContent: 0,
-    isPhysicsPaused: false, //TODO needs to start out as true
-    physicsKey: 0,
     trashcanGameStatus: "idle" as TrashcanGameStatus,
     trashcanAttempts: 0,
     trashcanMakes: 0,
@@ -74,8 +68,6 @@ export const useSceneStore = create<HomeSceneState>((set, get) => {
     setDonateAmount: (donateAmount: string) => set({ donateAmount }),
     setActiveLaptopContent: (activeLaptopContent: number | null) =>
       set({ activeLaptopContent }),
-    setIsPhysicsPaused: (isPhysicsPaused: boolean) => set({ isPhysicsPaused }),
-    setPhysicsKey: (physicsKey: number) => set({ physicsKey }),
     setTrashcanGameStatus: (trashcanGameStatus: TrashcanGameStatus) =>
       set({ trashcanGameStatus }),
     setTrashcanAttempts: (trashcanAttempts: number) =>
