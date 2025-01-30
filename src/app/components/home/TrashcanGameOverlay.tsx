@@ -15,28 +15,20 @@ export default function TrashcanGameOverlay() {
           : "opacity-0 pointer-events-none"
       } transition-opacity duration-200`}
     >
-      {/* {trashcanGameStatus === "idle" && trashcanGameScore.attempts === 0 ? (
+      {trashcanGameStatus === "idle" && trashcanAttempts === 0 ? (
         <div className="absolute text-center text-white max-w-[300px] top-[270px] left-[60px] text-lg z-[8388637]">
           Click, drag, &amp; release the paper to shoot it in the trash
         </div>
-      ) : (trashcanGameStatus === "dragging" ||
-          trashcanGameStatus === "thrown") &&
-        trashcanGameScore.attempts > 0 ? (
-        <div className="absolute text-center text-white max-w-[300px] top-[270px] left-[60px] text-lg z-[8388637]">
-          Attempts: {trashcanGameScore.attempts} Makes:{" "}
-          {trashcanGameScore.makes}
-        </div>
       ) : (
-        <></>
-      )} */}
-      <>
-        <div className="absolute text-center text-white max-w-[300px] top-[270px] left-[60px] text-lg z-[8388637]">
-          Attempts: {trashcanAttempts}
-        </div>
-        <div className="absolute text-center text-white max-w-[300px] top-[270px] right-[60px] text-lg z-[8388637]">
-          Makes: {trashcanMakes}
-        </div>
-      </>
+        <>
+          <div className="absolute text-center text-white max-w-[300px] top-[270px] left-[60px] text-lg z-[8388637]">
+            Attempts: {trashcanAttempts}
+          </div>
+          <div className="absolute text-center text-white max-w-[300px] top-[270px] right-[60px] text-lg z-[8388637]">
+            Makes: {trashcanMakes}
+          </div>
+        </>
+      )}
     </div>
   );
 }

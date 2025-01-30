@@ -6,8 +6,6 @@ import { useCameraStore } from "@/app/store/camera";
 import useAnimateCamera from "@/app/utils/useAnimateCamera";
 import {
   CollisionEnterHandler,
-  ContactForcePayload,
-  IntersectionEnterPayload,
   RapierRigidBody,
   RigidBody,
   type CollisionEnterPayload,
@@ -47,7 +45,7 @@ const Paper = ({ paperKey }: { paperKey: number }) => {
   const { pointer } = useThree();
 
   useEffect(() => {
-    // if (isDragging && isOrbit.current) setIsOrbit(false);
+    if (isDragging && isOrbit.current) setIsOrbit(false);
     if (!isDragging) s.mouse = null;
   }, [isDragging]);
 
@@ -66,7 +64,6 @@ const Paper = ({ paperKey }: { paperKey: number }) => {
       trashcanGameStatus === "started"
     ) {
       const handleMouseUp = (): void => {
-        console.log("pointer up ran");
         setIsDragging(false);
         setIsDynamic(true);
       };
@@ -136,7 +133,7 @@ export default function Trashcan() {
     setTrashcanAttempts,
     setTrashcanMakes,
   } = useSceneStore((state) => state);
-  const { setIsOverlayHidden } = useCameraStore((state) => state);
+  const { activeMarker, setIsOverlayHidden } = useCameraStore((state) => state);
 
   const { camGoTo, isLocationDisabled } = useAnimateCamera();
 
@@ -172,6 +169,7 @@ export default function Trashcan() {
         position: TRASHCAN_LOCATION_MARKER_POS,
         camPos: TRASHCAN_INTERACT_POS,
         camTarget: TRASHCAN_INTERACT_TARGET,
+        clickHandler: resetTrashcanGame,
       }
     );
   };
@@ -189,12 +187,22 @@ export default function Trashcan() {
     [trashcanMakes]
   );
 
+  const resetTrashcanGame = (): void => {
+    setTrashcanGameStatus("idle");
+    setTrashcanAttempts(0);
+    setTrashcanMakes(0);
+  };
+
   return (
     <>
       <Paper paperKey={paperKey} />
       <RigidBody type="fixed" colliders="trimesh">
         <group
-          onClick={onTrashcanClick}
+          onClick={
+            activeMarker.current !== LocationMarkers.Trashcan
+              ? onTrashcanClick
+              : undefined
+          }
           position={[0.9, 0.03, -0.4]}
           scale={0.2}
         >
