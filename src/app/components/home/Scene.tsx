@@ -88,7 +88,7 @@ export default function Scene() {
                   onIncline={() => setDpr(2)}
                   onDecline={() => setDpr(1)}
                 />
-                {/* <Perf position="bottom-left" /> */}
+                <Perf position="top-left" />
                 <Physics timeStep={1 / 60}>
                   <fog attach="fog" args={["rgb(16,16,16)", 0, 10]} />
                   <Environment preset="city" />

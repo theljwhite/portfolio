@@ -138,6 +138,7 @@ export default function Trashcan() {
     setTrashcanAttempts,
     setTrashcanMakes,
   } = useSceneStore((state) => state);
+
   const { activeMarker, isAnimating, setIsOverlayHidden, setIsOrbit } =
     useCameraStore((state) => state);
 
