@@ -37,12 +37,10 @@ export default function useAnimateCamera() {
         if (cam.orbitEnabled) setIsOrbit(true);
         setActiveMarker(cam.activeMarker ?? null);
         setIsAnimating(true);
-        console.log("Cam started");
       },
       onRest: () => {
         if (!cam.orbitEnabled) setIsOrbit(false);
         setIsAnimating(false);
-        console.log("Cam rested");
       },
     });
   };

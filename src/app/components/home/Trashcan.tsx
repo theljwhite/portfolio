@@ -17,8 +17,10 @@ import { LocationMarkers } from "@/app/store/camera";
 //but RigidBody doesnt work well onDrag w/ DragControls, it was causing isssues with the Paper RigidBody.
 //see: https://github.com/pmndrs/react-three-rapier/issues/688
 //the code was cleaner but it broke stuff, so for now had to use useFrame, useEffects and pointer window listener sadly.
+//with DragControls there were 0 useEffects needed here, lol, but it breaks the paper RigidBody. so I'm keeping it like this now temporarily.
 
-//TODO bug when attempts > makes, because of second attempt after already thrown once
+//TODO - unlike everywhere else in my scene, my camera setup struggles to animate correctly here if orbit is disabled
+//so for now the 1st useEffect below in <Trashcan> is needed, sadly, to disable orbit after the animate(temp fix) (we heard you like useEffects so we put a useEffect in your useEffect)
 
 const TRASHCAN_INTERACT_POS = [0.1, 0, 0.3];
 const TRASHCAN_INTERACT_TARGET = [0.7, 0, -0.7];
@@ -39,15 +41,12 @@ const Paper = ({ paperKey }: { paperKey: number }) => {
   const { trashcanGameStatus, setTrashcanGameStatus } = useSceneStore(
     (state) => state
   );
-  const { activeMarker, isOrbit, setIsOrbit } = useCameraStore(
-    (state) => state
-  );
+  const { activeMarker } = useCameraStore((state) => state);
 
   const paperRef = useRef<RapierRigidBody>(null!);
   const { pointer } = useThree();
 
   useEffect(() => {
-    if (isDragging && isOrbit.current) setIsOrbit(false);
     if (!isDragging) s.mouse = null;
   }, [isDragging]);
 
@@ -139,7 +138,8 @@ export default function Trashcan() {
     setTrashcanAttempts,
     setTrashcanMakes,
   } = useSceneStore((state) => state);
-  const { activeMarker, setIsOverlayHidden } = useCameraStore((state) => state);
+  const { activeMarker, isAnimating, setIsOverlayHidden, setIsOrbit } =
+    useCameraStore((state) => state);
 
   const { camGoTo, isLocationDisabled } = useAnimateCamera();
   const { isMobile } = useScreenSize();
@@ -158,6 +158,19 @@ export default function Trashcan() {
   const trashcanMarkerPos = isMobile
     ? TRASHCAN_LOCATION_MARKER_POS_MOBILE
     : TRASHCAN_LOCATION_MARKER_POS;
+
+  useEffect(() => {
+    if (
+      activeMarker.current === LocationMarkers.Trashcan &&
+      !isAnimating.current
+    ) {
+      const timeout = setTimeout(() => {
+        setIsOrbit(false);
+      }, 50);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [isAnimating.current, activeMarker.current]);
 
   useEffect(() => {
     if (trashcanGameStatus === "thrown") {

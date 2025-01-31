@@ -17,7 +17,7 @@ export default function TrashcanGameOverlay() {
     >
       {trashcanGameStatus === "idle" && trashcanAttempts === 0 ? (
         <>
-          <div className="absolute block lg:hidden text-center text-white max-w-[300px] top-[270px] left-[60px] text-lg z-[8388637]">
+          <div className="absolute block lg:hidden text-center text-white max-w-[300px] top-[250px] left-[60px] text-lg z-[8388637]">
             Click, drag, &amp; release the paper to shoot it in the trash
           </div>
           <div className="hidden lg:block absolute max-w-[300px] text-center text-white top-[270px] right-[290px] text-lg z-[8388637]">
@@ -27,10 +27,10 @@ export default function TrashcanGameOverlay() {
       ) : (
         <>
           <div className="block lg:hidden">
-            <div className="absolute text-center text-white max-w-[300px] top-[270px] left-[60px] text-lg z-[8388637]">
+            <div className="absolute text-center text-white max-w-[300px] top-[250px] left-[60px] text-lg z-[8388637]">
               Attempts: {trashcanAttempts}
             </div>
-            <div className="absolute text-center text-white max-w-[300px] top-[270px] right-[60px] text-lg z-[8388637]">
+            <div className="absolute text-center text-white max-w-[300px] top-[250px] right-[60px] text-lg z-[8388637]">
               Makes: {trashcanMakes}
             </div>
           </div>
