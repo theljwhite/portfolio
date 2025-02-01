@@ -29,8 +29,6 @@ import LocationMarker from "./LocationMarker";
 import Socials from "./Socials";
 import Trashcan from "./Trashcan";
 
-import { Perf } from "r3f-perf";
-
 //TODO - canvas doesnt always resize from small to large properly because of the CanvasWrapper fix needed to fix Drei <Html> being misaligned on Safari (its a safari bug but CanvasWrapper fixes it, allows the Laptop component to look good on mobile)
 //for now, its more important that the laptop is shown correctly on all devices. meanwhile, monitoring Drei/R3F updates, and exploring other temporary solutions (resize from large to small still works fine)
 
@@ -88,7 +86,7 @@ export default function Scene() {
                   onIncline={() => setDpr(2)}
                   onDecline={() => setDpr(1)}
                 />
-                <Perf position="top-left" />
+
                 <Physics timeStep={1 / 60}>
                   <fog attach="fog" args={["rgb(16,16,16)", 0, 10]} />
                   <Environment preset="city" />

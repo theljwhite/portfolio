@@ -34,7 +34,7 @@ export default function TrashcanGameOverlay() {
               Makes: {trashcanMakes}
             </div>
           </div>
-          <div className="hidden lg:block absolute max-h-[30px] max-w-[125px] text-start text-white top-[270px] right-[475px] text-lg z-[8388637]">
+          <div className="hidden lg:block absolute max-h-[30px] min-w-[125px] text-start text-white top-[270px] right-[475px] text-lg z-[8388637]">
             <div className="flex flex-col truncate">
               <span>Attempts: {trashcanAttempts}</span>
               <span>Makes: {trashcanMakes}</span>

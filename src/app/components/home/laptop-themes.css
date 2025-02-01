@@ -106,27 +106,6 @@ See: /components/LaptopContent.tsx
   --keyword: #91b4d5;
 }
 
-[data-theme="ilyat-moegi"] {
-  --background-color: #0d0d0d;
-  --text-color: #dcdde4;
-  --comment: #ffffff4f;
-  --operator: #ed9cc2;
-  --literal-color: #f6c177;
-  --literal-style: italic;
-  --number: #f6c177;
-  --template-var: #f6c177;
-  --built-in: #f3a580;
-  --type: #f3a580;
-  --meta: #f3a580;
-  --link: #f3a580;
-  --attribute: #f3a580;
-  --string: #74ccaa;
-  --params: #a0a5d6;
-  --title: #5fb5be;
-  --title-class: #f3a580;
-  --keyword: #a0a5d6;
-}
-
 pre code.hljs {
   display: block;
   overflow-x: auto;
